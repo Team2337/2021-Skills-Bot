@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.commands.swerve.*;
 import frc.robot.nerdyfiles.swerve.*;
 
 /**
@@ -130,10 +129,10 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     /* --- Array for modules --- */
     swerveModules = new FXSwerveModule[] {
-      new FXSwerveModule(0, new TalonFX(Constants.MODULE0DRIVEMOTORID), new TalonFX(Constants.MODULE0ANGLEMOTORID), angleOffsets[0], CANAngleSensors[0]), // Module 0
-      new FXSwerveModule(1, new TalonFX(Constants.MODULE1DRIVEMOTORID), new TalonFX(Constants.MODULE1ANGLEMOTORID), angleOffsets[1], CANAngleSensors[1]), // Module 1
-      new FXSwerveModule(2, new TalonFX(Constants.MODULE2DRIVEMOTORID), new TalonFX(Constants.MODULE2ANGLEMOTORID), angleOffsets[2], CANAngleSensors[2]), // Module 2
-      new FXSwerveModule(3, new TalonFX(Constants.MODULE3DRIVEMOTORID), new TalonFX(Constants.MODULE3ANGLEMOTORID), angleOffsets[3], CANAngleSensors[3])  // Module 3
+      new FXSwerveModule(0, new TalonFX(Constants.MODULE0_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE0_ANGLE_MOTOR_ID), angleOffsets[0], CANAngleSensors[0]), // Module 0
+      new FXSwerveModule(1, new TalonFX(Constants.MODULE1_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE1_ANGLE_MOTOR_ID), angleOffsets[1], CANAngleSensors[1]), // Module 1
+      new FXSwerveModule(2, new TalonFX(Constants.MODULE2_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE2_ANGLE_MOTOR_ID), angleOffsets[2], CANAngleSensors[2]), // Module 2
+      new FXSwerveModule(3, new TalonFX(Constants.MODULE3_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE3_ANGLE_MOTOR_ID), angleOffsets[3], CANAngleSensors[3])  // Module 3
     };
 
     // Setup for drive motor inversion (They may not need to be inverted)
