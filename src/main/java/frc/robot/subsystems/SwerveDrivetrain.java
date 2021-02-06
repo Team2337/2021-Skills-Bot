@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.commands.swerve.*;
 import frc.robot.nerdyfiles.swerve.*;
@@ -21,7 +20,6 @@ import frc.robot.nerdyfiles.swerve.*;
  */
 public class SwerveDrivetrain extends SubsystemBase {
 
-  private OperatorAngleAdjustment operatorAngleAdjustment;
   private Pigeon pigeon;
 
   // Sets the distances from module to module
@@ -85,11 +83,8 @@ public class SwerveDrivetrain extends SubsystemBase {
    * and the calculations from the joystick inputs is handled.
    * Field orientation is set here as well
    */
-  public SwerveDrivetrain(OperatorAngleAdjustment operatorAngleAdjustment, Pigeon pigeon, Vision vision, OI oi) {
-    this.operatorAngleAdjustment = operatorAngleAdjustment;
+  public SwerveDrivetrain(Pigeon pigeon) {
     this.pigeon = pigeon;
-
-    setDefaultCommand(new SwerveDriveCommand(this, operatorAngleAdjustment, pigeon, vision, oi));
 
     /**
      * If the CAN encoders are used then the angle offsets will equal 0 because they are already configured
@@ -223,9 +218,6 @@ public class SwerveDrivetrain extends SubsystemBase {
         Math.abs(forward) > deadband
         || Math.abs(strafe) > deadband
         || Math.abs(rotation) > deadband
-        || operatorAngleAdjustment.getSlowRotateMode()
-        || operatorAngleAdjustment.getLimelightRotationMode()
-        || operatorAngleAdjustment.getBallTrackingEnabled()
       ) {
         if(Math.abs((lastAngle[i] - angles[i])) < 90) {
           lastAngle[i] = angles[i];
