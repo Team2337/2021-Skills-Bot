@@ -24,9 +24,6 @@ public class RobotContainer {
 
   private final Command autonomousCommand = new WaitCommand(15).withTimeout(15);
 
-  // Must go before subsystems
-  public static Constants Constants = new Constants();
-
   /* --- Subsystems --- */
   private Pigeon pigeon = new Pigeon();
   private SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(pigeon);

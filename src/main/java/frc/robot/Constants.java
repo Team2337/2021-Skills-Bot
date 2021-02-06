@@ -42,39 +42,4 @@ public final class Constants {
     public static int MODULE3_ANGLE_MOTOR_ID = 11;
     public static int MODULE3_DRIVE_MOTOR_ID = 15;
 
-    /**
-     * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
-     * constants.  This class should not be used for any other purpose.  All constants should be
-     * declared globally (i.e. public static final).  Do not put anything functional in this class.
-     *
-     * <p>It is advised to static finalally import this class (or one of its inner classes) wherever the
-     * constants are needed, to reduce verbosity.
-     */
-    public Constants() {
-        if(Robot.isComp) {
-            MODULE0_DRIVE_MOTOR_ID = 0;
-            MODULE0_ANGLE_MOTOR_ID = 4;
-
-            MODULE1_DRIVE_MOTOR_ID = 1;
-            MODULE1_ANGLE_MOTOR_ID = 5;
-
-            MODULE2_DRIVE_MOTOR_ID = 14;
-            MODULE2_ANGLE_MOTOR_ID = 10;
-
-            MODULE3_DRIVE_MOTOR_ID = 15;
-            MODULE3_ANGLE_MOTOR_ID = 11;
-        } else {
-            MODULE0_DRIVE_MOTOR_ID = 1;
-            MODULE0_ANGLE_MOTOR_ID = 2;
-
-            MODULE1_DRIVE_MOTOR_ID = 3;
-            MODULE1_ANGLE_MOTOR_ID = 4;
-
-            MODULE2_DRIVE_MOTOR_ID = 5;
-            MODULE2_ANGLE_MOTOR_ID = 6;
-
-            MODULE3_DRIVE_MOTOR_ID = 7;
-            MODULE3_ANGLE_MOTOR_ID = 8;
-        }
-    }
 }
