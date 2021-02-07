@@ -26,8 +26,13 @@ public final class Constants {
         // Since the robot is a square the radius is simple - be careful when adapting for other bases
         private static final double DRIVETRAIN_RADIUS_INCHES = (DRIVETRAIN_LENGTH_INCHES / 2);
 
-        public static final double MAX_FEET_PER_SECOND = 13.5;
-        private static final double MAX_INCHES_PER_SECOND = 13.5 * 12;
+        /**
+         * The max unadjusted speed in feet/sec for a Falcon 500 motor with the
+         * MK3 Swerve Drive Specialties module is 13.6 feet/second
+         * https://www.swervedrivespecialties.com/products/mk3-swerve-module
+         */
+        public static final double MAX_FEET_PER_SECOND = 13.6;
+        private static final double MAX_INCHES_PER_SECOND = MAX_FEET_PER_SECOND * 12;
         /**
          * To calculate max rotational speed:
          * Max speed in feet per second * 12 = inches per second
