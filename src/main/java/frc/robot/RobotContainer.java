@@ -8,10 +8,9 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.OperatorAngleAdjustment;
+import frc.robot.commands.swerve.SwerveDriveCommand;
 import frc.robot.subsystems.Pigeon;
 import frc.robot.subsystems.SwerveDrivetrain;
-import frc.robot.subsystems.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -20,26 +19,24 @@ import frc.robot.subsystems.Vision;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final Command autonomousCommand = new WaitCommand(15).withTimeout(15);
 
-  // Must go before subsystems
-  public static Constants Constants = new Constants();
+  private final XboxController controller = new XboxController(0);
+
+  private final Command autonomousCommand = new WaitCommand(15).withTimeout(15);
 
   /* --- Subsystems --- */
   private Pigeon pigeon = new Pigeon();
-  private Vision vision = new Vision();
-  private OperatorAngleAdjustment operatorAngleAdjustment = new OperatorAngleAdjustment(vision);
-  private OI oi = new OI(operatorAngleAdjustment, pigeon, vision);
-  private SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(operatorAngleAdjustment, pigeon, vision, oi);
+  private SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(pigeon);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    swerveDrivetrain.setDefaultCommand(new SwerveDriveCommand(swerveDrivetrain, controller));
+
     // Configure the button bindings
     configureButtonBindings();
+
     // Resets the pigeon to 0
     pigeon.resetPidgey();
-    vision.switchPipeLine(0);
-    vision.setLEDMode(1);
   }
 
   /**
