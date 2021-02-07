@@ -4,10 +4,8 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.sensors.*;
 
-import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants;
 
@@ -23,48 +21,30 @@ import frc.robot.Constants;
  */
 public class FXSwerveModule {
 
-    /* --- Ints --- */
-
     /** The current module's ID number (0 -> 3)*/
     private int moduleNumber;
-
-    /* --- Doubles --- */
 
     /** The angle offset from the zero position on the angle motor in RADIANS */
     private double angleMotorOffset;
 
     /**
-     * The error of the previous iteration of the angle calculations
-     * This is requred in order to find the D (derivative) value for
-     * the speed calculations
-     */
-    private double lastError = 0;
-
-    /**
-     * The allowable angle slop on the modules in degrees
-     * This will reduce the oscillation on the angle motor
-     * when within +- 3 degrees of the target
-     */
-    private double allowableErrorDegree = 3;
-
-    /**
      * Proportional value for the drive motor speed
      * This is used to scale the error to a funcitonal speed for the motors
      */
-    private double driveP = 15;
+    private static final double kDriveP = 15;
 
     /**
      * Integral value for the drive motor speed
      * This value is used to reduce oscillation when sending the motor to a setpoint
      */
-    private double driveI = 0.01;
+    private static final double kDriveI = 0.01;
 
     /**
      * Derivative value for the drive motor speed
      * This is added to the speed of the motors to increase power at
      * smaller errors
      */
-    private double driveD = 0.1;
+    private static final double kDriveD = 0.1;
 
     /**
      * Feet Forward value for the drive motor speed
@@ -72,36 +52,14 @@ public class FXSwerveModule {
      * causing the motor to increase the power output to
      * be able to reach its setpoint
      */
-    private double driveF = 0.2;
+    private static final double kDriveF = 0.2;
 
-    /**
-     * Proportional value for the angle motor speed
-     * This is used to scale the error to a funcitonal speed for the motors
-     */
-    private double angleP = 0.63;
-
-    /**
-     * Derivative value for the angle motor speed
-     * This is added to the speed of the motors to increase power at
-     * smaller errors
-     */
-    private double angleD = 0.02;
-
-    /** Sets the max speed for the drive motors */
-    private double driveMaxSpeed = 1.0;
-
-    private int angleAllowableClosedloopError = 5;
-    private double talonAngleP = 1.0;
-    private double talonAngleI = 0;
-    private double talonAngleD = 0;
-    private double talonAngleF = 0;
-
-    /* --- Booleans --- */
-
-    /** Sets the inversion mode on the drive motors (True: invered | False: not inverted) */
-    private boolean isDriveInverted = false;
-
-    /* --- Motor Controllers --- */
+    private static final double kAngleP = 0.63;
+    private static final double kAngleI = 0.02;
+    private static final double kAngleD = 0.02;
+    private static final double kAngleF = 0.02;
+    private static final double kAngleAllowableClosedloopError = 5;
+    private static final double kAngleOpenloopRamp = 0.15;
 
     /** TalonFX motor controller, used as an angle motor in the swerve module */
     public TalonFX driveMotor;
@@ -109,22 +67,14 @@ public class FXSwerveModule {
     /** TalonFX motor controller, used as a drive motor in the swerve module */
     public TalonFX angleMotor;
 
-    /* --- Sensors --- */
+    /** CANCoder encoder, used measure the rotational position of the angle motor */
+    public CANCoder canCoder;
 
     /**
-     * Analog potentiometer used to measure the exact location of
-     * each swerve module. The output recieved from this is in voltage (0 -> 5)
+     * The number of ticks in a single revolution for the encoder being used
+     * https://docs.ctre-phoenix.com/en/latest/ch14_MCSensor.html#sensor-resolution
      */
-    public AnalogInput analogAngleSensor;
-    public CANCoder CANAngleSensor;
-
-    /* --- Current Limit Stator --- */
-    private StatorCurrentLimitConfiguration currentLimitConfigurationAngle = new StatorCurrentLimitConfiguration();
-    private StatorCurrentLimitConfiguration currentLimitConfigurationDrive = new StatorCurrentLimitConfiguration();
-
-    /* --- Talon FX Configurations --- */
-    private TalonFXConfiguration TalonFXConfigurationAngle;
-    private TalonFXConfiguration TalonFXConfigurationDrive;
+    private static final double kEncoderTicksPerRotation = 4096;
 
     /**
      * Swerve Module Object used to run the calculations for the swerve drive
@@ -134,19 +84,20 @@ public class FXSwerveModule {
      * Both will need to be passed in when the object is created
      * @see SwerveDriveCommand
      * @param moduleNumber - int Module ID to call each module (not CAN IDs)
-     * @param driveMotor - TalonFX motor Object with CAN ID of the module's drive motor
-     * @param angleMotor - TalonFX motor Object with CAN ID of the module's angle motor
-     * @param angleMotorOffset - double value indicating the angle offset for the current module
-     * @param analogAngleSensor - AnalogInput sensor Object with the Analog Port of the current module
+     * @param driveMotor - TalonFX motor object with CAN ID of the module's drive motor
+     * @param angleMotor - TalonFX motor object with CAN ID of the module's angle motor
+     * @param canCoder - CANCoder sensor object that measures the rotation of the angle motor
+     * @param angleMotorOffset - The angle offset for the current module in degrees
      */
-    public FXSwerveModule(int moduleNumber, TalonFX driveMotor, TalonFX angleMotor, double angleMotorOffset, CANCoder CANAngleSensor) {
+    public FXSwerveModule(int moduleNumber, TalonFX driveMotor, TalonFX angleMotor, CANCoder canCoder, double angleMotorOffset) {
         this.moduleNumber = moduleNumber;
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.angleMotorOffset = angleMotorOffset;
-        this.CANAngleSensor = CANAngleSensor;
-        TalonFXConfigurationDrive = new TalonFXConfiguration();
-        TalonFXConfigurationAngle = new TalonFXConfiguration();
+        this.canCoder = canCoder;
+
+        TalonFXConfiguration angleTalonFXConfiguration = new TalonFXConfiguration();
+        TalonFXConfiguration driveTalonFXConfiguration = new TalonFXConfiguration();
 
         /* --- Set Factory Default --- */
 
@@ -161,23 +112,23 @@ public class FXSwerveModule {
         /* ------------------------------------ */
         /****************************************/
 
-        CANCoderConfiguration CANCoderConfigurationAngle = new CANCoderConfiguration();
-        CANAngleSensor.configAllSettings(CANCoderConfigurationAngle);
+        CANCoderConfiguration canCoderConfiguration = new CANCoderConfiguration();
+        canCoder.configAllSettings(canCoderConfiguration);
 
-        TalonFXConfigurationAngle.slot0.kP = talonAngleP;
-        TalonFXConfigurationAngle.slot0.kI = talonAngleI;
-        TalonFXConfigurationAngle.slot0.kD = talonAngleD;
-        TalonFXConfigurationAngle.slot0.kF = talonAngleF;
-        TalonFXConfigurationAngle.slot0.allowableClosedloopError = angleAllowableClosedloopError;
-        TalonFXConfigurationAngle.feedbackNotContinuous = true;
-        TalonFXConfigurationAngle.openloopRamp = 0.15;
+        angleTalonFXConfiguration.slot0.kP = kAngleP;
+        angleTalonFXConfiguration.slot0.kI = kAngleI;
+        angleTalonFXConfiguration.slot0.kD = kAngleD;
+        angleTalonFXConfiguration.slot0.kF = kAngleF;
+        angleTalonFXConfiguration.slot0.allowableClosedloopError = kAngleAllowableClosedloopError;
+        angleTalonFXConfiguration.feedbackNotContinuous = true;
+        angleTalonFXConfiguration.openloopRamp = kAngleOpenloopRamp;
 
         // Use the CANCoder as the remote sensor for the primary TalonFX PID
-        TalonFXConfigurationAngle.remoteFilter0.remoteSensorDeviceID = CANAngleSensor.getDeviceID();
-        TalonFXConfigurationAngle.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
-        TalonFXConfigurationAngle.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+        angleTalonFXConfiguration.remoteFilter0.remoteSensorDeviceID = canCoder.getDeviceID();
+        angleTalonFXConfiguration.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
+        angleTalonFXConfiguration.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
 
-        angleMotor.configAllSettings(TalonFXConfigurationAngle);
+        angleMotor.configAllSettings(angleTalonFXConfiguration);
 
         angleMotor.setNeutralMode(NeutralMode.Coast);
 
@@ -192,24 +143,16 @@ public class FXSwerveModule {
         driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, 0);
         driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
 
-        /* --- Drive PID --- */
-        driveMotor.config_kP(0, driveP, 0);
-        driveMotor.config_kI(0, driveI, 0);
-        driveMotor.config_kD(0, driveD, 0);
-        driveMotor.config_kF(0, driveF, 0);
-
         /* --- Talon FX Drive Configurations --- */
-        TalonFXConfigurationDrive.slot0.kP = driveP;
-        TalonFXConfigurationDrive.slot0.kI = driveI;
-        TalonFXConfigurationDrive.slot0.kD = driveD;
-        TalonFXConfigurationDrive.slot0.kF = driveF;
-        TalonFXConfigurationDrive.peakOutputForward = driveMaxSpeed;
-        TalonFXConfigurationDrive.peakOutputReverse = -driveMaxSpeed;
-        TalonFXConfigurationDrive.slot0.allowableClosedloopError = 100;
-        TalonFXConfigurationDrive.closedloopRamp = 0.55;
-        TalonFXConfigurationDrive.openloopRamp = 0.2;
+        driveTalonFXConfiguration.slot0.kP = kDriveP;
+        driveTalonFXConfiguration.slot0.kI = kDriveI;
+        driveTalonFXConfiguration.slot0.kD = kDriveD;
+        driveTalonFXConfiguration.slot0.kF = kDriveF;
+        driveTalonFXConfiguration.slot0.allowableClosedloopError = 100;
+        driveTalonFXConfiguration.closedloopRamp = 0.55;
+        driveTalonFXConfiguration.openloopRamp = 0.2;
 
-        driveMotor.configAllSettings(TalonFXConfigurationDrive);
+        driveMotor.configAllSettings(driveTalonFXConfiguration);
 
         /* --- Motion Magic --- */
         // Sets the velocity & accelaration for the motion magic mode
@@ -220,6 +163,7 @@ public class FXSwerveModule {
         driveMotor.setNeutralMode(NeutralMode.Coast);
 
         /* --- Setup Angle Current Limits --- */
+        StatorCurrentLimitConfiguration currentLimitConfigurationAngle = new StatorCurrentLimitConfiguration();
         // Sets the current limit for the angle motor
         currentLimitConfigurationAngle.currentLimit = 50;
         // Enables the current limit
@@ -230,6 +174,7 @@ public class FXSwerveModule {
         currentLimitConfigurationAngle.triggerThresholdTime = 3;
 
         /* --- Setup Drive Current Limit --- */
+        StatorCurrentLimitConfiguration currentLimitConfigurationDrive = new StatorCurrentLimitConfiguration();
         // Sets the current limit for the drive motor
         currentLimitConfigurationDrive.currentLimit = 50;
         // Enables the current limit
@@ -244,125 +189,42 @@ public class FXSwerveModule {
         driveMotor.configStatorCurrentLimit(currentLimitConfigurationDrive, 0);
     }
 
-    /**************************/
-    /* ---------------------- */
-    /* --- Sensor Methods --- */
-    /* ---------------------- */
-    /**************************/
-
     /**
-     * Gets the angle voltages
-     * @return - The angle voltages
+     * Gets the module number of the current module
+     * @return The module number of the current module
      */
-    public double getAnalogVoltage() {
-        return analogAngleSensor.getVoltage();
-    }
-
-    public double getCANCoderDegrees() {
-        return CANAngleSensor.getAbsolutePosition();
-    }
-
-    public double getCANCoderRadians() {
-        SmartDashboard.putNumber("Absolute Position 2" + moduleNumber, CANAngleSensor.getAbsolutePosition()* (Math.PI/180));
-        return CANAngleSensor.getAbsolutePosition() * (Math.PI/180);
-    }
-
-    /**
-     * Gets the raw analog input, and divides it by the current 5V reading from
-     * the robot to normalize the sensor value in terms of (0 -> 1)
-     * @return - double sensor positional value from (0 -> 1)
-     */
-
-    public double getNormalizedAnalogVoltage() {
-        double voltage = 0;
-        if(Constants.Swerve.ANALOGENCODER) {
-             voltage = analogAngleSensor.getVoltage() / RobotController.getVoltage5V();
-        }
-        return voltage;
-    }
-
-    /**
-     * Takes the normalized sensor value, converting it to RADIANS
-     * @return - double angle value in RADIANS
-     */
-    public double getNormalizedAnalogVoltageRadians() {
-        return getNormalizedAnalogVoltage() * (2 * Math.PI);
-    }
-
-    public double getRadians() {
-        double radians;
-        if (Constants.Swerve.ANALOGENCODER) {
-            radians = getNormalizedAnalogVoltageRadians();
-        } else {
-            radians = getCANCoderRadians();
-        }
-        SmartDashboard.putNumber("Radians 2" + moduleNumber, radians);
-        return radians;
-    }
-
-    /*************************/
-    /* --------------------- */
-    /* --- Angle Methods --- */
-    /* --------------------- */
-    /*************************/
-
-    /**
-     * Adds the offset to the angle motors
-     * @return - Double value adds the angle offset
-     */
-    public double adjustAngleWithOffset() {
-        return (getRadians() + this.angleMotorOffset) % (2 * Math.PI);
-    }
-
     public int getModuleNumber() {
-        return moduleNumber;
-    }
-
-    public void setModuleState(SwerveModuleState moduleState, double maxFeetPerSec) {
-        angleMotor.set(TalonFXControlMode.Position, (moduleState.angle.getDegrees() / 360) * 4096);
-
-        double feetPerSecond = Units.metersToFeet(moduleState.speedMetersPerSecond);
-        driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / maxFeetPerSec);
+        return this.moduleNumber;
     }
 
     /**
-     * Takes the desired angle, and the current angle and computes the delta (current - target)
-     * to set the speed to the angle motors to move the module to the
-     * desired angle, without overshooting.
-     * @param targetAngle - double value in degrees
+     * Gets the rotational position of the module
+     * @return The rotational position of the angle motor in degrees
      */
-    public void setModuleAngle(double targetAngle) {
-        double delta = targetAngle - getCANCoderDegrees();
-        double angle;
-        if (Math.abs(delta) > 90.0) {
-            driveMotor.setInverted(true);
-            Rotation2d rotated = Rotation2d.fromDegrees(targetAngle).rotateBy(Rotation2d.fromDegrees(180.0));
-            angle = rotated.getDegrees();
-        } else {
-            driveMotor.setInverted(false);
-            angle = targetAngle;
-        }
-
-        System.out.println("targetAngle = " + targetAngle + "  angle = " + angle);
-
-        angleMotor.set(TalonFXControlMode.Position,  (angle/360) * 4096);
-
+    public double getAngle() {
+        // TODO: Do we need to take the angleMotorOffset in to account?
+        return canCoder.getAbsolutePosition();
     }
 
     /**
-     * Sets the speed of the module angle motor
-     * @param speed - double value to set the speed to the angle motor (-1 -> 1)
+     * Set the speed + rotation of the swerve module from a SwerveModuleState object
+     * @param desiredState - A SwerveModuleState representing the desired new state of the module
      */
-    public void setAngleMotorSpeed(double speed) {
-        angleMotor.set(ControlMode.PercentOutput, speed);
+    public void setDesiredState(SwerveModuleState desiredState) {
+        SwerveModuleState state = SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(getAngle()));
+        // Set the absolute position for the motor by converting our degrees to # of ticks for the rotational value
+        angleMotor.set(TalonFXControlMode.Position, (state.angle.getDegrees() / 360) * kEncoderTicksPerRotation);
+
+        double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
+        driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
     }
 
-    /**
-     * Gets the angle offset on the module (-2PI -> 2PI)
-     * @return - double value of the angle offset of the current module (-2PI -> 2PI)
-     */
-    public double getAngleOffset() {
-        return this.angleMotorOffset;
+    public void stopAngleMotor() {
+        angleMotor.set(TalonFXControlMode.PercentOutput, 0);
+    }
+
+    public void stopDriveMotor() {
+        driveMotor.set(TalonFXControlMode.PercentOutput, 0);
     }
 
     /**
@@ -371,65 +233,6 @@ public class FXSwerveModule {
      */
     public double getAngleMotorTemperature() {
         return angleMotor.getTemperature();
-    }
-
-    /**
-     * Gets the drive encoder position in ticks
-     * @return - The selected sensor position
-     */
-    public double getDriveEncoderValue() {
-        return driveMotor.getSelectedSensorPosition(0);
-    }
-
-    /**
-     * Sets the encoder drive position
-     * @param position - Sets the selected sensor position
-     */
-    public void setDriveEncoder(int position) {
-        driveMotor.setSelectedSensorPosition(position, 0, 0);
-    }
-
-    /**
-     * Zeros all drive encoders
-     */
-    public void zeroDriveEncoder() {
-        setDriveEncoder(0);
-    }
-
-    /**
-     * Gets the angle encoder position in ticks
-     * @return - The selected sensor position
-     */
-    public double getAngleEncoderValue() {
-        return angleMotor.getSelectedSensorPosition(0);
-    }
-
-    public void setAngleEncoder(int position) {
-        angleMotor.setSelectedSensorPosition(position, 0, 0);
-    }
-
-    /*************************/
-    /* --------------------- */
-    /* --- Drive Methods --- */
-    /* --------------------- */
-    /*************************/
-
-    /**
-     * Sets the drive to be inverted
-     * @param isDriveInverted - boolean value stating the drive inversion mode (True: inverted | False: not inverted)
-     */
-    public void setDriveInverted(boolean isDriveInverted) {
-        this.isDriveInverted = isDriveInverted;
-    }
-
-    /**
-     * Sets the speed of the drive motors
-     * @param speed - double value in percent of the motors (-1 -> 1)
-     */
-    public void setDriveSpeed(double speed) {
-        if(isDriveInverted) speed = -speed;
-
-        driveMotor.set(ControlMode.PercentOutput, speed);
     }
 
     /**
