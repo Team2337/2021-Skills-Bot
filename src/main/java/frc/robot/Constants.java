@@ -10,18 +10,34 @@ package frc.robot;
  */
 public final class Constants {
 
+    /**
+     * 17x17in robot - since the values are the same, we'll only define one value
+     * as opposed to having a length and a width. Keep in mind - this will not work
+     * in the future if the robot is not a perfect square.
+     */
+    public static final double DRIVETRAIN_LENGTH_INCHES = 17;
+
+    // Robot-specific configuration for our swerve drive algorithm
     public final class Swerve {
-        public static final double GEARRATIO = 8.31;
-        public static final double WHEELDIAMETER = 4;
-        public static final double TICKSPERREVOLUTION = GEARRATIO * 4096;
-        public static final double INCHESPERREVOLUTION = WHEELDIAMETER * Math.PI;
-        public static final double TICKSPERINCH = 1550;
-        public static final double INCHESPERDEGREE = 0.2722;
-        public static final double MINVELOCITY = 1;
-        public static final double TICKSPERDEGREE = 102;
-        public final static double SLOWROTATESPEED = 0.05;
-        public final static boolean SWERVEDEBUG = false;
-        public final static boolean ANALOGENCODER = false;
+        // The module inset from the outside edges of the robot
+        public static final double MODULE_INSET_INCHES = 3.25;
+        // /2 since we're measuring from the center - halfway
+        public static final double MODULE_DISTANCE_FROM_CENTER_INCHES = (DRIVETRAIN_LENGTH_INCHES / 2) - MODULE_INSET_INCHES;
+        // Since the robot is a square the radius is simple - be careful when adapting for other bases
+        private static final double DRIVETRAIN_RADIUS_INCHES = (DRIVETRAIN_LENGTH_INCHES / 2);
+
+        public static final double MAX_FEET_PER_SECOND = 13.5;
+        private static final double MAX_INCHES_PER_SECOND = 13.5 * 12;
+        /**
+         * To calculate max rotational speed:
+         * Max speed in feet per second * 12 = inches per second
+         * 2pi * radius of the chassis (8.5in) = inches in one revolution
+         * inches per second / inches in one revolution =  revolutions per second
+         * revolutions per second * 360 degrees = degrees per second
+         */
+        private static final double INCHES_PER_REVOLUTION = Math.PI * 2 * DRIVETRAIN_RADIUS_INCHES;
+        private static final double REVOLUTION_PER_SECOND = MAX_INCHES_PER_SECOND / INCHES_PER_REVOLUTION;
+        public static final double MAX_DEGREES_PER_SECOND = REVOLUTION_PER_SECOND * 360;
     }
 
     /*******************/
@@ -30,16 +46,19 @@ public final class Constants {
     /* --------------- */
     /*******************/
 
-    public static int MODULE0_DRIVE_MOTOR_ID = 0;
-    public static int MODULE0_ANGLE_MOTOR_ID = 4;
+    public static final int MODULE0_DRIVE_MOTOR_ID = 0;
+    public static final int MODULE0_ANGLE_MOTOR_ID = 4;
+    public static final int MODULE0_ANGLE_CANCODER_ID = 1;
 
-    public static int MODULE1_DRIVE_MOTOR_ID = 1;
-    public static int MODULE1_ANGLE_MOTOR_ID = 5;
+    public static final int MODULE1_DRIVE_MOTOR_ID = 1;
+    public static final int MODULE1_ANGLE_MOTOR_ID = 5;
+    public static final int MODULE1_ANGLE_CANCODER_ID = 2;
 
-    public static int MODULE2_DRIVE_MOTOR_ID = 14;
-    public static int MODULE2_ANGLE_MOTOR_ID = 10;
+    public static final int MODULE2_DRIVE_MOTOR_ID = 14;
+    public static final int MODULE2_ANGLE_MOTOR_ID = 10;
+    public static final int MODULE2_ANGLE_CANCODER_ID = 3;
 
-    public static int MODULE3_ANGLE_MOTOR_ID = 11;
-    public static int MODULE3_DRIVE_MOTOR_ID = 15;
-
+    public static final int MODULE3_ANGLE_MOTOR_ID = 11;
+    public static final int MODULE3_DRIVE_MOTOR_ID = 15;
+    public static final int MODULE3_ANGLE_CANCODER_ID = 4;
 }
