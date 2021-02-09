@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.swerve.SetTurnMotorTicks;
 import frc.robot.commands.swerve.SwerveDriveCommand;
 import frc.robot.subsystems.Pigeon;
 import frc.robot.subsystems.SwerveDrivetrain;
@@ -45,7 +47,13 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    final JoystickButton greenA = new JoystickButton(controller, 1);
+    final JoystickButton redB   = new JoystickButton(controller, 2);
+
+    greenA.whenPressed(new SetTurnMotorTicks(swerveDrivetrain));
+    redB.whenPressed(new SetTurnMotorTicks(swerveDrivetrain).withTimeout(1));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

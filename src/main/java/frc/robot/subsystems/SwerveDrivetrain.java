@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.*;
 
@@ -69,6 +70,8 @@ public class SwerveDrivetrain extends SubsystemBase {
    */
   public SwerveDrivetrain(Pigeon pigeon) {
     this.pigeon = pigeon;
+
+    SmartDashboard.putNumber("ticks", 0);
 
     modules = new FXSwerveModule[] {
       new FXSwerveModule(0, new TalonFX(Constants.MODULE0_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE0_ANGLE_MOTOR_ID), new CANCoder(Constants.MODULE0_ANGLE_CANCODER_ID), 0), // Module 0
@@ -149,6 +152,16 @@ public class SwerveDrivetrain extends SubsystemBase {
   public void stopAngleMotors() {
     for(FXSwerveModule module : modules) {
       module.stopAngleMotor();
+    }
+  }
+
+  /**
+   * Sets all modules turn motors to a specific set point tick
+   */
+  public void setTurnMotorTicks() {
+    double tick = SmartDashboard.getNumber("ticks", 0);
+    for(FXSwerveModule module : modules) {
+      module.angleMotor.set(ControlMode.Position, tick);
     }
   }
 
