@@ -28,11 +28,11 @@ public class SwerveDrivetrain extends SubsystemBase {
 
   /**
    * Array for swerve module objects, sorted by ID
-	 * 0 is Front Right,
-	 * 1 is Front Left,
-	 * 2 is Back Left,
-	 * 3 is Back Right
-	 */
+   * 0 is Front Right,
+   * 1 is Front Left,
+   * 2 is Back Left,
+   * 3 is Back Right
+   */
   private FXSwerveModule[] modules;
 
   /**
@@ -96,17 +96,22 @@ public class SwerveDrivetrain extends SubsystemBase {
     double vyFeetPerSecond = Constants.Swerve.MAX_FEET_PER_SECOND * -strafe;
     double omegaDegreesPerSecond = Constants.Swerve.MAX_DEGREES_PER_SECOND * -rotation;
 
+    SmartDashboard.putNumber("Max Degrees Per Second", Constants.Swerve.MAX_DEGREES_PER_SECOND);
+    SmartDashboard.putNumber("OmegaDegrees", omegaDegreesPerSecond);
+    
     // Kinematics expects meters/sec + radians
     double vxMetersPerSecond = Units.feetToMeters(vxFeetPerSeccond);
     double vyMetersPerSecond = Units.feetToMeters(vyFeetPerSecond);
     double omegaRadiansPerSecond = Units.degreesToRadians(omegaDegreesPerSecond);
-
+    
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
       vxMetersPerSecond,
       vyMetersPerSecond,
       omegaRadiansPerSecond
     );
-
+      
+    SmartDashboard.putString("ChassisSpeeds", chassisSpeeds.toString());
+    
     if (isFieldOriented) {
       // If the robot is field-oriented, use a field-oriented field speed instead
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(

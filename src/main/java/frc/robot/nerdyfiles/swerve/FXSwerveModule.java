@@ -6,6 +6,7 @@ import com.ctre.phoenix.sensors.*;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants;
 
@@ -16,7 +17,7 @@ import frc.robot.Constants;
  * This Object uses the TalonFX's for both the angle motor and drive motor
  * Both will need to be passed in when the object is created
  * @see SwerveDriveCommand
- * @author Bryce G.
+ * @author Madison J. Zayd A.
  * @category SWERVE
  */
 public class FXSwerveModule {
@@ -54,10 +55,10 @@ public class FXSwerveModule {
      */
     private static final double kDriveF = 0.2;
 
-    private static final double kAngleP = 0.63;
-    private static final double kAngleI = 0.02;
-    private static final double kAngleD = 0.02;
-    private static final double kAngleF = 0.02;
+    private static final double kAngleP = 1.0;
+    private static final double kAngleI = 0.0;
+    private static final double kAngleD = 0.0;
+    private static final double kAngleF = 0.00;
     private static final double kAngleAllowableClosedloopError = 5;
     private static final double kAngleOpenloopRamp = 0.15;
 
@@ -113,15 +114,22 @@ public class FXSwerveModule {
         /****************************************/
 
         CANCoderConfiguration canCoderConfiguration = new CANCoderConfiguration();
+        canCoderConfiguration.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
         canCoder.configAllSettings(canCoderConfiguration);
+
+        // [] = inclusive
+        // () = exclusive
+        // [-0.5, +0.5)
+        // [-0.5, 0.499999]
 
         angleTalonFXConfiguration.slot0.kP = kAngleP;
         angleTalonFXConfiguration.slot0.kI = kAngleI;
         angleTalonFXConfiguration.slot0.kD = kAngleD;
         angleTalonFXConfiguration.slot0.kF = kAngleF;
         angleTalonFXConfiguration.slot0.allowableClosedloopError = kAngleAllowableClosedloopError;
-        angleTalonFXConfiguration.feedbackNotContinuous = true;
+        angleTalonFXConfiguration.feedbackNotContinuous = false;
         angleTalonFXConfiguration.openloopRamp = kAngleOpenloopRamp;
+        angleTalonFXConfiguration.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
 
         // Use the CANCoder as the remote sensor for the primary TalonFX PID
         angleTalonFXConfiguration.remoteFilter0.remoteSensorDeviceID = canCoder.getDeviceID();
@@ -211,9 +219,22 @@ public class FXSwerveModule {
      * @param desiredState - A SwerveModuleState representing the desired new state of the module
      */
     public void setDesiredState(SwerveModuleState desiredState) {
+        SmartDashboard.putString("Desired States/" + moduleNumber, desiredState.toString());
+        SmartDashboard.putNumber("Module Angle/" + moduleNumber, getAngle());
         SwerveModuleState state = SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(getAngle()));
+        SmartDashboard.putString("Desired State (Optimized)/" + moduleNumber, state.toString());
+
+        double varzor = (state.angle.getDegrees() / 360) * kEncoderTicksPerRotation;
+        if (varzor == 2048) {
+            varzor = 2047;
+        }
+
         // Set the absolute position for the motor by converting our degrees to # of ticks for the rotational value
-        angleMotor.set(TalonFXControlMode.Position, (state.angle.getDegrees() / 360) * kEncoderTicksPerRotation);
+        angleMotor.set(TalonFXControlMode.Position, varzor);
+
+        // getDegrees() -> [-180 - 180] / 360 -> [-0.5 - 0.5] -> * kEncoderTicksPerRotation -> -2048 - 2048
+        SmartDashboard.putNumber("Encoder Ticks", varzor);
+        SmartDashboard.putNumber("Angle Motor Position", angleMotor.getSelectedSensorPosition());
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
         driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
@@ -242,4 +263,5 @@ public class FXSwerveModule {
     public double getDriveMotorTemperature() {
         return driveMotor.getTemperature();
     }
+
 }
