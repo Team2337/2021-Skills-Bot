@@ -87,6 +87,12 @@ public class SwerveDrivetrain extends SubsystemBase {
    * @param rotation - double joystick value from the X axis on the right hand stick
    */
   public void calculateJoystickInput(double forward, double strafe, double rotation) {
+    // Don't reset our swerve module angle if we go from some value to 0
+    boolean shouldUpdateAngle = true;
+    if (forward == 0 && strafe == 0 && rotation == 0) {
+      shouldUpdateAngle = false;
+    }
+
     double vxFeetPerSeccond = Constants.Swerve.MAX_FEET_PER_SECOND * forward;
     /**
      * For our joystick X axes - kinematics expects left to be a positive value,
@@ -98,20 +104,20 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     SmartDashboard.putNumber("Max Degrees Per Second", Constants.Swerve.MAX_DEGREES_PER_SECOND);
     SmartDashboard.putNumber("OmegaDegrees", omegaDegreesPerSecond);
-    
+
     // Kinematics expects meters/sec + radians
     double vxMetersPerSecond = Units.feetToMeters(vxFeetPerSeccond);
     double vyMetersPerSecond = Units.feetToMeters(vyFeetPerSecond);
     double omegaRadiansPerSecond = Units.degreesToRadians(omegaDegreesPerSecond);
-    
+
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
       vxMetersPerSecond,
       vyMetersPerSecond,
       omegaRadiansPerSecond
     );
-      
+
     SmartDashboard.putString("ChassisSpeeds", chassisSpeeds.toString());
-    
+
     if (isFieldOriented) {
       // If the robot is field-oriented, use a field-oriented field speed instead
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -126,7 +132,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     for (int i = 0; i < moduleStates.length; i++) {
       FXSwerveModule module = modules[i];
       SwerveModuleState moduleState = moduleStates[i];
-      module.setDesiredState(moduleState);
+      module.setDesiredState(moduleState, shouldUpdateAngle);
     }
   }
 

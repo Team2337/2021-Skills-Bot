@@ -117,11 +117,6 @@ public class FXSwerveModule {
         canCoderConfiguration.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
         canCoder.configAllSettings(canCoderConfiguration);
 
-        // [] = inclusive
-        // () = exclusive
-        // [-0.5, +0.5)
-        // [-0.5, 0.499999]
-
         angleTalonFXConfiguration.slot0.kP = kAngleP;
         angleTalonFXConfiguration.slot0.kI = kAngleI;
         angleTalonFXConfiguration.slot0.kD = kAngleD;
@@ -129,7 +124,6 @@ public class FXSwerveModule {
         angleTalonFXConfiguration.slot0.allowableClosedloopError = kAngleAllowableClosedloopError;
         angleTalonFXConfiguration.feedbackNotContinuous = false;
         angleTalonFXConfiguration.openloopRamp = kAngleOpenloopRamp;
-        angleTalonFXConfiguration.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
 
         // Use the CANCoder as the remote sensor for the primary TalonFX PID
         angleTalonFXConfiguration.remoteFilter0.remoteSensorDeviceID = canCoder.getDeviceID();
@@ -218,23 +212,21 @@ public class FXSwerveModule {
      * Set the speed + rotation of the swerve module from a SwerveModuleState object
      * @param desiredState - A SwerveModuleState representing the desired new state of the module
      */
-    public void setDesiredState(SwerveModuleState desiredState) {
-        SmartDashboard.putString("Desired States/" + moduleNumber, desiredState.toString());
-        SmartDashboard.putNumber("Module Angle/" + moduleNumber, getAngle());
-        SwerveModuleState state = SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(getAngle()));
-        SmartDashboard.putString("Desired State (Optimized)/" + moduleNumber, state.toString());
+    public void setDesiredState(SwerveModuleState desiredState, boolean shouldUpdateAngle) {
+        Rotation2d currentRotation = Rotation2d.fromDegrees(getAngle());
+        SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
 
-        double varzor = (state.angle.getDegrees() / 360) * kEncoderTicksPerRotation;
-        if (varzor == 2048) {
-            varzor = 2047;
+        if (shouldUpdateAngle) {
+            // Find the rotational difference between the current state and the desired state
+            // Will be a positive value for clockwise rotations, neg for ccw rotations
+            Rotation2d rotationDelta = state.angle.minus(currentRotation);
+
+            double deltaTicks = (rotationDelta.getDegrees() / 360) * kEncoderTicksPerRotation;
+            double currentTicks = canCoder.getPosition() / canCoder.configGetFeedbackCoefficient();
+            double desiredTicks = currentTicks + deltaTicks;
+            // Set the absolute position for the motor by converting our degrees to # of ticks for the rotational value
+            angleMotor.set(TalonFXControlMode.Position, desiredTicks);
         }
-
-        // Set the absolute position for the motor by converting our degrees to # of ticks for the rotational value
-        angleMotor.set(TalonFXControlMode.Position, varzor);
-
-        // getDegrees() -> [-180 - 180] / 360 -> [-0.5 - 0.5] -> * kEncoderTicksPerRotation -> -2048 - 2048
-        SmartDashboard.putNumber("Encoder Ticks", varzor);
-        SmartDashboard.putNumber("Angle Motor Position", angleMotor.getSelectedSensorPosition());
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
         driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
