@@ -29,11 +29,11 @@ public class SwerveDrivetrain extends SubsystemBase {
 
   /**
    * Array for swerve module objects, sorted by ID
-	 * 0 is Front Right,
-	 * 1 is Front Left,
-	 * 2 is Back Left,
-	 * 3 is Back Right
-	 */
+   * 0 is Front Right,
+   * 1 is Front Left,
+   * 2 is Back Left,
+   * 3 is Back Right
+   */
   private FXSwerveModule[] modules;
 
   /**
@@ -90,6 +90,14 @@ public class SwerveDrivetrain extends SubsystemBase {
    * @param rotation - double joystick value from the X axis on the right hand stick
    */
   public void calculateJoystickInput(double forward, double strafe, double rotation) {
+    // By default, our angle motors will reset back to 0
+    // If we let go of our joysticks, we don't want our angle motors to snap to a position
+    // We want to stay still, so the robot does not adjust once we've stopped moving
+    boolean shouldUpdateAngle = true;
+    if (forward == 0 && strafe == 0 && rotation == 0) {
+      shouldUpdateAngle = false;
+    }
+
     double vxFeetPerSeccond = Constants.Swerve.MAX_FEET_PER_SECOND * forward;
     /**
      * For our joystick X axes - kinematics expects left to be a positive value,
@@ -124,7 +132,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     for (int i = 0; i < moduleStates.length; i++) {
       FXSwerveModule module = modules[i];
       SwerveModuleState moduleState = moduleStates[i];
-      module.setDesiredState(moduleState);
+      module.setDesiredState(moduleState, shouldUpdateAngle);
     }
   }
 

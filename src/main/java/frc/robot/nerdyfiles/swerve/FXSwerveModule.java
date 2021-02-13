@@ -16,7 +16,7 @@ import frc.robot.Constants;
  * This Object uses the TalonFX's for both the angle motor and drive motor
  * Both will need to be passed in when the object is created
  * @see SwerveDriveCommand
- * @author Bryce G.
+ * @author Madison J. Zayd A.
  * @category SWERVE
  */
 public class FXSwerveModule {
@@ -54,10 +54,10 @@ public class FXSwerveModule {
      */
     private static final double kDriveF = 0.2;
 
-    private static final double kAngleP = 0.63;
-    private static final double kAngleI = 0.02;
-    private static final double kAngleD = 0.02;
-    private static final double kAngleF = 0.02;
+    private static final double kAngleP = 1.0;
+    private static final double kAngleI = 0.0;
+    private static final double kAngleD = 0.0;
+    private static final double kAngleF = 0.00;
     private static final double kAngleAllowableClosedloopError = 5;
     private static final double kAngleOpenloopRamp = 0.15;
 
@@ -120,7 +120,6 @@ public class FXSwerveModule {
         angleTalonFXConfiguration.slot0.kD = kAngleD;
         angleTalonFXConfiguration.slot0.kF = kAngleF;
         angleTalonFXConfiguration.slot0.allowableClosedloopError = kAngleAllowableClosedloopError;
-        angleTalonFXConfiguration.feedbackNotContinuous = true;
         angleTalonFXConfiguration.openloopRamp = kAngleOpenloopRamp;
 
         // Use the CANCoder as the remote sensor for the primary TalonFX PID
@@ -210,10 +209,21 @@ public class FXSwerveModule {
      * Set the speed + rotation of the swerve module from a SwerveModuleState object
      * @param desiredState - A SwerveModuleState representing the desired new state of the module
      */
-    public void setDesiredState(SwerveModuleState desiredState) {
-        SwerveModuleState state = SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(getAngle()));
-        // Set the absolute position for the motor by converting our degrees to # of ticks for the rotational value
-        angleMotor.set(TalonFXControlMode.Position, (state.angle.getDegrees() / 360) * kEncoderTicksPerRotation);
+    public void setDesiredState(SwerveModuleState desiredState, boolean shouldUpdateAngle) {
+        Rotation2d currentRotation = Rotation2d.fromDegrees(getAngle());
+        SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
+
+        if (shouldUpdateAngle) {
+            // Find the rotational difference between the current state and the desired state
+            // Will be a positive value for clockwise rotations, neg for ccw rotations
+            Rotation2d rotationDelta = state.angle.minus(currentRotation);
+
+            double deltaTicks = (rotationDelta.getDegrees() / 360) * kEncoderTicksPerRotation;
+            double currentTicks = canCoder.getPosition() / canCoder.configGetFeedbackCoefficient();
+            double desiredTicks = currentTicks + deltaTicks;
+            // Set the absolute position for the motor by converting our degrees to # of ticks for the rotational value
+            angleMotor.set(TalonFXControlMode.Position, desiredTicks);
+        }
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
         driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
@@ -242,4 +252,5 @@ public class FXSwerveModule {
     public double getDriveMotorTemperature() {
         return driveMotor.getTemperature();
     }
+
 }
