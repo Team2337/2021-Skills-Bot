@@ -87,7 +87,9 @@ public class SwerveDrivetrain extends SubsystemBase {
    * @param rotation - double joystick value from the X axis on the right hand stick
    */
   public void calculateJoystickInput(double forward, double strafe, double rotation) {
-    // Don't reset our swerve module angle if we go from some value to 0
+    // By default, our angle motors will reset back to 0
+    // If we let go of our joysticks, we don't want our angle motors to snap to a position
+    // We want to stay still, so the robot does not adjust once we've stopped moving
     boolean shouldUpdateAngle = true;
     if (forward == 0 && strafe == 0 && rotation == 0) {
       shouldUpdateAngle = false;
@@ -102,9 +104,6 @@ public class SwerveDrivetrain extends SubsystemBase {
     double vyFeetPerSecond = Constants.Swerve.MAX_FEET_PER_SECOND * -strafe;
     double omegaDegreesPerSecond = Constants.Swerve.MAX_DEGREES_PER_SECOND * -rotation;
 
-    SmartDashboard.putNumber("Max Degrees Per Second", Constants.Swerve.MAX_DEGREES_PER_SECOND);
-    SmartDashboard.putNumber("OmegaDegrees", omegaDegreesPerSecond);
-
     // Kinematics expects meters/sec + radians
     double vxMetersPerSecond = Units.feetToMeters(vxFeetPerSeccond);
     double vyMetersPerSecond = Units.feetToMeters(vyFeetPerSecond);
@@ -115,8 +114,6 @@ public class SwerveDrivetrain extends SubsystemBase {
       vyMetersPerSecond,
       omegaRadiansPerSecond
     );
-
-    SmartDashboard.putString("ChassisSpeeds", chassisSpeeds.toString());
 
     if (isFieldOriented) {
       // If the robot is field-oriented, use a field-oriented field speed instead

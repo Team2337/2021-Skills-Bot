@@ -6,7 +6,6 @@ import com.ctre.phoenix.sensors.*;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants;
 
@@ -114,7 +113,6 @@ public class FXSwerveModule {
         /****************************************/
 
         CANCoderConfiguration canCoderConfiguration = new CANCoderConfiguration();
-        canCoderConfiguration.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
         canCoder.configAllSettings(canCoderConfiguration);
 
         angleTalonFXConfiguration.slot0.kP = kAngleP;
@@ -122,7 +120,6 @@ public class FXSwerveModule {
         angleTalonFXConfiguration.slot0.kD = kAngleD;
         angleTalonFXConfiguration.slot0.kF = kAngleF;
         angleTalonFXConfiguration.slot0.allowableClosedloopError = kAngleAllowableClosedloopError;
-        angleTalonFXConfiguration.feedbackNotContinuous = false;
         angleTalonFXConfiguration.openloopRamp = kAngleOpenloopRamp;
 
         // Use the CANCoder as the remote sensor for the primary TalonFX PID
