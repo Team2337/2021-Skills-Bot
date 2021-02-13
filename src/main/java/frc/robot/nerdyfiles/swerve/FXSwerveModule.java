@@ -16,7 +16,7 @@ import frc.robot.Constants;
  * This Object uses the TalonFX's for both the angle motor and drive motor
  * Both will need to be passed in when the object is created
  * @see SwerveDriveCommand
- * @author Madison J. Zayd A.
+ * @author Madison J. and Zayd A.
  * @category SWERVE
  */
 public class FXSwerveModule {
@@ -71,6 +71,12 @@ public class FXSwerveModule {
     public CANCoder canCoder;
 
     /**
+     * 4in wheels on the MK3 Swerve modules
+     * https://www.swervedrivespecialties.com/products/mk3-swerve-module
+     */
+    private static final double kWheelDiameterInches = 4;
+
+    /**
      * The number of ticks in a single revolution for the encoder being used
      * https://docs.ctre-phoenix.com/en/latest/ch14_MCSensor.html#sensor-resolution
      */
@@ -95,7 +101,7 @@ public class FXSwerveModule {
         this.angleMotor = angleMotor;
         this.angleMotorOffset = angleMotorOffset;
         this.canCoder = canCoder;
-
+        
         TalonFXConfiguration angleTalonFXConfiguration = new TalonFXConfiguration();
         TalonFXConfiguration driveTalonFXConfiguration = new TalonFXConfiguration();
 
@@ -227,6 +233,20 @@ public class FXSwerveModule {
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
         driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
+    }
+
+    public SwerveModuleState getState() {
+        // Ticks / 100ms
+        double ticksPer100ms = driveMotor.getSelectedSensorPosition();
+        // Ticks/rotation -> Distance/rotation by using our circumference of our wheel
+        double ticksToInches = kEncoderTicksPerRotation * (2 * Math.PI * (kWheelDiameterInches / 2));
+        double inchesPer100ms = ticksPer100ms * ticksToInches;
+        // 12 inches per foot
+        double feetPer100ms = inchesPer100ms / 12;
+        // 10 100ms per second
+        double feetPerSecond = feetPer100ms * 10;
+        double metersPerSecond = Units.feetToMeters(feetPerSecond);
+        return new SwerveModuleState(metersPerSecond, Rotation2d.fromDegrees(getAngle()));
     }
 
     public void stopAngleMotor() {

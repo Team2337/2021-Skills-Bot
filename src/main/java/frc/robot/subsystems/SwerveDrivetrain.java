@@ -4,10 +4,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.*;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
@@ -20,7 +22,7 @@ import frc.robot.nerdyfiles.swerve.*;
  * and the calculations from the joystick inputs is handled.
  * Field orientation is set here as well
  *
- * @author Madison J., and Zayd A.
+ * @author Madison J. and Zayd A.
  * @category SWERVE
  */
 public class SwerveDrivetrain extends SubsystemBase {
@@ -38,31 +40,35 @@ public class SwerveDrivetrain extends SubsystemBase {
 
   /**
    * Should be in the same order as the swerve modules (see above)
-   * Positive x values represent moving toward the front of the robot whereas
+   * Positive x values represent moving toward the front of the robot
    * positive y values represent moving toward the left of the robot
    * https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html#constructing-the-kinematics-object
    */
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
     new Translation2d(
-      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_FROM_CENTER_INCHES),
-      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_FROM_CENTER_INCHES)
+      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES)
     ),
     new Translation2d(
-      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_FROM_CENTER_INCHES),
-      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_FROM_CENTER_INCHES)
+      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES)
     ),
     new Translation2d(
-      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_FROM_CENTER_INCHES),
-      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_FROM_CENTER_INCHES)
+      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES)
     ),
     new Translation2d(
-      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_FROM_CENTER_INCHES),
-      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_FROM_CENTER_INCHES)
+      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES)
     )
   );
 
-  private boolean isFieldOriented = true;
+  private SwerveDriveOdometry odometry;
 
+  public Pose2d getPose() {
+    // TODO: Write this method
+    return new Pose2d();
+  }
   /**
    * Subsystem where swerve modules are configured,
    * and the calculations from the joystick inputs is handled.
@@ -70,6 +76,8 @@ public class SwerveDrivetrain extends SubsystemBase {
    */
   public SwerveDrivetrain(Pigeon pigeon) {
     this.pigeon = pigeon;
+
+    odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(pigeon.getYaw()));
 
     SmartDashboard.putNumber("ticks", 0);
 
@@ -89,7 +97,7 @@ public class SwerveDrivetrain extends SubsystemBase {
    * @param strafe - double joystick value from the X axis on the left hand stick
    * @param rotation - double joystick value from the X axis on the right hand stick
    */
-  public void calculateJoystickInput(double forward, double strafe, double rotation) {
+  public void calculateJoystickInput(double forward, double strafe, double rotation, boolean isFieldOriented) {
     // By default, our angle motors will reset back to 0
     // If we let go of our joysticks, we don't want our angle motors to snap to a position
     // We want to stay still, so the robot does not adjust once we've stopped moving
@@ -137,15 +145,6 @@ public class SwerveDrivetrain extends SubsystemBase {
   }
 
   /**
-   * Sets the field orientation mode of the robot
-   * (True: robot is field oriented | False: robot is robot oriented)
-   * @param isFieldOriented - boolean value to set fieldOrientation mode
-   */
-  public void setFieldOriented(boolean isFieldOriented) {
-    this.isFieldOriented = isFieldOriented;
-  }
-
-  /**
    * Stops all of the drive motors on each module
    */
   public void stopDriveMotors() {
@@ -175,6 +174,8 @@ public class SwerveDrivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+    odometry.update(Rotation2d.fromDegrees(pigeon.getYaw()), modules[0].getState(), modules[1].getState(), modules[2].getState(), modules[3].getState());
+
     for(FXSwerveModule module : modules) {
       SmartDashboard.putNumber("Module Angle (Degrees)/" + module.getModuleNumber(), module.getAngle());
       SmartDashboard.putNumber("Angle Motor Temperature/" + module.getModuleNumber(), module.getAngleMotorTemperature());

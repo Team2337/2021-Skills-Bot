@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
  */
 public class SwerveDriveCommand extends CommandBase {
 
-  private boolean swerveDebug = false;
+  private boolean swerveDebug = true;
 
   private final SwerveDrivetrain drivetrain;
   private final XboxController controller;
@@ -40,10 +40,13 @@ public class SwerveDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-    /* --- Joystick Values --- */
+    // We are inverting this because Xbox controllers return negative values when we push forward.
     double forward = -controller.getY(Hand.kLeft);
-    double strafe = controller.getX(Hand.kLeft);
+    // We are inverting this because we want a positive value when we pull to the left.
+    // Xbox controllers return positive values when you pull to the right by default.
+    double strafe = -controller.getX(Hand.kLeft);
     double rotation = -controller.getX(Hand.kRight);
+    boolean isFieldOriented = !controller.getBumper(Hand.kLeft);
 
     // Set Deadband
     forward = Utilities.deadband(forward, 0.1);
@@ -51,7 +54,7 @@ public class SwerveDriveCommand extends CommandBase {
     rotation = Utilities.deadband(rotation, 0.1);
 
     // Pass on joystick values to be calculated into angles and speeds
-    drivetrain.calculateJoystickInput(forward, strafe, rotation);
+    drivetrain.calculateJoystickInput(forward, strafe, rotation, isFieldOriented);
 
     if(swerveDebug) {
       SmartDashboard.putNumber("Forward", forward);
