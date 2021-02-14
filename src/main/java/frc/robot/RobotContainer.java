@@ -48,6 +48,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    // Driver Left Bumper is used for field-oriented drive - held for true, released for false
+
     final JoystickButton greenA = new JoystickButton(controller, 1);
     final JoystickButton redB   = new JoystickButton(controller, 2);
 
