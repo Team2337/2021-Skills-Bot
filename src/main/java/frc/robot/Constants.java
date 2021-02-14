@@ -15,20 +15,28 @@ public final class Constants {
      * as opposed to having a length and a width. Keep in mind - this will not work
      * in the future if the robot is not a perfect square.
      */
-    public static final double DRIVETRAIN_LENGTH_INCHES = 17;
+    private static final double DRIVETRAIN_WIDTH_INCHES = 17;
+    private static final double DRIVETRAIN_LENGTH_INCHES = 17;
+
+    // The module inset from the outside edges of the robot
+    private static final double MODULE_INSET_WIDTH_INCHES = 3.25;
+    private static final double MODULE_INSET_HEIGHT_INCHES = 3.25;
+
+    private static final double TRACK_WIDTH = DRIVETRAIN_WIDTH_INCHES - (MODULE_INSET_WIDTH_INCHES * 2);
+    private static final double WHEEL_BASE = DRIVETRAIN_LENGTH_INCHES - (MODULE_INSET_HEIGHT_INCHES * 2);
 
     // Robot-specific configuration for our swerve drive algorithm
-    public final class Swerve {
-        // The module inset from the outside edges of the robot
-        public static final double MODULE_INSET_INCHES = 3.25;
+    public static final class Swerve {
         // /2 since we're measuring from the center - halfway
-        public static final double MODULE_DISTANCE_FROM_CENTER_INCHES = (DRIVETRAIN_LENGTH_INCHES / 2) - MODULE_INSET_INCHES;
-        // Since the robot is a square the radius is simple - be careful when adapting for other bases
-        private static final double DRIVETRAIN_RADIUS_INCHES = (DRIVETRAIN_LENGTH_INCHES / 2);
+        public static final double MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES = TRACK_WIDTH / 2;
+        public static final double MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES = WHEEL_BASE / 2;
+
+        // Radius to the wheel modules can be thought of as a triangle - width and length are the two sides
+        private static final double DRIVETRAIN_RADIUS_INCHES = Math.hypot(MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES, MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES);
 
         /**
-         * The max unadjusted speed in feet/sec for a Falcon 500 motor with the
-         * MK3 Swerve Drive Specialties module is 13.6 feet/second
+         * The max unadjusted speed in feet/sec for a Falcon 500 motor with the MK3
+         * Swerve Drive Specialties module is 13.6 feet/second
          * https://www.swervedrivespecialties.com/products/mk3-swerve-module
          */
         public static final double MAX_FEET_PER_SECOND = 13.6;
