@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.auto.LPathCommand;
 import frc.robot.commands.swerve.SetTurnMotorTicks;
 import frc.robot.commands.swerve.SwerveDriveCommand;
 import frc.robot.subsystems.Pigeon;
@@ -24,11 +25,11 @@ public class RobotContainer {
 
   private final XboxController controller = new XboxController(0);
 
-  private final Command autonomousCommand = new WaitCommand(15).withTimeout(15);
-
   /* --- Subsystems --- */
   private Pigeon pigeon = new Pigeon();
   private SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(pigeon);
+
+  private final Command autonomousCommand = new LPathCommand(swerveDrivetrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

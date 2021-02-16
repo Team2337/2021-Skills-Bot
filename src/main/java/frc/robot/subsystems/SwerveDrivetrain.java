@@ -65,10 +65,6 @@ public class SwerveDrivetrain extends SubsystemBase {
 
   private SwerveDriveOdometry odometry;
 
-  public Pose2d getPose() {
-    // TODO: Write this method
-    return new Pose2d();
-  }
   /**
    * Subsystem where swerve modules are configured,
    * and the calculations from the joystick inputs is handled.
@@ -89,13 +85,26 @@ public class SwerveDrivetrain extends SubsystemBase {
     };
   }
 
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
+  }
+
+  public SwerveDriveKinematics getKinematics() {
+    return kinematics;
+  }
+
   /**
-   * Calculates the desired angle of each module,
-   * and the speed and direction of the drive motors based on
+   * Calculates 
+   * he desired angle of each  
+   * and the speed  
+   * nd direction o   the drive motors based on
    * joystick inputs
-   * @param forward - double joystick value from the Y axis on the left hand stick
-   * @param strafe - double joystick value from the X axis on the left hand stick
-   * @param rotation - double joystick value from the X axis on the right hand stick
+   * @
+   *                 aram forward - double joy   tick value from the Y axis on the left hand stick
+   * 
+   *                 param strafe - double joystick value from the X axis on the left hand stick
+   * @pa
+   *                 am rotation - double joystick value from the X axis on the right hand stick
    */
   public void calculateJoystickInput(double forward, double strafe, double rotation, boolean isFieldOriented) {
     // By default, our angle motors will reset back to 0
@@ -137,9 +146,17 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
-    for (int i = 0; i < moduleStates.length; i++) {
+    setModuleStates(moduleStates, shouldUpdateAngle);
+  }
+
+  public void setModuleStates(SwerveModuleState[] states) {
+    setModuleStates(states, true);
+  }
+
+  public void setModuleStates(SwerveModuleState[] states, boolean shouldUpdateAngle) {
+    for (int i = 0; i < states.length; i++) {
       FXSwerveModule module = modules[i];
-      SwerveModuleState moduleState = moduleStates[i];
+      SwerveModuleState moduleState = states[i];
       module.setDesiredState(moduleState, shouldUpdateAngle);
     }
   }
