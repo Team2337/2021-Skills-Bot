@@ -14,8 +14,8 @@ public class TrajectoryCommand extends SwerveControllerCommand {
   public TrajectoryCommand(Trajectory trajectory, SwerveDrivetrain drivetrain) {
     // TODO: We know our velocity is correct, we need to figure out if our acceleration is correct
     super(
-    trajectory,
-    drivetrain::getPose,
+      trajectory,
+      drivetrain::getPose,
       drivetrain.getKinematics(),
       new PIDController(1, 0, 0),
       new PIDController(1, 0, 0),
