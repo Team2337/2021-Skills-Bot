@@ -53,6 +53,14 @@ public final class Constants {
         public static final double MAX_DEGREES_PER_SECOND = REVOLUTION_PER_SECOND * 360;
     }
 
+    // Autons to return when calling a particular method in subsystems/PixyCam.java
+    public static enum PixyAutons {
+        RedA,
+        RedB,
+        BlueA,
+        BlueB
+    }
+
     /*******************/
     /* --------------- */
     /* --- CAN IDs --- */
