@@ -135,7 +135,7 @@ public class PixyCam extends SubsystemBase {
 	}
 
 	/**
-	 * @return Returns the x-coordinate of the largest target.
+	 * @return Returns the x-coordinate of the largest target. 0-315
 	 */
 	public int getLargestTargetX(){
 		Block largestTarget = getLargestTarget();
@@ -143,7 +143,7 @@ public class PixyCam extends SubsystemBase {
 		return largestTarget.getX();
 	}
 	/**
-	 * @return Returns the y-coordinate of the largest target.
+	 * @return Returns the y-coordinate of the largest target. 0-207
 	 */
 	public int getLargestTargetY(){
 		Block largestTarget = getLargestTarget();
@@ -178,8 +178,17 @@ public class PixyCam extends SubsystemBase {
 		return largestTarget.getHeight();
 	}
 
+	/**
+	 * Detects which path should be used
+	 * @return An enum representing the path to take. Returns null if there was an error.
+	 */
 	public PixyAutons getAuton(){
 		updateTargets();
-		return null;
+		int x = getLargestTargetX();
+		if(x >= 0 && x < 79)          return PixyAutons.RedA;
+		else if(x >= 79 && x < 158)   return PixyAutons.RedB;
+		else if(x >= 158 && x < 237)  return PixyAutons.BlueA;
+		else if(x >= 237 && x <= 315) return PixyAutons.BlueB;
+		else return null;
 	}
 }
