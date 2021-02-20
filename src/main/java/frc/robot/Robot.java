@@ -9,9 +9,14 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import com.ctre.phoenix.Logger;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.nerdyfiles.swerve.FXSwerveModule;
+import frc.robot.subsystems.SwerveDrivetrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,6 +27,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
 
   public static boolean isComp = false;
+
+  public boolean Logger;
 
   private Command autonomousCommand;
 
@@ -83,11 +90,16 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    smartDashboardPrints();
+
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    Logger = false;
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -116,6 +128,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    Logger = true;
   }
 
   /** This function is called periodically during operator control. */
@@ -131,4 +144,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  public void smartDashboardPrints() {
+    SmartDashboard.putBoolean("Logger", Logger);
+  }
 }
+
+

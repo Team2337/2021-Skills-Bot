@@ -81,6 +81,7 @@ public class FXSwerveModule {
      * https://docs.ctre-phoenix.com/en/latest/ch14_MCSensor.html#sensor-resolution
      */
     private static final double kEncoderTicksPerRotation = 4096;
+    private static final double kEncoderTicksPerDriveRotation = 2048;
 
     /**
      * Swerve Module Object used to run the calculations for the swerve drive
@@ -215,14 +216,14 @@ public class FXSwerveModule {
      * Get the velocity of the drive motor for the module.
      * @return The velocity for the drive motor of the module in feet per second.
      */
-    private double getVelocity() {
+    public double getVelocity() {
         // Ticks per 100ms
         double velocityTicks = driveMotor.getSelectedSensorVelocity();
 
         // Inches traveled per tick can be found by using our circumference (2pi * r) of our wheel
-        double inchesPerTick = (2 * Math.PI * (kWheelDiameterInches / 2)) / kEncoderTicksPerRotation;
+       // double inchesPerTick = (2 * Math.PI * (kWheelDiameterInches / 2)) / kEncoderTicksPerDriveRotation;
         // Inches per 100ms
-        double velocityInches = velocityTicks * inchesPerTick;
+        double velocityInches = velocityTicks * Constants.Swerve.INCHES_PER_TICK;
 
         // Inches -> Feet (12 inches per foot)
         double velocityFeet = velocityInches / 12;
@@ -280,6 +281,14 @@ public class FXSwerveModule {
      */
     public double getDriveMotorTemperature() {
         return driveMotor.getTemperature();
+    }
+
+    public void resetDriveMotorPosition() {
+        driveMotor.setSelectedSensorPosition(0);
+    }
+    
+    public double getDriveMotorPosition() {
+        return driveMotor.getSelectedSensorPosition();
     }
 
 }

@@ -152,6 +152,10 @@ public class SwerveDrivetrain extends SubsystemBase {
     setModuleStates(states, true);
   }
 
+  public void resetModuleStates() {
+    odometry.resetPosition(new Pose2d(0,0,Rotation2d.fromDegrees(0)), Rotation2d.fromDegrees(0));
+  }
+
   public void setModuleStates(SwerveModuleState[] states, boolean shouldUpdateAngle) {
     for (int i = 0; i < states.length; i++) {
       FXSwerveModule module = modules[i];
@@ -188,6 +192,12 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
   }
 
+  public void resetDriveEncoders() {
+    for(FXSwerveModule module : modules) {
+      module.resetDriveMotorPosition();
+    }
+  }
+
   @Override
   public void periodic() {
     odometry.update(Rotation2d.fromDegrees(pigeon.getYaw()), modules[0].getState(), modules[1].getState(), modules[2].getState(), modules[3].getState());
@@ -196,6 +206,13 @@ public class SwerveDrivetrain extends SubsystemBase {
       SmartDashboard.putNumber("Module Angle (Degrees)/" + module.getModuleNumber(), module.getAngle());
       SmartDashboard.putNumber("Angle Motor Temperature/" + module.getModuleNumber(), module.getAngleMotorTemperature());
       SmartDashboard.putNumber("Drive Motor Temperature/" + module.getModuleNumber(), module.getDriveMotorTemperature());
+
+      SmartDashboard.putNumber("Inches Traveled/" + module.getModuleNumber(), Constants.Swerve.INCHES_PER_TICK * module.getDriveMotorPosition());
+
+      SmartDashboard.putNumber("Feet Traveled/" + module.getModuleNumber(), Constants.Swerve.FEET_PER_TICK * module.getDriveMotorPosition());
+
+      SmartDashboard.putNumber("Drive Encoders/" + module.getModuleNumber(), module.getDriveMotorPosition());
+
     }
   }
 

@@ -11,17 +11,17 @@ import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrivetrain;
 
-public class LPathCommand extends TrajectoryCommand {
+public class LPathTrajectory extends TrajectoryCommand {
 
-  public LPathCommand(SwerveDrivetrain drivetrain) {
+  public LPathTrajectory(SwerveDrivetrain drivetrain) {
     // TODO: We know our velocity is correct, we need to figure out if our acceleration is correct
     super(
       TrajectoryGenerator.generateTrajectory(
         new Pose2d(0, 0, new Rotation2d(0)),
         List.of(
-          new Translation2d(Units.feetToMeters(20), 0)
+          new Translation2d(Units.feetToMeters(10), 0)
         ),
-        new Pose2d(Units.feetToMeters(20), Units.feetToMeters(20), new Rotation2d(0)),
+        new Pose2d(Units.feetToMeters(20), Units.feetToMeters(0), new Rotation2d(0)),
         new TrajectoryConfig(
           Units.feetToMeters(Constants.Swerve.MAX_FEET_PER_SECOND),
           Units.feetToMeters(Constants.Swerve.MAX_FEET_PER_SECOND)
