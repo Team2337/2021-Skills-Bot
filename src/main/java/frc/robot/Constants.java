@@ -16,7 +16,7 @@ public final class Constants {
      * in the future if the robot is not a perfect square.
      */
     private static final double DRIVETRAIN_WIDTH_INCHES = 17;
-    private static final double DRIVETRAIN_LENGTH_INCHES = 17;
+    public static final double DRIVETRAIN_LENGTH_INCHES = 17;
 
     // The module inset from the outside edges of the robot
     private static final double MODULE_INSET_WIDTH_INCHES = 3.25;
@@ -51,14 +51,6 @@ public final class Constants {
         private static final double INCHES_PER_REVOLUTION = Math.PI * 2 * DRIVETRAIN_RADIUS_INCHES;
         private static final double REVOLUTION_PER_SECOND = MAX_INCHES_PER_SECOND / INCHES_PER_REVOLUTION;
         public static final double MAX_DEGREES_PER_SECOND = REVOLUTION_PER_SECOND * 360;
-    }
-
-    // Autons to return when calling a particular method in subsystems/PixyCam.java
-    public static enum PixyAutons {
-        RedA,
-        RedB,
-        BlueA,
-        BlueB
     }
 
     /*******************/

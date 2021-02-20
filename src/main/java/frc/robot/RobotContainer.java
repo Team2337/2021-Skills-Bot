@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.autonav.BarrelRacingCommand;
 import frc.robot.commands.auto.autonav.BounceCommand;
 import frc.robot.commands.auto.autonav.SlalomCommand;
+import frc.robot.commands.auto.GalacticSearchCommand;
 import frc.robot.commands.swerve.SetTurnMotorTicks;
 import frc.robot.commands.swerve.SwerveDriveCommand;
+import frc.robot.subsystems.PixyCam;
 import frc.robot.subsystems.Pigeon;
 import frc.robot.subsystems.SwerveDrivetrain;
 
@@ -32,6 +34,7 @@ public class RobotContainer {
   private final XboxController controller = new XboxController(0);
 
   /* --- Subsystems --- */
+  private PixyCam pixy = new PixyCam(0);
   private Pigeon pigeon = new Pigeon();
   private SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(pigeon);
 
@@ -65,6 +68,7 @@ public class RobotContainer {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    autonChooser.addOption("Galactic Search", new GalacticSearchCommand(pixy, swerveDrivetrain));
   }
 
   /**

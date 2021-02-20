@@ -3,9 +3,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.ArrayList;
-import io.github.pseudoresonance.pixy2api.*;
+import io.github.pseudoresonance.pixy2api.Pixy2;
+import io.github.pseudoresonance.pixy2api.Pixy2CCC;
 import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
-import frc.robot.Constants.PixyAutons;
 
 /**
  * The code for retrieving PixyCam values from the SPI
@@ -44,7 +44,7 @@ public class PixyCam extends SubsystemBase {
     // This method will be called once per scheduler run
 
     //If there is no camera present, try to initialize it.
-    if(!isCamera)
+    if (!isCamera)
       state = pixycam.init(chip);
 
     //Detect connection
@@ -53,10 +53,10 @@ public class PixyCam extends SubsystemBase {
     SmartDashboard.putBoolean("Pixy " + chip + " Connected", isCamera);
     SmartDashboard.putBoolean("Pixy " + chip + " sees target", seesTarget);
 
-    if(DEBUG){
+    if (DEBUG){
       //Acquire target data
       updateTargets();
-      if(numberOfTargets > 0){
+      if (numberOfTargets > 0){
         //Get the largest target
         // Block lt = getLargestTarget(); //Gets the largest target (lt)
         SmartDashboard.putString("Largest block", getLargestTarget().toString());
@@ -67,7 +67,7 @@ public class PixyCam extends SubsystemBase {
         SmartDashboard.putNumber("Largest Target Height", getLargestTargetHeight());
       }
       //Push to dashboard how many targets are detected
-      SmartDashboard.putNumber("Number of Targets", numberOfTargets); 
+      SmartDashboard.putNumber("Number of Targets", numberOfTargets);
     }
   }
 
@@ -80,7 +80,7 @@ public class PixyCam extends SubsystemBase {
     //Update the cache number
     cacheNumber++;
     //Update the seesTarget variable
-    if(numberOfTargets > 0) seesTarget = true;
+    if (numberOfTargets > 0) seesTarget = true;
     else seesTarget = false;
   }
 
@@ -101,14 +101,14 @@ public class PixyCam extends SubsystemBase {
    */
   public Block getLargestTarget() {
     //See if we already have the largest Block (to be efficient)
-    if(lastLargestBlockRetrieval == cacheNumber){
+    if (lastLargestBlockRetrieval == cacheNumber){
       SmartDashboard.putNumber("lastRetrieval", lastLargestBlockRetrieval);
       SmartDashboard.putNumber("cacheNumber", cacheNumber);
       return lastLargestBlock;
     }
 
     //Check to see if there are any targets.
-    if(numberOfTargets <= 0){
+    if (numberOfTargets <= 0){
       return null;
     }
     //Get all the targets
@@ -116,10 +116,10 @@ public class PixyCam extends SubsystemBase {
     Block largestBlock = null;
     //Loops through all targets and finds the widest one
     for(Block block : blocks){
-      if(largestBlock == null){
+      if (largestBlock == null){
         //If this is the first iteration, set largestBlock to the current block.
         largestBlock = block;
-      } else if(block.getWidth() > largestBlock.getWidth()){
+      } else if (block.getWidth() > largestBlock.getWidth()){
         //If we find a wider block, set largestBlock to the current block.
         largestBlock = block;
       }
@@ -139,7 +139,7 @@ public class PixyCam extends SubsystemBase {
    */
   public int getLargestTargetX() {
     Block largestTarget = getLargestTarget();
-    if(largestTarget == null) return -1;
+    if (largestTarget == null) return -1;
     return largestTarget.getX();
   }
 
@@ -148,7 +148,7 @@ public class PixyCam extends SubsystemBase {
    */
   public int getLargestTargetY() {
     Block largestTarget = getLargestTarget();
-    if(largestTarget == null) return -1;
+    if (largestTarget == null) return -1;
     return largestTarget.getY();
   }
 
@@ -158,9 +158,15 @@ public class PixyCam extends SubsystemBase {
    */
   public double getLargestTargetAngle() {
     double x = (double)getLargestTargetX();
-    if(x == -1) return 0.0;
-    //316 is the width of the camera
-    return ((x / 316) * 60) - 30;
+    //Return 0 (centered) if no target was found
+    if (x == -1) return 0.0;
+    /**
+     * To get the angle, we divide the x (which ranges from 0 to 315, the width
+     * of the camera) by 315 to get it as a percentage from 0-1. We multiply
+     * that by 60 (the field of view of the PixyCam) to get it in terms of
+     * degrees, and then subtract it by 30 to center it.
+     */
+    return ((x / 315) * 60) - 30;
   }
 
   /**
@@ -168,7 +174,7 @@ public class PixyCam extends SubsystemBase {
    */
   public int getLargestTargetWidth() {
     Block largestTarget = getLargestTarget();
-    if(largestTarget == null) return -1;
+    if (largestTarget == null) return -1;
     return largestTarget.getWidth();
   }
 
@@ -178,22 +184,8 @@ public class PixyCam extends SubsystemBase {
    */
   public int getLargestTargetHeight() {
     Block largestTarget = getLargestTarget();
-    if(largestTarget == null) return -1;
+    if (largestTarget == null) return -1;
     return largestTarget.getHeight();
-  }
-
-  /**
-   * Detects which path should be used
-   * @return An enum representing the path to take. Returns null if there was an error.
-   */
-  public PixyAutons getAuton() {
-    updateTargets();
-    int x = getLargestTargetX();
-    if(x >= 0 && x < 79)          return PixyAutons.RedA;
-    else if(x >= 79 && x < 158)   return PixyAutons.RedB;
-    else if(x >= 158 && x < 237)  return PixyAutons.BlueA;
-    else if(x >= 237 && x <= 315) return PixyAutons.BlueB;
-    else return null;
   }
 
 }
