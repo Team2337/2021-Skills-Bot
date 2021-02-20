@@ -44,7 +44,7 @@ public final class Constants {
         /**
          * To calculate max rotational speed:
          * Max speed in feet per second * 12 = inches per second
-         * 2pi * radius of the chassis (8.5in) = inches in one revolution
+         * 2pi * radius of the chassis (3.71231 in) = inches in one revolution
          * inches per second / inches in one revolution =  revolutions per second
          * revolutions per second * 360 degrees = degrees per second
          */
