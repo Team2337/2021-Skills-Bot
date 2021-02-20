@@ -9,7 +9,7 @@ import frc.robot.Constants.PixyAutons;
 
 /**
  * The code for retrieving PixyCam values from the SPI
- * @author Michael F.
+ * @author Michael F., Nicholas Stokes
  */
 public class PixyCam extends SubsystemBase {
 
