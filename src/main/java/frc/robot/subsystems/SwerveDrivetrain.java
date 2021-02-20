@@ -94,17 +94,16 @@ public class SwerveDrivetrain extends SubsystemBase {
   }
 
   /**
-   * Calculates 
-   * he desired angle of each  
-   * and the speed  
-   * nd direction o   the drive motors based on
-   * joystick inputs
-   * @
-   *                 aram forward - double joy   tick value from the Y axis on the left hand stick
-   * 
-   *                 param strafe - double joystick value from the X axis on the left hand stick
-   * @pa
-   *                 am rotation - double joystick value from the X axis on the right hand stick
+   * Calculates the desired angle of each module, and the speed and direction of
+   * the drive motors based on joystick inputs
+   *
+   * @param forward         - double joystick value from the Y axis on the left
+   *                        hand stick
+   * @param strafe          - double joystick value from the X axis on the left
+   *                        hand stick
+   * @param rotation        - double joystick value from the X axis on the right
+   *                        hand stick
+   * @param isFieldOriented - If the robot should drive relative to the field
    */
   public void calculateJoystickInput(double forward, double strafe, double rotation, boolean isFieldOriented) {
     // By default, our angle motors will reset back to 0
