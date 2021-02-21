@@ -106,7 +106,7 @@ public class RobotContainer {
     final JoystickButton greenA = new JoystickButton(controller, 1);
     final JoystickButton redB = new JoystickButton(controller, 2);
 
-    greenA.whenPressed(new ResetDrivePosition(swerveDrivetrain));
+    greenA.whenPressed(() -> swerveDrivetrain.resetDriveEncoders());
     redB.whenPressed(new resetOdometry(swerveDrivetrain));
 
     SmartDashboard.putData("AutonChooser", autonChooser);
