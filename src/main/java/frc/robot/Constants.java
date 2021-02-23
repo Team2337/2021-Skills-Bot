@@ -25,6 +25,13 @@ public final class Constants {
     private static final double TRACK_WIDTH = DRIVETRAIN_WIDTH_INCHES - (MODULE_INSET_WIDTH_INCHES * 2);
     private static final double WHEEL_BASE = DRIVETRAIN_LENGTH_INCHES - (MODULE_INSET_HEIGHT_INCHES * 2);
 
+    /**
+     * The x-offset (in inches) of the robot from the start of the starting
+     * zone to position it perfectly with its bumpers touching the edge of
+     * the starting zone
+     */
+    public static final double GSC_X_OFFSET = 30 - (DRIVETRAIN_LENGTH_INCHES / 2);
+
     // Robot-specific configuration for our swerve drive algorithm
     public static final class Swerve {
         // /2 since we're measuring from the center - halfway

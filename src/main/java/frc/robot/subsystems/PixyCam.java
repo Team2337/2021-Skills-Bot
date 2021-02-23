@@ -15,19 +15,19 @@ public class PixyCam extends SubsystemBase {
 
   //PixyCam
   private Pixy2 pixycam;
-  private boolean isCamera = false;
+  private boolean connected;
   private int state = -1;
   private int chip;
-  private int numberOfTargets = 0;
   private boolean seesTarget = false;
+  private boolean retrievedState = false;
 
   //For efficiency
-  private int cacheNumber = 0;
-  private int lastLargestBlockRetrieval = -1;
+  private int cacheNumber;
+  private int lastLargestBlockRetrieval;
   private Block lastLargestBlock;
 
   //Debug mode
-  private final boolean DEBUG = true;
+  private final boolean DEBUG = false;
 
   /**
    * Subsystem for the PixyCam
@@ -36,27 +36,37 @@ public class PixyCam extends SubsystemBase {
   public PixyCam(int chipselect){
     chip = chipselect;
     pixycam = Pixy2.createInstance(Pixy2.LinkType.SPI);
+    cacheNumber = 0;
+    lastLargestBlockRetrieval = -1;
     state = pixycam.init(chip);
+    connected = (state >= 0);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
-    //If there is no camera present, try to initialize it.
-    if (!isCamera)
-      state = pixycam.init(chip);
-
     //Detect connection
-    isCamera = (state >= 0);
+    connected = (state >= 0);
+
+    //Check to see if the camera initialized correctly.
+    if (!connected && !retrievedState){
+      //If we got here, the camera gave us an error.
+      //Try to reinitialize the Pixy.
+      state = pixycam.init(chip);
+      //If we get another error, don't check again.
+      //Keep the error code for reference
+      if (state < 0) retrievedState = true;
+    }
     SmartDashboard.putNumber("Pixy " + chip + " State", state);
-    SmartDashboard.putBoolean("Pixy " + chip + " Connected", isCamera);
+    SmartDashboard.putBoolean("Pixy " + chip + " Connected", connected);
     SmartDashboard.putBoolean("Pixy " + chip + " sees target", seesTarget);
 
+    //Debug testing
     if (DEBUG){
       //Acquire target data
-      updateTargets();
-      if (numberOfTargets > 0){
+      int numberOfTargets = updateTargets();
+      if (seesTarget){
         //Get the largest target
         // Block lt = getLargestTarget(); //Gets the largest target (lt)
         SmartDashboard.putString("Largest block", getLargestTarget().toString());
@@ -74,14 +84,15 @@ public class PixyCam extends SubsystemBase {
   /**
    * Refreshes the target cache.
    */
-  public void updateTargets() {
+  public int updateTargets() {
     //Retrieve the targets and store the number in a variable
-    numberOfTargets = pixycam.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG1, 48);
+    int numberOfTargets = pixycam.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG1, 48);
     //Update the cache number
     cacheNumber++;
     //Update the seesTarget variable
     if (numberOfTargets > 0) seesTarget = true;
     else seesTarget = false;
+    return numberOfTargets;
   }
 
   /**
@@ -90,8 +101,7 @@ public class PixyCam extends SubsystemBase {
    */
   public ArrayList<Block> getAllTargets() {
     //Retrieve all blocks
-    ArrayList<Block> blocks = pixycam.getCCC().getBlockCache();
-    return blocks;
+    return pixycam.getCCC().getBlockCache();
   }
 
   /**
@@ -108,14 +118,13 @@ public class PixyCam extends SubsystemBase {
     }
 
     //Check to see if there are any targets.
-    if (numberOfTargets <= 0){
-      return null;
-    }
+    if (!seesTarget) return null;
+
     //Get all the targets
     ArrayList<Block> blocks = getAllTargets();
     Block largestBlock = null;
     //Loops through all targets and finds the widest one
-    for(Block block : blocks){
+    for (Block block : blocks){
       if (largestBlock == null){
         //If this is the first iteration, set largestBlock to the current block.
         largestBlock = block;
@@ -135,20 +144,30 @@ public class PixyCam extends SubsystemBase {
   }
 
   /**
-   * @return Returns the x-coordinate of the largest target. 0-315
+   * @return Returns the x-coordinate of the largest target from 0-315. 
+   * Returns -1 if there isn't a target.
    */
   public int getLargestTargetX() {
+    //Get the largest target
     Block largestTarget = getLargestTarget();
-    if (largestTarget == null) return -1;
+    //Return -1 if there was no target
+    if (largestTarget == null)
+      return -1;
+    //Return the requested value
     return largestTarget.getX();
   }
 
   /**
-   * @return Returns the y-coordinate of the largest target. 0-207
+   * @return Returns the y-coordinate of the largest target from 0-207. 
+   * Returns -1 if there isn't a target.
    */
   public int getLargestTargetY() {
+    //Get the largest target
     Block largestTarget = getLargestTarget();
-    if (largestTarget == null) return -1;
+    //Return -1 if there was no target
+    if (largestTarget == null)
+      return -1;
+    //Return the requested value
     return largestTarget.getY();
   }
 
@@ -157,9 +176,10 @@ public class PixyCam extends SubsystemBase {
    * Ranges from -30 to 30. Returns 0.0 if no target was found.
    */
   public double getLargestTargetAngle() {
-    double x = (double)getLargestTargetX();
+    double x = getLargestTargetX();
     //Return 0 (centered) if no target was found
-    if (x == -1) return 0.0;
+    if (x < 0.0)
+      return 0.0;
     /**
      * To get the angle, we divide the x (which ranges from 0 to 315, the width
      * of the camera) by 315 to get it as a percentage from 0-1. We multiply
@@ -174,7 +194,10 @@ public class PixyCam extends SubsystemBase {
    */
   public int getLargestTargetWidth() {
     Block largestTarget = getLargestTarget();
-    if (largestTarget == null) return -1;
+    //Return -1 if there was no target
+    if (largestTarget == null)
+      return -1;
+    //Return the requested value
     return largestTarget.getWidth();
   }
 
@@ -184,7 +207,10 @@ public class PixyCam extends SubsystemBase {
    */
   public int getLargestTargetHeight() {
     Block largestTarget = getLargestTarget();
-    if (largestTarget == null) return -1;
+    //Return -1 if there was no target
+    if (largestTarget == null)
+      return -1;
+    //Return the requested value
     return largestTarget.getHeight();
   }
 
