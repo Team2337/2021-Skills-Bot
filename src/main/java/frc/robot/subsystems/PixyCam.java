@@ -15,11 +15,11 @@ public class PixyCam extends SubsystemBase {
 
   //PixyCam
   private Pixy2 pixycam;
-  private boolean connected;
-  private int state = -1;
+  private int state;
   private int chip;
-  private boolean seesTarget = false;
-  private boolean retrievedState = false;
+  private boolean connected;
+  private boolean seesTarget;
+  private boolean retrievedState;
 
   //For efficiency
   private int cacheNumber;
@@ -31,15 +31,18 @@ public class PixyCam extends SubsystemBase {
 
   /**
    * Subsystem for the PixyCam
-   * @param chipselect The chip the pixy is plugged into on the SPI
+   * @param chipSelect The chip the pixy is plugged into on the SPI
    */
-  public PixyCam(int chipselect){
-    chip = chipselect;
+  public PixyCam(int chipSelect){
+    //Initialize variables
     pixycam = Pixy2.createInstance(Pixy2.LinkType.SPI);
+    state = pixycam.init(chipSelect);
+    connected = (state >= 0);
+    chip = chipSelect;
+    seesTarget = false;
+    retrievedState = false;
     cacheNumber = 0;
     lastLargestBlockRetrieval = -1;
-    state = pixycam.init(chip);
-    connected = (state >= 0);
   }
 
   @Override
@@ -178,7 +181,7 @@ public class PixyCam extends SubsystemBase {
   public double getLargestTargetAngle() {
     double x = getLargestTargetX();
     //Return 0 (centered) if no target was found
-    if (x < 0.0)
+    if (!seesTarget)
       return 0.0;
     /**
      * To get the angle, we divide the x (which ranges from 0 to 315, the width
