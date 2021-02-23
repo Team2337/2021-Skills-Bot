@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.autonav.BarrelRacingCommand;
 import frc.robot.commands.auto.autonav.BounceCommand;
 import frc.robot.commands.auto.autonav.SlalomCommand;
-import frc.robot.commands.auto.GalacticSearchCommand;
+import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.swerve.SetTurnMotorTicks;
 import frc.robot.commands.swerve.SwerveDriveCommand;
 import frc.robot.subsystems.PixyCam;
@@ -68,7 +68,7 @@ public class RobotContainer {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    autonChooser.addOption("Galactic Search", new GalacticSearchCommand(pixy, swerveDrivetrain));
+    autonChooser.addOption("Galactic Search", new GalacticSearch(pixy, swerveDrivetrain));
   }
 
   /**

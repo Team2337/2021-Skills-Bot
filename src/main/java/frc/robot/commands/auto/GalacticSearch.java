@@ -17,14 +17,14 @@ import edu.wpi.first.wpilibj.util.Units;
  * Uses the PixyCam to run an auton based on the position of a ball.
  * @author Michael F., Zach O., and Nicholas S.
  */
-public class GalacticSearchCommand extends InstantCommand {
+public class GalacticSearch extends InstantCommand {
 
   /**
    * Creates the Galactic Search Command.
    *
    * @param pixy The PixyCam used by this command.
    */
-  public GalacticSearchCommand(PixyCam pixy, SwerveDrivetrain drivetrain) {
+  public GalacticSearch(PixyCam pixy, SwerveDrivetrain drivetrain) {
     super(() -> {
       pixy.updateTargets();
       int x = pixy.getLargestTargetX();
