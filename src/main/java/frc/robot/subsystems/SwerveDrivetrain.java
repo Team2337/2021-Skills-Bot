@@ -78,10 +78,10 @@ public class SwerveDrivetrain extends SubsystemBase {
     SmartDashboard.putNumber("ticks", 0);
 
     modules = new FXSwerveModule[] {
-      new FXSwerveModule(0, new TalonFX(Constants.MODULE0_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE0_ANGLE_MOTOR_ID), new CANCoder(Constants.MODULE0_ANGLE_CANCODER_ID), 0), // Module 0
-      new FXSwerveModule(1, new TalonFX(Constants.MODULE1_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE1_ANGLE_MOTOR_ID), new CANCoder(Constants.MODULE1_ANGLE_CANCODER_ID), 0), // Module 1
-      new FXSwerveModule(2, new TalonFX(Constants.MODULE2_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE2_ANGLE_MOTOR_ID), new CANCoder(Constants.MODULE2_ANGLE_CANCODER_ID), 0), // Module 2
-      new FXSwerveModule(3, new TalonFX(Constants.MODULE3_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE3_ANGLE_MOTOR_ID), new CANCoder(Constants.MODULE3_ANGLE_CANCODER_ID), 0)  // Module 3
+      new FXSwerveModule(Constants.Swerve.ModulePosition.FRONT_RIGHT, new TalonFX(Constants.MODULE0_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE0_ANGLE_MOTOR_ID), new CANCoder(Constants.MODULE0_ANGLE_CANCODER_ID), 0),
+      new FXSwerveModule(Constants.Swerve.ModulePosition.FRONT_LEFT, new TalonFX(Constants.MODULE1_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE1_ANGLE_MOTOR_ID), new CANCoder(Constants.MODULE1_ANGLE_CANCODER_ID), 0),
+      new FXSwerveModule(Constants.Swerve.ModulePosition.BACK_LEFT, new TalonFX(Constants.MODULE2_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE2_ANGLE_MOTOR_ID), new CANCoder(Constants.MODULE2_ANGLE_CANCODER_ID), 0),
+      new FXSwerveModule(Constants.Swerve.ModulePosition.BACK_RIGHT, new TalonFX(Constants.MODULE3_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE3_ANGLE_MOTOR_ID), new CANCoder(Constants.MODULE3_ANGLE_CANCODER_ID), 0)
     };
   }
 
@@ -152,8 +152,8 @@ public class SwerveDrivetrain extends SubsystemBase {
     setModuleStates(states, true);
   }
 
-  public void resetModuleStates() {
-    odometry.resetPosition(new Pose2d(0,0,Rotation2d.fromDegrees(0)), Rotation2d.fromDegrees(0));
+  public void resetOdometry() {
+    odometry.resetPosition(new Pose2d(0, 0, Rotation2d.fromDegrees(0)), Rotation2d.fromDegrees(0));
   }
 
   public void setModuleStates(SwerveModuleState[] states, boolean shouldUpdateAngle) {
@@ -203,16 +203,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     odometry.update(Rotation2d.fromDegrees(pigeon.getYaw()), modules[0].getState(), modules[1].getState(), modules[2].getState(), modules[3].getState());
 
     for(FXSwerveModule module : modules) {
-      SmartDashboard.putNumber("Module Angle (Degrees)/" + module.getModuleNumber(), module.getAngle());
-      SmartDashboard.putNumber("Angle Motor Temperature/" + module.getModuleNumber(), module.getAngleMotorTemperature());
-      SmartDashboard.putNumber("Drive Motor Temperature/" + module.getModuleNumber(), module.getDriveMotorTemperature());
-
-      SmartDashboard.putNumber("Inches Traveled/" + module.getModuleNumber(), Constants.Swerve.INCHES_PER_TICK * module.getDriveMotorPosition());
-
-      SmartDashboard.putNumber("Feet Traveled/" + module.getModuleNumber(), Constants.Swerve.FEET_PER_TICK * module.getDriveMotorPosition());
-
-      SmartDashboard.putNumber("Drive Encoders/" + module.getModuleNumber(), module.getDriveMotorPosition());
-
+      module.logDebug();
     }
   }
 

@@ -1,4 +1,4 @@
-package frc.robot.commands.auto.Calibration;
+package frc.robot.commands.auto.calibration;
 
 import java.io.IOException;
 

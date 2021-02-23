@@ -9,14 +9,10 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import com.ctre.phoenix.Logger;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.nerdyfiles.swerve.FXSwerveModule;
-import frc.robot.subsystems.SwerveDrivetrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to

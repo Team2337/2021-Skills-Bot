@@ -1,8 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Units;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
@@ -30,21 +27,26 @@ public final class Constants {
 
     // Robot-specific configuration for our swerve drive algorithm
     public static final class Swerve {
+
+        public enum ModulePosition {
+            FRONT_RIGHT(0),
+            FRONT_LEFT(1),
+            BACK_LEFT(2),
+            BACK_RIGHT(3);
+            
+            public final int value;
+
+            ModulePosition(int value) {
+                this.value = value;
+            }
+        }
+
         // /2 since we're measuring from the center - halfway
         public static final double MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES = TRACK_WIDTH / 2;
         public static final double MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES = WHEEL_BASE / 2;
 
         // Radius to the wheel modules can be thought of as a triangle - width and length are the two sides
         private static final double DRIVETRAIN_RADIUS_INCHES = Math.hypot(MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES, MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES);
-        
-        public static final double DRIVE_TICKS_PER_REVOLUTION = 2048;
-        public static final double WHEEL_DIAMETER = 4;
-        public static final double DRIVE_GEAR_RATIO = 8.16;
-        public static final double DISTANCE_PER_REVOLUTION = 2 * Math.PI * (WHEEL_DIAMETER / 2);
-        public static final double ENCODER_TICKS_PER_WHEEL_REVOLUTION = DRIVE_TICKS_PER_REVOLUTION * DRIVE_GEAR_RATIO;
-        public static final double DRIVE_WHEEL_DISTANCE = DISTANCE_PER_REVOLUTION * ENCODER_TICKS_PER_WHEEL_REVOLUTION;
-        public static final double INCHES_PER_TICK = DISTANCE_PER_REVOLUTION/ENCODER_TICKS_PER_WHEEL_REVOLUTION;
-        public static final double FEET_PER_TICK = INCHES_PER_TICK / 12;
 
         /**
          * The max unadjusted speed in feet/sec for a Falcon 500 motor with the MK3

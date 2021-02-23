@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Units;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+//import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrivetrain;
 
-public class TrajectoryCommand extends SwerveControllerCommand {
+public class TrajectoryCommand extends FXSwerveControllerCommand {
 
   public TrajectoryCommand(Trajectory trajectory, SwerveDrivetrain drivetrain) {
     // TODO: We know our velocity is correct, we need to figure out if our acceleration is correct

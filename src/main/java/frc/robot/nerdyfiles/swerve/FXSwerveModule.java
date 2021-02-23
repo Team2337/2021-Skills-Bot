@@ -6,6 +6,7 @@ import com.ctre.phoenix.sensors.*;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants;
 
@@ -21,11 +22,7 @@ import frc.robot.Constants;
  */
 public class FXSwerveModule {
 
-    /** The current module's ID number (0 -> 3)*/
-    private int moduleNumber;
-
-    /** The angle offset from the zero position on the angle motor in RADIANS */
-    private double angleMotorOffset;
+    private Constants.Swerve.ModulePosition position;
 
     /**
      * Proportional value for the drive motor speed
@@ -75,13 +72,20 @@ public class FXSwerveModule {
      * https://www.swervedrivespecialties.com/products/mk3-swerve-module
      */
     private static final double kWheelDiameterInches = 4;
+    private static final double kDriveGearRatio = 8.16;
 
     /**
      * The number of ticks in a single revolution for the encoder being used
      * https://docs.ctre-phoenix.com/en/latest/ch14_MCSensor.html#sensor-resolution
      */
-    private static final double kEncoderTicksPerRotation = 4096;
-    private static final double kEncoderTicksPerDriveRotation = 2048;
+    private static final double kAngleCANcoderTicksPerRotation = 4096;
+    private static final double kDriveEncoderTicksPerRotation = 2048;
+
+    // Inches traveled per tick can be found by using our circumference (2pi * r) of our wheel
+    private static final double kWheelInchesPerRotation = 2 * Math.PI * (kWheelDiameterInches / 2);
+    private static final double kWheelTicksPerRevolution = kDriveEncoderTicksPerRotation * kDriveGearRatio;
+    private static final double kInchesPerTick = kWheelInchesPerRotation / kWheelTicksPerRevolution;
+    private static final double kDriveFeetPerTick = kInchesPerTick / 12;
 
     /**
      * Swerve Module Object used to run the calculations for the swerve drive
@@ -90,17 +94,16 @@ public class FXSwerveModule {
      * This Object uses the TalonFX's for both the angle motor and drive motor
      * Both will need to be passed in when the object is created
      * @see SwerveDriveCommand
-     * @param moduleNumber - int Module ID to call each module (not CAN IDs)
+     * @param position - int Module ID to call each module (not CAN IDs)
      * @param driveMotor - TalonFX motor object with CAN ID of the module's drive motor
      * @param angleMotor - TalonFX motor object with CAN ID of the module's angle motor
      * @param canCoder - CANCoder sensor object that measures the rotation of the angle motor
-     * @param angleMotorOffset - The angle offset for the current module in degrees
+     * @param angleMotorOffsetDegrees - The angle offset for the current module in degrees
      */
-    public FXSwerveModule(int moduleNumber, TalonFX driveMotor, TalonFX angleMotor, CANCoder canCoder, double angleMotorOffset) {
-        this.moduleNumber = moduleNumber;
+    public FXSwerveModule(Constants.Swerve.ModulePosition position, TalonFX driveMotor, TalonFX angleMotor, CANCoder canCoder, double angleMotorOffsetDegrees) {
+        this.position = position;
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
-        this.angleMotorOffset = angleMotorOffset;
         this.canCoder = canCoder;
 
         TalonFXConfiguration angleTalonFXConfiguration = new TalonFXConfiguration();
@@ -120,6 +123,7 @@ public class FXSwerveModule {
         /****************************************/
 
         CANCoderConfiguration canCoderConfiguration = new CANCoderConfiguration();
+        canCoderConfiguration.magnetOffsetDegrees = canCoder.configGetCustomParam(0) + (position.value * 90);
         canCoder.configAllSettings(canCoderConfiguration);
 
         angleTalonFXConfiguration.slot0.kP = kAngleP;
@@ -200,7 +204,7 @@ public class FXSwerveModule {
      * @return The module number of the current module
      */
     public int getModuleNumber() {
-        return this.moduleNumber;
+        return position.value;
     }
 
     /**
@@ -208,7 +212,6 @@ public class FXSwerveModule {
      * @return The rotational position of the angle motor in degrees
      */
     public double getAngle() {
-        // TODO: Do we need to take the angleMotorOffset in to account?
         return canCoder.getAbsolutePosition();
     }
 
@@ -220,10 +223,8 @@ public class FXSwerveModule {
         // Ticks per 100ms
         double velocityTicks = driveMotor.getSelectedSensorVelocity();
 
-        // Inches traveled per tick can be found by using our circumference (2pi * r) of our wheel
-       // double inchesPerTick = (2 * Math.PI * (kWheelDiameterInches / 2)) / kEncoderTicksPerDriveRotation;
         // Inches per 100ms
-        double velocityInches = velocityTicks * Constants.Swerve.INCHES_PER_TICK;
+        double velocityInches = velocityTicks * kInchesPerTick;
 
         // Inches -> Feet (12 inches per foot)
         double velocityFeet = velocityInches / 12;
@@ -244,7 +245,7 @@ public class FXSwerveModule {
             // Will be a positive value for clockwise rotations, neg for ccw rotations
             Rotation2d rotationDelta = state.angle.minus(currentRotation);
 
-            double deltaTicks = (rotationDelta.getDegrees() / 360) * kEncoderTicksPerRotation;
+            double deltaTicks = (rotationDelta.getDegrees() / 360) * kAngleCANcoderTicksPerRotation;
             double currentTicks = canCoder.getPosition() / canCoder.configGetFeedbackCoefficient();
             double desiredTicks = currentTicks + deltaTicks;
             // Set the absolute position for the motor by converting our degrees to # of ticks for the rotational value
@@ -271,7 +272,7 @@ public class FXSwerveModule {
      * Gets the angle motor temperature
      * @return - The temperature of the angle motors
      */
-    public double getAngleMotorTemperature() {
+    private double getAngleMotorTemperature() {
         return angleMotor.getTemperature();
     }
 
@@ -279,7 +280,7 @@ public class FXSwerveModule {
      * Gets the drive motor temperature
      * @return - The temperature of the drive motors
      */
-    public double getDriveMotorTemperature() {
+    private double getDriveMotorTemperature() {
         return driveMotor.getTemperature();
     }
 
@@ -289,6 +290,15 @@ public class FXSwerveModule {
     
     public double getDriveMotorPosition() {
         return driveMotor.getSelectedSensorPosition();
+    }
+
+    public void logDebug() {
+        SmartDashboard.putNumber("Module Angle (Degrees)/" + getModuleNumber(), getAngle());
+        SmartDashboard.putNumber("Angle Motor Temperature/" + getModuleNumber(), getAngleMotorTemperature());
+        SmartDashboard.putNumber("Drive Motor Temperature/" + getModuleNumber(), getDriveMotorTemperature());
+        SmartDashboard.putNumber("Inches Traveled/" + getModuleNumber(), kInchesPerTick * getDriveMotorPosition());
+        SmartDashboard.putNumber("Feet Traveled/" + getModuleNumber(), kDriveFeetPerTick * getDriveMotorPosition());
+        SmartDashboard.putNumber("Drive Encoders/" + getModuleNumber(), getDriveMotorPosition());
     }
 
 }
