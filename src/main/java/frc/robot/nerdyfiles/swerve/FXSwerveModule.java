@@ -123,8 +123,13 @@ public class FXSwerveModule {
         /****************************************/
 
         CANCoderConfiguration canCoderConfiguration = new CANCoderConfiguration();
+        canCoderConfiguration.customParam0 = canCoder.configGetCustomParam(0);
         canCoderConfiguration.magnetOffsetDegrees = canCoder.configGetCustomParam(0) + (position.value * 90);
         canCoder.configAllSettings(canCoderConfiguration);
+
+        SmartDashboard.putNumber("Get Custom Param/" + canCoder.getDeviceID(), canCoder.configGetCustomParam(0));
+        SmartDashboard.putNumber("Magnet Offest Degrees/" + canCoder.getDeviceID(), canCoder.configGetMagnetOffset());
+
 
         angleTalonFXConfiguration.slot0.kP = kAngleP;
         angleTalonFXConfiguration.slot0.kI = kAngleI;
