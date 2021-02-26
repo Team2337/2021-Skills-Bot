@@ -4,6 +4,7 @@ import java.util.List;
 import frc.robot.subsystems.PixyCam;
 import frc.robot.subsystems.SwerveDrivetrain;
 import frc.robot.Constants;
+import frc.robot.Constants.GalacticSearchAuton;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -34,15 +35,18 @@ public final class GalacticSearch extends InstantCommand {
       final double X_OFFSET = 30 - (Constants.DRIVETRAIN_LENGTH_INCHES / 2);
 
       //Get PixyCam values
-      pixy.updateTargets();
       int x = pixy.getLargestTargetX();
 
       //Create ball positions list
       List<Pose2d> ballPositions = List.of();
 
+      //If we don't use the trajectory generator, use the enum:
+      GalacticSearchAuton auton;
+
       //Source of positions: https://firstfrc.blob.core.windows.net/frc2021/Manual/2021AtHomeChallengesManual.pdf
       //The values used with x represent the x-position of the closest target in the field of view of the camera.
       if (x >= 0 && x < 79) {
+        auton = GalacticSearchAuton.RedA;
         //Red A path
         ballPositions = List.of(
           new Pose2d(
@@ -62,6 +66,7 @@ public final class GalacticSearch extends InstantCommand {
             Rotation2d.fromDegrees(-71.57))
         );
       } else if(x >= 79 && x < 158) {
+        auton = GalacticSearchAuton.RedB;
         //Red B path
         ballPositions = List.of(
           new Pose2d(
@@ -81,6 +86,7 @@ public final class GalacticSearch extends InstantCommand {
             Rotation2d.fromDegrees(-45))
         );
       } else if(x >= 158 && x < 237) {
+        auton = GalacticSearchAuton.BlueA;
         //Blue A path
         ballPositions = List.of(
           new Pose2d(
@@ -101,6 +107,7 @@ public final class GalacticSearch extends InstantCommand {
               Rotation2d.fromDegrees(-26.57))
         );
       } else if(x >= 237 && x <= 315) {
+        auton = GalacticSearchAuton.BlueB;
         //Blue B path
         ballPositions = List.of(
           new Pose2d(

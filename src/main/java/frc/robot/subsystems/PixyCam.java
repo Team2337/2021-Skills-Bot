@@ -9,7 +9,7 @@ import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
 
 /**
  * The code for retrieving PixyCam values from the SPI
- * @author Michael F., Nicholas Stokes
+ * @author Michael F., Nicholas S.
  */
 public class PixyCam extends SubsystemBase {
 
@@ -17,6 +17,7 @@ public class PixyCam extends SubsystemBase {
   private Pixy2 pixycam;
   private int state;
   private int chip;
+  private int numberOfTargets;
   private boolean connected;
   private boolean seesTarget;
   private boolean retrievedState;
@@ -43,14 +44,15 @@ public class PixyCam extends SubsystemBase {
     retrievedState = false;
     cacheNumber = 0;
     lastLargestBlockRetrieval = -1;
+    numberOfTargets = 0;
   }
 
+  // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
 
-    //Detect connection
-    connected = (state >= 0);
+    //DO NOT REMOVE THIS LINE OF CODE EVER
+    updateTargets();
 
     //Check to see if the camera initialized correctly.
     if (!connected && !retrievedState){
@@ -61,6 +63,11 @@ public class PixyCam extends SubsystemBase {
       //Keep the error code for reference
       if (state < 0) retrievedState = true;
     }
+
+    //Detect connection
+    connected = (state >= 0);
+
+    //Put important information to the SmartDashboard
     SmartDashboard.putNumber("Pixy " + chip + " State", state);
     SmartDashboard.putBoolean("Pixy " + chip + " Connected", connected);
     SmartDashboard.putBoolean("Pixy " + chip + " sees target", seesTarget);
@@ -68,7 +75,6 @@ public class PixyCam extends SubsystemBase {
     //Debug testing
     if (DEBUG){
       //Acquire target data
-      int numberOfTargets = updateTargets();
       if (seesTarget){
         //Get the largest target
         // Block lt = getLargestTarget(); //Gets the largest target (lt)
@@ -80,21 +86,29 @@ public class PixyCam extends SubsystemBase {
         SmartDashboard.putNumber("Largest Target Height", getLargestTargetHeight());
       }
       //Push to dashboard how many targets are detected
-      SmartDashboard.putNumber("Number of Targets", numberOfTargets);
+      SmartDashboard.putNumber("Number of Targets", getNumberOfTargets());
     }
   }
 
   /**
    * Refreshes the target cache.
    */
-  public int updateTargets() {
+  private void updateTargets() {
+    //If the Pixy is returning an error, don't update the targets.
+    if (state < 0) return;
     //Retrieve the targets and store the number in a variable
-    int numberOfTargets = pixycam.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG1, 48);
+    numberOfTargets = pixycam.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG1, 48);
     //Update the cache number
     cacheNumber++;
     //Update the seesTarget variable
     if (numberOfTargets > 0) seesTarget = true;
     else seesTarget = false;
+  }
+
+  /**
+   * @return The number of targets in view of the camera (or the last number retrieved)
+   */
+  public int getNumberOfTargets(){
     return numberOfTargets;
   }
 
