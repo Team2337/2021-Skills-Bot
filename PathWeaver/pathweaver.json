@@ -4,6 +4,6 @@
   "maxVelocity": 13.6,
   "maxAcceleration": 10.0,
   "wheelBase": 0.875,
-  "gameName": "Galactic Search B",
+  "gameName": "Galactic Search A",
   "outputDir": "../src/main/deploy"
 }
