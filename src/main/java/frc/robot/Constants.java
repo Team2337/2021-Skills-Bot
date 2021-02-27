@@ -62,14 +62,6 @@ public final class Constants {
     public static final double MAX_DEGREES_PER_SECOND = REVOLUTION_PER_SECOND * 360;
   }
 
-  // Galactic Search Challenge Paths
-  public static enum GalacticSearchAuton {
-    RedA,
-    RedB,
-    BlueA,
-    BlueB
-  }
-
   /*******************/
   /* --------------- */
   /* --- CAN IDs --- */
