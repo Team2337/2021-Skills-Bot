@@ -67,6 +67,8 @@ public class FXSwerveModule {
     /** CANCoder encoder, used measure the rotational position of the angle motor */
     public CANCoder canCoder;
 
+    public double angleMotorOffestDegrees;
+
     /**
      * 4in wheels on the MK3 Swerve modules
      * https://www.swervedrivespecialties.com/products/mk3-swerve-module
@@ -105,6 +107,7 @@ public class FXSwerveModule {
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.canCoder = canCoder;
+        this.angleMotorOffestDegrees = angleMotorOffestDegrees;
 
         TalonFXConfiguration angleTalonFXConfiguration = new TalonFXConfiguration();
         TalonFXConfiguration driveTalonFXConfiguration = new TalonFXConfiguration();
@@ -123,8 +126,9 @@ public class FXSwerveModule {
         /****************************************/
 
         CANCoderConfiguration canCoderConfiguration = new CANCoderConfiguration();
-        canCoderConfiguration.customParam0 = canCoder.configGetCustomParam(0);
-        canCoderConfiguration.magnetOffsetDegrees = canCoder.configGetCustomParam(0) + (position.value * 90);
+        //canCoderConfiguration.customParam0 = canCoder.configGetCustomParam(0);
+        //canCoderConfiguration.magnetOffsetDegrees = canCoder.configGetCustomParam(0) + (position.value * 90);
+        canCoderConfiguration.magnetOffsetDegrees = angleMotorOffsetDegrees + (position.value * 90);
         canCoder.configAllSettings(canCoderConfiguration);
 
         SmartDashboard.putNumber("Get Custom Param/" + canCoder.getDeviceID(), canCoder.configGetCustomParam(0));
@@ -224,7 +228,7 @@ public class FXSwerveModule {
      * Get the velocity of the drive motor for the module.
      * @return The velocity for the drive motor of the module in feet per second.
      */
-    public double getVelocity() {
+    private double getVelocity() {
         // Ticks per 100ms
         double velocityTicks = driveMotor.getSelectedSensorVelocity();
 
@@ -304,6 +308,7 @@ public class FXSwerveModule {
         SmartDashboard.putNumber("Inches Traveled/" + getModuleNumber(), kInchesPerTick * getDriveMotorPosition());
         SmartDashboard.putNumber("Feet Traveled/" + getModuleNumber(), kDriveFeetPerTick * getDriveMotorPosition());
         SmartDashboard.putNumber("Drive Encoders/" + getModuleNumber(), getDriveMotorPosition());
+        SmartDashboard.putNumber("Velocity/" + getModuleNumber(), getVelocity());
     }
 
 }

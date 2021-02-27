@@ -105,10 +105,14 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
+    robotContainer.resetDrivetrain();
+    
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+
+    Logger = true;
   }
 
   /** This function is called periodically during autonomous. */

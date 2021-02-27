@@ -53,7 +53,7 @@ public class RobotContainer {
     // Resets the pigeon to 0
     pigeon.resetPidgey();
 
-    swerveDrivetrain.resetDriveEncoders();
+    resetDrivetrain();
 
     autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
     try { autonChooser.addOption("Barrel Racing", new BarrelRacing(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
@@ -63,6 +63,11 @@ public class RobotContainer {
     try { autonChooser.addOption("StraightLineTest10Ft0", new StraightLineTest10Ft0(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("StraightLineTest10Ft1", new StraightLineTest10Ft1(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
     autonChooser.addOption("LPathCommand", new LPathTrajectory(swerveDrivetrain));
+  }
+
+  public void resetDrivetrain() {
+    swerveDrivetrain.resetOdometry();
+    swerveDrivetrain.resetDriveEncoders();
   }
 
   /**
