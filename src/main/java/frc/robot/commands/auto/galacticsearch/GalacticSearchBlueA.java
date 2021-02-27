@@ -1,20 +1,12 @@
 package frc.robot.commands.auto.galacticsearch;
 
-import java.util.List;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import frc.robot.Constants;
-import frc.robot.commands.auto.TrajectoryCommand;
+import java.io.IOException;
+
+import frc.robot.commands.auto.TrajectoryPathweaverCommand;
 import frc.robot.subsystems.SwerveDrivetrain;
 
-public class GalacticSearchBlueA extends TrajectoryCommand {
-  
-    public GalacticSearchBlueA(SwerveDrivetrain drivetrain){
-      super(
-        TrajectoryGenerator.generateTrajectory(
-          List.of(),
-          Constants.SWERVE_TRAJECTORY_CONFIG
-        ),
-        drivetrain
-      );
-    }
+public class GalacticSearchBlueA extends TrajectoryPathweaverCommand {
+  public GalacticSearchBlueA(SwerveDrivetrain drivetrain) throws IOException {
+    super("output/Blue A6.wpilib.json", drivetrain);
+  }
 }
