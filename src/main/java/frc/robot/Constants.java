@@ -27,6 +27,20 @@ public final class Constants {
 
     // Robot-specific configuration for our swerve drive algorithm
     public static final class Swerve {
+
+        public enum ModulePosition {
+            FRONT_RIGHT(0),
+            FRONT_LEFT(1),
+            BACK_LEFT(2),
+            BACK_RIGHT(3);
+            
+            public final int value;
+
+            ModulePosition(int value) {
+                this.value = value;
+            }
+        }
+
         // /2 since we're measuring from the center - halfway
         public static final double MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES = TRACK_WIDTH / 2;
         public static final double MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES = WHEEL_BASE / 2;
@@ -62,16 +76,20 @@ public final class Constants {
     public static final int MODULE0_DRIVE_MOTOR_ID = 0;
     public static final int MODULE0_ANGLE_MOTOR_ID = 4;
     public static final int MODULE0_ANGLE_CANCODER_ID = 1;
+    public static final double MODULE0_ANGLE_OFFSET = -230.801;
 
     public static final int MODULE1_DRIVE_MOTOR_ID = 1;
     public static final int MODULE1_ANGLE_MOTOR_ID = 5;
     public static final int MODULE1_ANGLE_CANCODER_ID = 2;
+    public static final double MODULE1_ANGLE_OFFSET = -75.938;
 
     public static final int MODULE2_DRIVE_MOTOR_ID = 14;
     public static final int MODULE2_ANGLE_MOTOR_ID = 10;
     public static final int MODULE2_ANGLE_CANCODER_ID = 3;
+    public static final double MODULE2_ANGLE_OFFSET = -350.859;
 
-    public static final int MODULE3_ANGLE_MOTOR_ID = 11;
     public static final int MODULE3_DRIVE_MOTOR_ID = 15;
+    public static final int MODULE3_ANGLE_MOTOR_ID = 11;
     public static final int MODULE3_ANGLE_CANCODER_ID = 4;
+    public static final double MODULE3_ANGLE_OFFSET = -15.557;
 }

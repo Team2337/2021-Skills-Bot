@@ -57,7 +57,7 @@ public class SwerveDriveCommand extends CommandBase {
     SmartDashboard.putNumber("Forward", forward);
     SmartDashboard.putNumber("Strafe", strafe);
     SmartDashboard.putNumber("Rotation", rotation);
-    SmartDashboard.putBoolean("Rotation", isFieldOriented);
+    SmartDashboard.putBoolean("isFieldOriented", isFieldOriented);
   }
 
   @Override
