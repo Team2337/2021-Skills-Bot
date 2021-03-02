@@ -164,6 +164,12 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
   }
 
+  public void setDriveMotionMagic(double distanceFeet) {
+    for (int i = 0; i < modules.length; i++) {
+      FXSwerveModule module = modules[i];
+      module.setDriveMotionMagic(distanceFeet);
+    }
+  }
   /**
    * Stops all of the drive motors on each module
    */

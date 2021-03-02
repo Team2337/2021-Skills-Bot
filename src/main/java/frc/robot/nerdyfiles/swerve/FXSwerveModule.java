@@ -263,6 +263,10 @@ public class FXSwerveModule {
         driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
     }
 
+    public void setDriveMotionMagic(double distanceFeet) {
+        driveMotor.set(TalonFXControlMode.MotionMagic, distanceFeet / kDriveFeetPerTick);
+    }
+
     public SwerveModuleState getState() {
         return new SwerveModuleState(Units.feetToMeters(getVelocity()), Rotation2d.fromDegrees(getAngle()));
     }
