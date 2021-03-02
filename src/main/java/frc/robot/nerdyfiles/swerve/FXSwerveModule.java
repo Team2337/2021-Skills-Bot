@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants;
+import frc.robot.Constants.Swerve.ModulePosition;;
 
 /**
  * Swerve Module Object used to run the calculations for the swerve drive
@@ -22,7 +23,7 @@ import frc.robot.Constants;
  */
 public class FXSwerveModule {
 
-    private Constants.Swerve.ModulePosition position;
+    private ModulePosition position;
 
     /**
      * Proportional value for the drive motor speed
@@ -67,8 +68,6 @@ public class FXSwerveModule {
     /** CANCoder encoder, used measure the rotational position of the angle motor */
     public CANCoder canCoder;
 
-    public double angleMotorOffestDegrees;
-
     /**
      * 4in wheels on the MK3 Swerve modules
      * https://www.swervedrivespecialties.com/products/mk3-swerve-module
@@ -107,7 +106,6 @@ public class FXSwerveModule {
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.canCoder = canCoder;
-        this.angleMotorOffestDegrees = angleMotorOffestDegrees;
 
         TalonFXConfiguration angleTalonFXConfiguration = new TalonFXConfiguration();
         TalonFXConfiguration driveTalonFXConfiguration = new TalonFXConfiguration();

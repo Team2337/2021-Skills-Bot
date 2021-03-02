@@ -6,7 +6,7 @@ import frc.robot.commands.auto.PathweaverTrajectoryCommand;
 import frc.robot.subsystems.SwerveDrivetrain;
 
 public class StraightLineTest10Ft1 extends PathweaverTrajectoryCommand {
-    public StraightLineTest10Ft1(SwerveDrivetrain drivetrain) throws IOException {
-      super("output/StraightLineTest10Ft1.wpilib.json", drivetrain);
-    }
+  public StraightLineTest10Ft1(SwerveDrivetrain drivetrain) throws IOException {
+    super("output/StraightLineTest10Ft1.wpilib.json", drivetrain);
   }
+}
