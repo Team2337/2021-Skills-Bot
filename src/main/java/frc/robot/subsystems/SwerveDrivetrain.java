@@ -170,6 +170,14 @@ public class SwerveDrivetrain extends SubsystemBase {
       module.setDriveMotionMagic(distanceFeet);
     }
   }
+
+  public void setModuleAngle(Rotation2d angleDegrees) {
+    for (int i = 0; i < modules.length; i++) {
+      FXSwerveModule module = modules[i];
+      module.setAngle(angleDegrees);
+    }
+  }
+
   /**
    * Stops all of the drive motors on each module
    */
@@ -194,13 +202,19 @@ public class SwerveDrivetrain extends SubsystemBase {
   public void setTurnMotorTicks() {
     double tick = SmartDashboard.getNumber("ticks", 0);
     for(FXSwerveModule module : modules) {
-      module.angleMotor.set(ControlMode.Position, tick);
+      // module.angleMotor.set(ControlMode.Position, tick);
     }
   }
 
   public void resetDriveEncoders() {
     for(FXSwerveModule module : modules) {
       module.resetDriveMotorPosition();
+    }
+  }
+
+  public void resetAngleMotors() {
+    for(FXSwerveModule module : modules) {
+      module.resetAngleMotor();
     }
   }
 

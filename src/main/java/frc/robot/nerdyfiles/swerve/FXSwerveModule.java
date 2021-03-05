@@ -29,20 +29,20 @@ public class FXSwerveModule {
      * Proportional value for the drive motor speed
      * This is used to scale the error to a funcitonal speed for the motors
      */
-    private static final double kDriveP = 15;
+    private static final double kDriveP = 0.1;
 
     /**
      * Integral value for the drive motor speed
      * This value is used to reduce oscillation when sending the motor to a setpoint
      */
-    private static final double kDriveI = 0.01;
+    private static final double kDriveI = 0;
 
     /**
      * Derivative value for the drive motor speed
      * This is added to the speed of the motors to increase power at
      * smaller errors
      */
-    private static final double kDriveD = 0.1;
+    private static final double kDriveD = 0;
 
     /**
      * Feet Forward value for the drive motor speed
@@ -50,7 +50,7 @@ public class FXSwerveModule {
      * causing the motor to increase the power output to
      * be able to reach its setpoint
      */
-    private static final double kDriveF = 0.2;
+    private static final double kDriveF = 0;
 
     private static final double kAngleP = 1.0;
     private static final double kAngleI = 0.0;
@@ -60,13 +60,13 @@ public class FXSwerveModule {
     private static final double kAngleOpenloopRamp = 0.15;
 
     /** TalonFX motor controller, used as an angle motor in the swerve module */
-    public TalonFX driveMotor;
+    private TalonFX driveMotor;
 
     /** TalonFX motor controller, used as a drive motor in the swerve module */
-    public TalonFX angleMotor;
+    private TalonFX angleMotor;
 
     /** CANCoder encoder, used measure the rotational position of the angle motor */
-    public CANCoder canCoder;
+    private CANCoder canCoder;
 
     /**
      * 4in wheels on the MK3 Swerve modules
@@ -165,16 +165,19 @@ public class FXSwerveModule {
         driveTalonFXConfiguration.slot0.kI = kDriveI;
         driveTalonFXConfiguration.slot0.kD = kDriveD;
         driveTalonFXConfiguration.slot0.kF = kDriveF;
-        driveTalonFXConfiguration.slot0.allowableClosedloopError = 100;
-        driveTalonFXConfiguration.closedloopRamp = 0.55;
-        driveTalonFXConfiguration.openloopRamp = 0.2;
+        // driveTalonFXConfiguration.slot0.allowableClosedloopError = 100;
+        // driveTalonFXConfiguration.closedloopRamp = 0.55;
+        // driveTalonFXConfiguration.openloopRamp = 0.2;
 
         driveMotor.configAllSettings(driveTalonFXConfiguration);
 
+        // Speeds are in ticks/100ms
+        int kMaxVelocityTicks = 22627;
+
         /* --- Motion Magic --- */
         // Sets the velocity & accelaration for the motion magic mode
-        driveMotor.configMotionCruiseVelocity(640, 0);
-        driveMotor.configMotionAcceleration(200, 0);
+        driveMotor.configMotionCruiseVelocity(kMaxVelocityTicks * 0.5 , 0);
+        driveMotor.configMotionAcceleration(kMaxVelocityTicks * 0.5, 0);
 
         // Sets how the motor will react when there is no power applied to the motor
         driveMotor.setNeutralMode(NeutralMode.Coast);
@@ -248,15 +251,7 @@ public class FXSwerveModule {
         SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
 
         if (shouldUpdateAngle) {
-            // Find the rotational difference between the current state and the desired state
-            // Will be a positive value for clockwise rotations, neg for ccw rotations
-            Rotation2d rotationDelta = state.angle.minus(currentRotation);
-
-            double deltaTicks = (rotationDelta.getDegrees() / 360) * kAngleCANcoderTicksPerRotation;
-            double currentTicks = canCoder.getPosition() / canCoder.configGetFeedbackCoefficient();
-            double desiredTicks = currentTicks + deltaTicks;
-            // Set the absolute position for the motor by converting our degrees to # of ticks for the rotational value
-            angleMotor.set(TalonFXControlMode.Position, desiredTicks);
+            setAngle(state.angle);
         }
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
@@ -267,8 +262,27 @@ public class FXSwerveModule {
         driveMotor.set(TalonFXControlMode.MotionMagic, distanceFeet / kDriveFeetPerTick);
     }
 
+    public void setAngle(Rotation2d angle) {
+        // TODO: Can we optimize our angles by inverting our motors
+        Rotation2d currentRotation = Rotation2d.fromDegrees(getAngle());
+
+        // Find the rotational difference between the current state and the desired state
+        // Will be a positive value for clockwise rotations, neg for ccw rotations
+        Rotation2d rotationDelta = angle.minus(currentRotation);
+
+        double deltaTicks = (rotationDelta.getDegrees() / 360) * kAngleCANcoderTicksPerRotation;
+        double currentTicks = canCoder.getPosition() / canCoder.configGetFeedbackCoefficient();
+        double desiredTicks = currentTicks + deltaTicks;
+        // Set the absolute position for the motor by converting our degrees to # of ticks for the rotational value
+        angleMotor.set(TalonFXControlMode.Position, desiredTicks);
+    }
+
     public SwerveModuleState getState() {
         return new SwerveModuleState(Units.feetToMeters(getVelocity()), Rotation2d.fromDegrees(getAngle()));
+    }
+
+    public void resetAngleMotor() {
+        setAngle(new Rotation2d(0));
     }
 
     public void stopAngleMotor() {

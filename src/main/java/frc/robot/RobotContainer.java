@@ -8,12 +8,15 @@ import java.io.IOException;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.LPathTrajectory;
+import frc.robot.commands.auto.MotionMagicCommand;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft0;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft1;
@@ -63,11 +66,21 @@ public class RobotContainer {
     try { autonChooser.addOption("StraightLineTest10Ft0", new StraightLineTest10Ft0(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("StraightLineTest10Ft1", new StraightLineTest10Ft1(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
     autonChooser.addOption("LPathCommand", new LPathTrajectory(swerveDrivetrain));
+    autonChooser.addOption("Motion Magic (10ft)", new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain));
+    autonChooser.addOption("Motion Magic (L-10ft)", new SequentialCommandGroup(
+      new MotionMagicCommand(new Translation2d(5, 2.5), swerveDrivetrain),
+      new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain)
+    ));
+    autonChooser.addOption("Motion Magic (L-10ft 2)", new SequentialCommandGroup(
+      new MotionMagicCommand(new Translation2d(5, 0), swerveDrivetrain),
+      new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain)
+    ));
   }
 
   public void resetDrivetrain() {
     swerveDrivetrain.resetOdometry();
     swerveDrivetrain.resetDriveEncoders();
+    swerveDrivetrain.resetAngleMotors();
   }
 
   /**
