@@ -71,15 +71,25 @@ public class RobotContainer {
       new MotionMagicCommand(new Translation2d(5, 2.5), swerveDrivetrain),
       new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain)
     ));
-    autonChooser.addOption("Motion Magic (L-10ft 2)", new SequentialCommandGroup(
-      new MotionMagicCommand(new Translation2d(5, 0), swerveDrivetrain),
-      new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain)
+    autonChooser.addOption("Motion Magic (L-10ft 2)",
+        new SequentialCommandGroup(new MotionMagicCommand(new Translation2d(5, 0), swerveDrivetrain),
+        new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain)));
+    autonChooser.addOption("Motion Magic (Tuning 1)", new SequentialCommandGroup(
+        new MotionMagicCommand(new Translation2d(5, 0), swerveDrivetrain)
+    ));
+    autonChooser.addOption("Motion Magic (Tuning 2)", new SequentialCommandGroup(
+        new MotionMagicCommand(new Translation2d(10, 0), swerveDrivetrain),
+        new MotionMagicCommand(new Translation2d(5, 0), swerveDrivetrain),
+        new MotionMagicCommand(new Translation2d(10, 0), swerveDrivetrain)
+    ));
+    autonChooser.addOption("Motion Magic (Tuning 3)", new SequentialCommandGroup(
+        new MotionMagicCommand(new Translation2d(-5, 0), swerveDrivetrain)
     ));
   }
 
   public void resetDrivetrain() {
     swerveDrivetrain.resetOdometry();
-    swerveDrivetrain.resetDriveEncoders();
+    swerveDrivetrain.resetDriveMotors();
     swerveDrivetrain.resetAngleMotors();
   }
 
@@ -96,7 +106,7 @@ public class RobotContainer {
     final JoystickButton greenA = new JoystickButton(controller, XboxController.Button.kA.value);
     final JoystickButton redB = new JoystickButton(controller, XboxController.Button.kB.value);
 
-    greenA.whenPressed(() -> swerveDrivetrain.resetDriveEncoders());
+    greenA.whenPressed(() -> swerveDrivetrain.resetDriveMotors());
     // greenA.whenPressed(new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
     redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
 

@@ -1,5 +1,7 @@
 package frc.robot.nerdyfiles.swerve;
 
+import java.util.concurrent.Callable;
+
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.sensors.*;
@@ -132,7 +134,6 @@ public class FXSwerveModule {
         SmartDashboard.putNumber("Get Custom Param/" + canCoder.getDeviceID(), canCoder.configGetCustomParam(0));
         SmartDashboard.putNumber("Magnet Offest Degrees/" + canCoder.getDeviceID(), canCoder.configGetMagnetOffset());
 
-
         angleTalonFXConfiguration.slot0.kP = kAngleP;
         angleTalonFXConfiguration.slot0.kI = kAngleI;
         angleTalonFXConfiguration.slot0.kD = kAngleD;
@@ -176,8 +177,8 @@ public class FXSwerveModule {
 
         /* --- Motion Magic --- */
         // Sets the velocity & accelaration for the motion magic mode
-        driveMotor.configMotionCruiseVelocity(kMaxVelocityTicks * 0.5 , 0);
-        driveMotor.configMotionAcceleration(kMaxVelocityTicks * 0.5, 0);
+        driveMotor.configMotionCruiseVelocity(kMaxVelocityTicks , 0);
+        driveMotor.configMotionAcceleration(kMaxVelocityTicks * 1, 0);
 
         // Sets how the motor will react when there is no power applied to the motor
         driveMotor.setNeutralMode(NeutralMode.Coast);
@@ -255,15 +256,21 @@ public class FXSwerveModule {
         }
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
-        driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
+
+       // driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
+       driveMotor.set(TalonFXControlMode.Velocity, ((feetPerSecond / 10) * 12) / kInchesPerTick);
     }
 
-    public void setDriveMotionMagic(double distanceFeet) {
+    public void setMotionMagic(Rotation2d angle, double distanceFeet) {
+        Rotation2d currentRotation = Rotation2d.fromDegrees(getAngle());
+        SwerveModuleState state = SwerveModuleState.optimize(new SwerveModuleState(1, angle), currentRotation);
+
+        setAngle(state.angle);
+
         driveMotor.set(TalonFXControlMode.MotionMagic, distanceFeet / kDriveFeetPerTick);
     }
 
-    public void setAngle(Rotation2d angle) {
-        // TODO: Can we optimize our angles by inverting our motors
+    private void setAngle(Rotation2d angle) {
         Rotation2d currentRotation = Rotation2d.fromDegrees(getAngle());
 
         // Find the rotational difference between the current state and the desired state
@@ -279,6 +286,10 @@ public class FXSwerveModule {
 
     public SwerveModuleState getState() {
         return new SwerveModuleState(Units.feetToMeters(getVelocity()), Rotation2d.fromDegrees(getAngle()));
+    }
+
+    public void resetDriveMotor() {
+        driveMotor.setSelectedSensorPosition(0);
     }
 
     public void resetAngleMotor() {
@@ -308,13 +319,19 @@ public class FXSwerveModule {
     private double getDriveMotorTemperature() {
         return driveMotor.getTemperature();
     }
-
-    public void resetDriveMotorPosition() {
-        driveMotor.setSelectedSensorPosition(0);
-    }
     
     public double getDriveMotorPosition() {
         return driveMotor.getSelectedSensorPosition();
+    }
+
+    public void playNote() {
+        angleMotor.set(TalonFXControlMode.MusicTone, 261.626); // C4
+        driveMotor.set(TalonFXControlMode.MusicTone, 261.626); // C4
+    }
+
+    public void stopNote() {
+        angleMotor.set(TalonFXControlMode.MusicTone, 0);
+        driveMotor.set(TalonFXControlMode.MusicTone, 0);
     }
 
     public void logDebug() {

@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.*;
 
@@ -164,17 +163,10 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
   }
 
-  public void setDriveMotionMagic(double distanceFeet) {
+  public void setMotionMagic(Rotation2d angleDegrees, double distanceFeet) {
     for (int i = 0; i < modules.length; i++) {
       FXSwerveModule module = modules[i];
-      module.setDriveMotionMagic(distanceFeet);
-    }
-  }
-
-  public void setModuleAngle(Rotation2d angleDegrees) {
-    for (int i = 0; i < modules.length; i++) {
-      FXSwerveModule module = modules[i];
-      module.setAngle(angleDegrees);
+      module.setMotionMagic(angleDegrees, distanceFeet);
     }
   }
 
@@ -196,6 +188,18 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
   }
 
+  public void playNote() {
+    for(FXSwerveModule module : modules) {
+      module.playNote();
+    }
+  }
+
+  public void stopNote() {
+    for(FXSwerveModule module : modules) {
+      module.stopNote();
+    }
+  }
+
   /**
    * Sets all modules turn motors to a specific set point tick
    */
@@ -206,9 +210,9 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
   }
 
-  public void resetDriveEncoders() {
+  public void resetDriveMotors() {
     for(FXSwerveModule module : modules) {
-      module.resetDriveMotorPosition();
+      module.resetDriveMotor();
     }
   }
 
