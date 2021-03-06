@@ -9,14 +9,19 @@ import java.io.IOException;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.auto.autonav.BarrelRacingCommand;
-import frc.robot.commands.auto.autonav.BounceCommand;
-import frc.robot.commands.auto.autonav.SlalomCommand;
 import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.swerve.SetTurnMotorTicks;
+import frc.robot.commands.auto.LPathTrajectory;
+import frc.robot.commands.auto.calibration.StraightLineTest10Ft;
+import frc.robot.commands.auto.calibration.StraightLineTest10Ft0;
+import frc.robot.commands.auto.calibration.StraightLineTest10Ft1;
+import frc.robot.commands.auto.autonav.BarrelRacing;
+import frc.robot.commands.auto.autonav.Bounce;
+import frc.robot.commands.auto.autonav.Slalom;
 import frc.robot.commands.swerve.SwerveDriveCommand;
 import frc.robot.subsystems.PixyCam;
 import frc.robot.subsystems.Pigeon;
@@ -52,23 +57,22 @@ public class RobotContainer {
     // Resets the pigeon to 0
     pigeon.resetPidgey();
 
+    resetDrivetrain();
+
     autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
-    try {
-      autonChooser.addOption("Barrel Racing", new BarrelRacingCommand(swerveDrivetrain));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    try {
-      autonChooser.addOption("Bounce", new BounceCommand(swerveDrivetrain));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    try {
-      autonChooser.addOption("Slalom", new SlalomCommand(swerveDrivetrain));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    try { autonChooser.addOption("Barrel Racing", new BarrelRacing(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("Bounce", new Bounce(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("Slalom", new Slalom(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("StraightLineTest10Ft", new StraightLineTest10Ft(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("StraightLineTest10Ft0", new StraightLineTest10Ft0(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("StraightLineTest10Ft1", new StraightLineTest10Ft1(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
+    autonChooser.addOption("LPathCommand", new LPathTrajectory(swerveDrivetrain));
     autonChooser.addOption("Galactic Search", new GalacticSearch(pixy, swerveDrivetrain));
+  }
+
+  public void resetDrivetrain() {
+    swerveDrivetrain.resetOdometry();
+    swerveDrivetrain.resetDriveEncoders();
   }
 
   /**
@@ -81,11 +85,15 @@ public class RobotContainer {
     // Driver Left Bumper is used for field-oriented drive - held for true, released
     // for false
 
-    final JoystickButton greenA = new JoystickButton(controller, 1);
-    final JoystickButton redB = new JoystickButton(controller, 2);
+    final JoystickButton greenA = new JoystickButton(controller, XboxController.Button.kA.value);
+    final JoystickButton redB = new JoystickButton(controller, XboxController.Button.kB.value);
 
-    greenA.whenPressed(new SetTurnMotorTicks(swerveDrivetrain));
-    redB.whenPressed(new SetTurnMotorTicks(swerveDrivetrain).withTimeout(1));
+    greenA.whenPressed(() -> swerveDrivetrain.resetDriveEncoders());
+    // greenA.whenPressed(new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
+    redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
+
+    SmartDashboard.putData("AutonChooser", autonChooser);
+    // SmartDashboard.putData("Reset Drive Encoder", new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
   }
 
   /**
@@ -96,4 +104,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autonChooser.getSelected();
   }
+
 }
