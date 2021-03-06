@@ -92,4 +92,6 @@ public final class Constants {
     public static final int MODULE3_ANGLE_MOTOR_ID = 11;
     public static final int MODULE3_ANGLE_CANCODER_ID = 4;
     public static final double MODULE3_ANGLE_OFFSET = -15.557;
+
+    public static final int INTAKE = 2; //TODO: replace placeholder value
 }
