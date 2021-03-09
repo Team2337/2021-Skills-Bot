@@ -10,6 +10,9 @@ import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrivetrain;
 
 public class TrajectoryCommand extends FXSwerveControllerCommand {
+  
+  private Trajectory trajectory;
+  private SwerveDrivetrain drivetrain;
 
   public TrajectoryCommand(Trajectory trajectory, SwerveDrivetrain drivetrain) {
     // TODO: We know our velocity is correct, we need to figure out if our acceleration is correct
@@ -26,6 +29,16 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
       drivetrain::setModuleStates,
       drivetrain
     );
+
+    this.trajectory = trajectory;
+    this.drivetrain = drivetrain;
+  }
+
+  @Override
+  public void initialize() {
+    super.initialize();
+
+    drivetrain.resetPosition(trajectory.getInitialPose());
   }
 
 }

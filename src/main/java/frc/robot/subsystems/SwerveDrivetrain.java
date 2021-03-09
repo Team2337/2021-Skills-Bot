@@ -84,6 +84,10 @@ public class SwerveDrivetrain extends SubsystemBase {
     };
   }
 
+  public void resetPosition(Pose2d pose) {
+    odometry.resetPosition(pose, Rotation2d.fromDegrees(pigeon.getYaw()));
+  }
+
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
