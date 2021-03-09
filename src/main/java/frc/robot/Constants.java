@@ -76,6 +76,8 @@ public final class Constants {
     public static final double MAX_DEGREES_PER_SECOND = REVOLUTION_PER_SECOND * 360;
   }
 
+  public static final int PIXY_CHIP_SELECT = 0;
+
   /*******************/
   /* --------------- */
   /* --- CAN IDs --- */

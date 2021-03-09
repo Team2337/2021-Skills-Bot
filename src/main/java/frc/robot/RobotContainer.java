@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.GalacticSearch;
-import frc.robot.commands.swerve.SetTurnMotorTicks;
 import frc.robot.commands.auto.LPathTrajectory;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft0;
@@ -39,7 +38,7 @@ public class RobotContainer {
   private final XboxController controller = new XboxController(0);
 
   /* --- Subsystems --- */
-  private PixyCam pixy = new PixyCam(0);
+  private PixyCam pixy = new PixyCam(Constants.PIXY_CHIP_SELECT);
   private Pigeon pigeon = new Pigeon();
   private SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(pigeon);
 
