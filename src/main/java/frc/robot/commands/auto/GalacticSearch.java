@@ -53,8 +53,4 @@ public final class GalacticSearch extends InstantCommand {
     }
   }
 
-  @Override
-  public void end(boolean interrupted) {
-  }
-
 }
