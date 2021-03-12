@@ -150,6 +150,10 @@ public class FXSwerveControllerCommand extends CommandBase {
     SmartDashboard.putNumber("desiredState_y", desiredState.poseMeters.getTranslation().getY());
     SmartDashboard.putNumber("Current_x", pose.getX());
     SmartDashboard.putNumber("Current_y", pose.getY());
+    SmartDashboard.putNumber("curTime", curTime);
+    SmartDashboard.putNumber("desiredState", desiredState.poseMeters.getRotation().getDegrees());
+
+
 
     m_outputModuleStates.accept(targetModuleStates);
   }

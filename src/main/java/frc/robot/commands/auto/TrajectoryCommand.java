@@ -20,8 +20,8 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
       trajectory,
       drivetrain::getPose,
       drivetrain.getKinematics(),
-      new PIDController(2, 0, 0),
-      new PIDController(2, 0, 0),
+      new PIDController(5.5, 0, 0),
+      new PIDController(3, 0, 0),
       new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND),
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND)
