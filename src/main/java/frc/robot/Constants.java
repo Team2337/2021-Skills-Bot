@@ -81,12 +81,12 @@ public final class Constants {
     public static final int MODULE1_DRIVE_MOTOR_ID = 1;
     public static final int MODULE1_ANGLE_MOTOR_ID = 5;
     public static final int MODULE1_ANGLE_CANCODER_ID = 2;
-    public static final double MODULE1_ANGLE_OFFSET = -75.938;
+    public static final double MODULE1_ANGLE_OFFSET = -36.826;
 
     public static final int MODULE2_DRIVE_MOTOR_ID = 14;
     public static final int MODULE2_ANGLE_MOTOR_ID = 10;
     public static final int MODULE2_ANGLE_CANCODER_ID = 3;
-    public static final double MODULE2_ANGLE_OFFSET = -350.859;
+    public static final double MODULE2_ANGLE_OFFSET = -346.992;
 
     public static final int MODULE3_DRIVE_MOTOR_ID = 15;
     public static final int MODULE3_ANGLE_MOTOR_ID = 11;
