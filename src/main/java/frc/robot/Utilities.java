@@ -23,8 +23,8 @@ public class Utilities {
      * @return - squared input double value
      */
     public static double squareValues(double value) {
-        // double direction = value < 0 ? -1 : 1;
-        return Math.copySign(Math.pow(value, 2), value);
+      // double direction = value < 0 ? -1 : 1;
+      return Math.copySign(Math.pow(value, 2), value);
     }
 
     /**
@@ -35,11 +35,11 @@ public class Utilities {
      * @return - returns derivative double value to add to the speed of the motor
      */
     public static double calculateDerivative(double error, double lastError, double dt) {
-        if (Double.isFinite(lastError)) {
-            return (error - lastError) / dt;
-        } else {
-            return 0;
-        }
+      if (Double.isFinite(lastError)) {
+        return (error - lastError) / dt;
+      } else {
+        return 0;
+      }
     }
 
   /**
