@@ -84,6 +84,26 @@ public final class Constants {
   /* --------------- */
   /*******************/
 
+  /**
+   * For reference:
+   *  0 - module 0 drive motor
+   *  1 - module 1 drive motor, module 0 angle cancoder
+   *  2 - module 1 angle cancoder
+   *  3 - module 2 angle cancoder
+   *  4 - module 3 angle cancoder
+   *  5 - module 1 angle motor
+   *  6 - Intake
+   *  7 - FREE
+   *  8 - FREE
+   *  9 - FREE
+   * 10 - module 2 angle motor
+   * 11 - module 3 angle motor
+   * 12 - FREE
+   * 13 - FREE
+   * 14 - module 2 drive motor
+   * 15 - module 3 drive motor
+   */
+
   public static final int MODULE0_DRIVE_MOTOR_ID = 0;
   public static final int MODULE0_ANGLE_MOTOR_ID = 4;
   public static final int MODULE0_ANGLE_CANCODER_ID = 1;
@@ -104,5 +124,5 @@ public final class Constants {
   public static final int MODULE3_ANGLE_CANCODER_ID = 4;
   public static final double MODULE3_ANGLE_OFFSET = -15.557;
 
-  public static final int INTAKE = 2; //TODO: replace placeholder value
+  public static final int INTAKE = 6; //TODO: replace placeholder value
 }
