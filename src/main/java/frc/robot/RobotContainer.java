@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.auto.LPathTrajectory;
 import frc.robot.commands.auto.MotionMagicCommand;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft;
@@ -24,6 +25,7 @@ import frc.robot.commands.auto.autonav.BarrelRacing;
 import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;
 import frc.robot.commands.swerve.SwerveDriveCommand;
+import frc.robot.subsystems.PixyCam;
 import frc.robot.subsystems.Pigeon;
 import frc.robot.subsystems.SwerveDrivetrain;
 
@@ -39,6 +41,7 @@ public class RobotContainer {
   private final XboxController controller = new XboxController(0);
 
   /* --- Subsystems --- */
+  private PixyCam pixy = new PixyCam(Constants.PIXY_CHIP_SELECT);
   private Pigeon pigeon = new Pigeon();
   private SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(pigeon);
 
@@ -85,6 +88,7 @@ public class RobotContainer {
     autonChooser.addOption("Motion Magic (Tuning 3)", new SequentialCommandGroup(
         new MotionMagicCommand(new Translation2d(-5, 0), swerveDrivetrain)
     ));
+    autonChooser.addOption("Galactic Search", new GalacticSearch(pixy, swerveDrivetrain));
   }
 
   public void resetDrivetrain() {
