@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.*;
 
@@ -85,6 +84,10 @@ public class SwerveDrivetrain extends SubsystemBase {
     };
   }
 
+  public void resetPosition(Pose2d pose) {
+    odometry.resetPosition(pose, Rotation2d.fromDegrees(pigeon.getYaw()));
+  }
+
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
@@ -164,6 +167,13 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
   }
 
+  public void setMotionMagic(Rotation2d angleDegrees, double distanceFeet) {
+    for (int i = 0; i < modules.length; i++) {
+      FXSwerveModule module = modules[i];
+      module.setMotionMagic(angleDegrees, distanceFeet);
+    }
+  }
+
   /**
    * Stops all of the drive motors on each module
    */
@@ -182,19 +192,37 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
   }
 
+  public void playNote() {
+    for(FXSwerveModule module : modules) {
+      module.playNote();
+    }
+  }
+
+  public void stopNote() {
+    for(FXSwerveModule module : modules) {
+      module.stopNote();
+    }
+  }
+
   /**
    * Sets all modules turn motors to a specific set point tick
    */
   public void setTurnMotorTicks() {
     double tick = SmartDashboard.getNumber("ticks", 0);
     for(FXSwerveModule module : modules) {
-      module.angleMotor.set(ControlMode.Position, tick);
+      // module.angleMotor.set(ControlMode.Position, tick);
     }
   }
 
-  public void resetDriveEncoders() {
+  public void resetDriveMotors() {
     for(FXSwerveModule module : modules) {
-      module.resetDriveMotorPosition();
+      module.resetDriveMotor();
+    }
+  }
+
+  public void resetAngleMotors() {
+    for(FXSwerveModule module : modules) {
+      module.resetAngleMotor();
     }
   }
 
