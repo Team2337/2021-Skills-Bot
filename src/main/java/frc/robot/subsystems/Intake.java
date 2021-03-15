@@ -15,23 +15,18 @@ public class Intake extends SubsystemBase {
   private final boolean DEBUG = true;
 
   private TalonFX intakeMotor;
-  private StatorCurrentLimitConfiguration intakeCurrentLimitConfig;
 
-  private double setSpeed;
-
-  public Intake(){
+  public Intake() {
     //Initialize variables
-    setSpeed = 0;
-
-    //Initialize motor
     intakeMotor = new TalonFX(Constants.INTAKE);
 
     //Set settings on motor
     intakeMotor.configFactoryDefault();
-    intakeMotor.setInverted(false);
+    // intakeMotor.setInverted(true); // Uncomment me if we need to invert the motors
 
     //Configure a current limit
-    intakeCurrentLimitConfig = new StatorCurrentLimitConfiguration();
+    StatorCurrentLimitConfiguration intakeCurrentLimitConfig = 
+      new StatorCurrentLimitConfiguration();
     intakeCurrentLimitConfig.currentLimit = 50;
     intakeCurrentLimitConfig.enable = true;
     intakeCurrentLimitConfig.triggerThresholdCurrent = 40;
@@ -44,11 +39,10 @@ public class Intake extends SubsystemBase {
   }
 
   @Override
-  public void periodic(){
+  public void periodic() {
     //Debug stuff
-    if(DEBUG){
-      SmartDashboard.putNumber("Intake Set Speed", getIntakeSetSpeed());
-      SmartDashboard.putNumber("Intake Actual Speed", getIntakeActualSpeed());
+    if(DEBUG) {
+      SmartDashboard.putNumber("Intake Speed", getIntakeSpeed());
       SmartDashboard.putNumber("Intake Motor Temp", getIntakeTemperature());
     }
   }
@@ -57,36 +51,21 @@ public class Intake extends SubsystemBase {
    * Sets the speed of the intake
    * @param speed The speed to set the motor as a percentage value -1 through 1.
    */
-  public void setIntakeSpeed(double speed){
-    //Set tracking variable
-    setSpeed = speed;
-
-    //Set intake speed
+  public void setIntakeSpeed(double speed) {
     intakeMotor.set(ControlMode.PercentOutput, speed);
   }
 
   /**
    * Stops the motor
    */
-  public void stopIntake(){
-    //Set tracking variable
-    setSpeed = 0;
-
-    //Stop motor by setting its speed to 0
+  public void stopIntake() {
     intakeMotor.set(ControlMode.PercentOutput, 0);
-  }
-
-  /**
-   * @return The set speed of the motor
-   */
-  public double getIntakeSetSpeed(){
-    return setSpeed;
   }
 
   /**
    * @return The current speed of the motor
    */
-  public double getIntakeActualSpeed(){
+  public double getIntakeSpeed() {
     return intakeMotor.getMotorOutputPercent();
   }
 
@@ -94,7 +73,7 @@ public class Intake extends SubsystemBase {
    * Gets the temperature of the intake motor
    * @return The temperature in Celsius of the intake motor
    */
-  public double getIntakeTemperature(){
+  public double getIntakeTemperature() {
     return intakeMotor.getTemperature();
   }
 }
