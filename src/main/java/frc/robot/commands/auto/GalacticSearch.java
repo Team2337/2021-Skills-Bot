@@ -5,13 +5,13 @@ import frc.robot.subsystems.PixyCam;
 import frc.robot.subsystems.SwerveDrivetrain;
 import frc.robot.commands.auto.galacticsearch.*;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Uses the PixyCam to run an auton based on the position of a ball.
  * @author Michael F., Zach O., and Nicholas S.
  */
-public final class GalacticSearch extends InstantCommand {
+public final class GalacticSearch extends CommandBase {
 
   private PixyCam pixy;
   private SwerveDrivetrain drivetrain;
@@ -23,7 +23,6 @@ public final class GalacticSearch extends InstantCommand {
    * @param drivetrain The drivetrain for scheduling commands
    */
   public GalacticSearch(PixyCam pixy, SwerveDrivetrain drivetrain) {
-    super();
     this.pixy = pixy;
     this.drivetrain = drivetrain;
   }

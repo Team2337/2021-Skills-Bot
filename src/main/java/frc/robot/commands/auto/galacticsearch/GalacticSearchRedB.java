@@ -7,6 +7,6 @@ import frc.robot.subsystems.SwerveDrivetrain;
 
 public class GalacticSearchRedB extends PathweaverTrajectoryCommand {
   public GalacticSearchRedB(SwerveDrivetrain drivetrain) throws IOException {
-    super("output/Red B3.wpilib.json", drivetrain);
+    super("output/RedB.wpilib.json", drivetrain);
   }
 }
