@@ -14,7 +14,7 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
   private Trajectory trajectory;
   private SwerveDrivetrain drivetrain;
 
-  public TrajectoryCommand(Trajectory trajectory, SwerveDrivetrain drivetrain) {
+  public TrajectoryCommand(Trajectory trajectory, Boolean shouldUpdate, SwerveDrivetrain drivetrain) {
     // TODO: We know our velocity is correct, we need to figure out if our acceleration is correct
     super(
       trajectory,
@@ -22,16 +22,23 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
       drivetrain.getKinematics(),
       new PIDController(5.5, 0, 0),
       new PIDController(3, 0, 0),
-      new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(
+      new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND),
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND)
       )),
+      shouldUpdate,
       drivetrain::setModuleStates,
       drivetrain
     );
 
     this.trajectory = trajectory;
     this.drivetrain = drivetrain;
+  }
+
+
+  public TrajectoryCommand(Trajectory trajectory, SwerveDrivetrain drivetrain) {
+    // TODO: We know our velocity is correct, we need to figure out if our acceleration is correct
+    this(trajectory, false, drivetrain);
   }
 
   @Override

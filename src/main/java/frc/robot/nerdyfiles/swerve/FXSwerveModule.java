@@ -250,7 +250,7 @@ public class FXSwerveModule {
     public void setDesiredState(SwerveModuleState desiredState, boolean shouldUpdateAngle) {
         Rotation2d currentRotation = Rotation2d.fromDegrees(getAngle());
         SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
-
+        
         if (shouldUpdateAngle) {
             setAngle(state.angle);
         }

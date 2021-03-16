@@ -233,6 +233,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     ChassisSpeeds speeds = kinematics.toChassisSpeeds(modules[0].getState(), modules[1].getState(), modules[2].getState(), modules[3].getState());
     SmartDashboard.putNumber("Velocity X", Units.metersToFeet(speeds.vxMetersPerSecond));
     SmartDashboard.putNumber("Velocity Y", Units.metersToFeet(speeds.vyMetersPerSecond));
+    SmartDashboard.putNumber("PoseYaw", getPose().getRotation().getDegrees());
 
     for(FXSwerveModule module : modules) {
       module.logDebug();
