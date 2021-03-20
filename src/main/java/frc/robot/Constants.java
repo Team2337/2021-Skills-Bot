@@ -13,6 +13,22 @@ import edu.wpi.first.wpilibj.util.Units;
  */
 public final class Constants {
 
+  // Path Max Velocities and Accelerations
+  //BarrelRacing
+  // Max Velocity - 4.145
+  // Acceleration - 8.2
+
+  //Slalom
+  // Max Velocity - 4.145
+  // Acceleration - 7.5
+
+  //Bounce
+  // Max Velocity - 4.145
+  // Acceleration - 8.2
+
+
+
+
   /**
    * 17x17in robot - since the values are the same, we'll only define one value
    * as opposed to having a length and a width. Keep in mind - this will not work
@@ -50,6 +66,7 @@ public final class Constants {
       }
     }
 
+
     // /2 since we're measuring from the center - halfway
     public static final double MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES = TRACK_WIDTH / 2;
     public static final double MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES = WHEEL_BASE / 2;
@@ -62,7 +79,7 @@ public final class Constants {
      * Swerve Drive Specialties module is 13.6 feet/second
      * https://www.swervedrivespecialties.com/products/mk3-swerve-module
      */
-    public static final double MAX_FEET_PER_SECOND = 13.6;
+    public static final double MAX_FEET_PER_SECOND = 20;
     private static final double MAX_INCHES_PER_SECOND = MAX_FEET_PER_SECOND * 12;
     /**
      * To calculate max rotational speed:

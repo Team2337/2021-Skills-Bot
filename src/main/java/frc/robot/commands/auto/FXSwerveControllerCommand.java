@@ -78,7 +78,9 @@ public class FXSwerveControllerCommand extends CommandBase {
     m_trajectory = requireNonNullParam(trajectory, "trajectory", "FXSwerveControllerCommand");
     m_pose = requireNonNullParam(pose, "pose", "FXSwerveControllerCommand");
     m_kinematics = requireNonNullParam(kinematics, "kinematics", "FXSwerveControllerCommand");
-
+    
+    // Either -180 to 180 or 0 to 360 - trying the former, might need to try the latter
+    thetaController.enableContinuousInput(-(Math.PI), (Math.PI));
     m_controller = new HolonomicDriveController(
         requireNonNullParam(xController, "xController", "FXSwerveControllerCommand"),
         requireNonNullParam(yController, "xController", "FXSwerveControllerCommand"),
@@ -127,17 +129,33 @@ public class FXSwerveControllerCommand extends CommandBase {
   public FXSwerveControllerCommand(Trajectory trajectory, Supplier<Pose2d> pose, SwerveDriveKinematics kinematics,
       PIDController xController, PIDController yController, ProfiledPIDController thetaController,
       Consumer<SwerveModuleState[]> outputModuleStates, Subsystem... requirements) {
-    this(trajectory, pose, kinematics, xController, yController, thetaController,
-        () -> trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters.getRotation(),
-        outputModuleStates, requirements);
+      this(
+          trajectory,
+          pose,
+          kinematics,
+          xController,
+          yController,
+          thetaController,
+          () -> trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters.getRotation(),
+          outputModuleStates,
+          requirements
+      );
   }
   
   public FXSwerveControllerCommand(Trajectory trajectory, Supplier<Pose2d> pose, SwerveDriveKinematics kinematics,
   PIDController xController, PIDController yController, ProfiledPIDController thetaController,
   Boolean shouldUpdate, Consumer<SwerveModuleState[]> outputModuleStates, Subsystem... requirements) {
-this(trajectory, pose, kinematics, xController, yController, thetaController,
-() -> trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters.getRotation(),
-    outputModuleStates, requirements);
+    this(
+        trajectory,
+        pose,
+        kinematics,
+        xController,
+        yController,
+        thetaController,
+        () -> trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters.getRotation(),
+        outputModuleStates,
+        requirements
+    );
     m_shouldUpdate = shouldUpdate;
 }
   @Override
@@ -162,14 +180,14 @@ this(trajectory, pose, kinematics, xController, yController, thetaController,
     var targetChassisSpeeds = m_controller.calculate(pose, desiredState, m_actualRotation);
     var targetModuleStates = m_kinematics.toSwerveModuleStates(targetChassisSpeeds);
 
-    SmartDashboard.putNumber("desiredState_x", desiredState.poseMeters.getTranslation().getX());
-    SmartDashboard.putNumber("desiredState_y", desiredState.poseMeters.getTranslation().getY());
-    SmartDashboard.putNumber("Current_x", pose.getX());
-    SmartDashboard.putNumber("Current_y", pose.getY());
+    SmartDashboard.putNumber("pathX", desiredState.poseMeters.getTranslation().getX());
+    SmartDashboard.putNumber("pathHeading", desiredState.poseMeters.getRotation().getDegrees());
+    SmartDashboard.putNumber("pathY", desiredState.poseMeters.getTranslation().getY());
+    SmartDashboard.putNumber("robotX", pose.getX());
+    SmartDashboard.putNumber("robotHeading", pose.getRotation().getDegrees());
+    SmartDashboard.putNumber("robotY", pose.getY());
     SmartDashboard.putNumber("curTime", curTime);
     SmartDashboard.putNumber("desiredRotation", m_actualRotation.getDegrees());
-
-
 
     m_outputModuleStates.accept(targetModuleStates);
   }

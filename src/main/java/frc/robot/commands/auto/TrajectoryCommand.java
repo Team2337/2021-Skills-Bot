@@ -21,8 +21,8 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
       drivetrain::getPose,
       drivetrain.getKinematics(),
       new PIDController(5.5, 0, 0),
-      new PIDController(3, 0, 0),
-      new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(
+      new PIDController(3, 0, 0), // Theta controller P was 10 for bounce path
+      new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND),
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND)
       )),
