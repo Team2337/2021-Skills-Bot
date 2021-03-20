@@ -123,8 +123,9 @@ public class SwerveDrivetrain extends SubsystemBase {
      * right to be a negative value. On our Xbox controller - right is a positive value,
      * left is a negative value. We need to negate the values to work with kinematics.
      */
-    double vyFeetPerSecond = Constants.Swerve.MAX_FEET_PER_SECOND * -strafe;
-    double omegaDegreesPerSecond = Constants.Swerve.MAX_DEGREES_PER_SECOND * -rotation;
+    //TODO: Update comment if it works
+    double vyFeetPerSecond = Constants.Swerve.MAX_FEET_PER_SECOND * strafe;
+    double omegaDegreesPerSecond = Constants.Swerve.MAX_DEGREES_PER_SECOND * rotation;
 
     // Kinematics expects meters/sec + radians
     double vxMetersPerSecond = Units.feetToMeters(vxFeetPerSeccond);
@@ -160,10 +161,14 @@ public class SwerveDrivetrain extends SubsystemBase {
   }
 
   public void setModuleStates(SwerveModuleState[] states, boolean shouldUpdateAngle) {
+    setModuleStates(states, shouldUpdateAngle, false);
+  }
+
+  public void setModuleStates(SwerveModuleState[] states, boolean shouldUpdateAngle, boolean isJoystickControl) {
     for (int i = 0; i < states.length; i++) {
       FXSwerveModule module = modules[i];
       SwerveModuleState moduleState = states[i];
-      module.setDesiredState(moduleState, shouldUpdateAngle);
+      module.setDesiredState(moduleState, shouldUpdateAngle, isJoystickControl);
     }
   }
 
