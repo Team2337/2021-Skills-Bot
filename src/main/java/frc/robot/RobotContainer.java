@@ -25,9 +25,8 @@ import frc.robot.commands.auto.autonav.BarrelRacing;
 import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;
 import frc.robot.commands.swerve.SwerveDriveCommand;
-import frc.robot.subsystems.PixyCam;
-import frc.robot.subsystems.Pigeon;
-import frc.robot.subsystems.SwerveDrivetrain;
+import frc.robot.commands.intake.*;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -44,6 +43,7 @@ public class RobotContainer {
   private PixyCam pixy = new PixyCam(Constants.PIXY_CHIP_SELECT);
   private Pigeon pigeon = new Pigeon();
   private SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(pigeon);
+  private Intake intake = new Intake();
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -110,9 +110,16 @@ public class RobotContainer {
     final JoystickButton greenA = new JoystickButton(controller, XboxController.Button.kA.value);
     final JoystickButton redB = new JoystickButton(controller, XboxController.Button.kB.value);
 
+    final JoystickButton bumperRight = new JoystickButton(controller, XboxController.Button.kBumperRight.value);
+
+    //Drive motor controls
     greenA.whenPressed(() -> swerveDrivetrain.resetDriveMotors());
     // greenA.whenPressed(new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
     redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
+
+    // Intake controls
+    bumperRight.whenPressed(new SetIntakeSpeed(intake, 1));
+    bumperRight.whenReleased(new StopIntake(intake));
 
     SmartDashboard.putData("AutonChooser", autonChooser);
     // SmartDashboard.putData("Reset Drive Encoder", new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));

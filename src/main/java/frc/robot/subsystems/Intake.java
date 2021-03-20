@@ -22,7 +22,6 @@ public class Intake extends SubsystemBase {
 
     //Set settings on motor
     intakeMotor.configFactoryDefault();
-    // intakeMotor.setInverted(true); // Uncomment me if we need to invert the motors
 
     //Configure a current limit
     StatorCurrentLimitConfiguration intakeCurrentLimitConfig = 
