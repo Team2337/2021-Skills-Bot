@@ -78,29 +78,31 @@ public final class Constants {
 
   public static final int PIXY_CHIP_SELECT = 0;
 
-   /*******************/
-    /* --------------- */
-    /* --- CAN IDs --- */
-    /* --------------- */
-    /*******************/
+  /*******************/
+  /* --------------- */
+  /* --- CAN IDs --- */
+  /* --------------- */
+  /*******************/
 
-    public static final int MODULE0_DRIVE_MOTOR_ID = 0;
-    public static final int MODULE0_ANGLE_MOTOR_ID = 4;
-    public static final int MODULE0_ANGLE_CANCODER_ID = 1;
-    public static final double MODULE0_ANGLE_OFFSET = -230.801;
+  public static final int MODULE0_DRIVE_MOTOR_ID = 0;
+  public static final int MODULE0_ANGLE_MOTOR_ID = 4;
+  public static final int MODULE0_ANGLE_CANCODER_ID = 1;
+  public static final double MODULE0_ANGLE_OFFSET = -230.801;
 
-    public static final int MODULE1_DRIVE_MOTOR_ID = 1;
-    public static final int MODULE1_ANGLE_MOTOR_ID = 5;
-    public static final int MODULE1_ANGLE_CANCODER_ID = 2;
-    public static final double MODULE1_ANGLE_OFFSET = -36.826;
+  public static final int MODULE1_DRIVE_MOTOR_ID = 1;
+  public static final int MODULE1_ANGLE_MOTOR_ID = 5;
+  public static final int MODULE1_ANGLE_CANCODER_ID = 2;
+  public static final double MODULE1_ANGLE_OFFSET = -36.826;
 
-    public static final int MODULE2_DRIVE_MOTOR_ID = 14;
-    public static final int MODULE2_ANGLE_MOTOR_ID = 10;
-    public static final int MODULE2_ANGLE_CANCODER_ID = 3;
-    public static final double MODULE2_ANGLE_OFFSET = -346.992;
+  public static final int MODULE2_DRIVE_MOTOR_ID = 14;
+  public static final int MODULE2_ANGLE_MOTOR_ID = 10;
+  public static final int MODULE2_ANGLE_CANCODER_ID = 3;
+  public static final double MODULE2_ANGLE_OFFSET = -346.992;
 
-    public static final int MODULE3_DRIVE_MOTOR_ID = 15;
-    public static final int MODULE3_ANGLE_MOTOR_ID = 11;
-    public static final int MODULE3_ANGLE_CANCODER_ID = 4;
-    public static final double MODULE3_ANGLE_OFFSET = -15.557;
+  public static final int MODULE3_DRIVE_MOTOR_ID = 15;
+  public static final int MODULE3_ANGLE_MOTOR_ID = 11;
+  public static final int MODULE3_ANGLE_CANCODER_ID = 4;
+  public static final double MODULE3_ANGLE_OFFSET = -15.557;
+
+  public static final int INTAKE = 6;
 }
