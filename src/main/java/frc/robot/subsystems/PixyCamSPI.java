@@ -11,9 +11,9 @@ import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
  * The code for retrieving PixyCam values from the SPI
  * @author Michael F., Nicholas S.
  */
-public class PixyCam extends SubsystemBase {
+public class PixyCamSPI extends SubsystemBase {
 
-  //PixyCam
+  // PixyCam
   private Pixy2 pixycam;
   private int state;
   private int chip;
@@ -22,19 +22,20 @@ public class PixyCam extends SubsystemBase {
   private boolean seesTarget;
   private boolean retrievedState;
 
-  //For efficiency
+  // For efficiency
   private int cacheNumber;
   private int lastLargestBlockRetrieval;
   private Block lastLargestBlock;
 
-  //Debug mode
+  // Debug mode
   private final boolean DEBUG = false;
 
   /**
    * Subsystem for the PixyCam
+   * 
    * @param chipSelect The chip the pixy is plugged into on the SPI
    */
-  public PixyCam(int chipSelect){
+  public PixyCamSPI(int chipSelect) {
     //Initialize variables
     pixycam = Pixy2.createInstance(Pixy2.LinkType.SPI);
     state = pixycam.init(chipSelect);

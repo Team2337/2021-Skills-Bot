@@ -209,16 +209,6 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
   }
 
-  /**
-   * Sets all modules turn motors to a specific set point tick
-   */
-  public void setTurnMotorTicks() {
-    double tick = SmartDashboard.getNumber("ticks", 0);
-    for(FXSwerveModule module : modules) {
-      // module.angleMotor.set(ControlMode.Position, tick);
-    }
-  }
-
   public void resetDriveMotors() {
     for(FXSwerveModule module : modules) {
       module.resetDriveMotor();

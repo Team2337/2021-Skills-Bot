@@ -94,6 +94,8 @@ public final class Constants {
   }
 
   public static final int PIXY_CHIP_SELECT = 0;
+  public static final int PIXY_ANALOG = 4; //MXP pin 3
+  public static final int PIXY_DIGITAL = 5;
 
   /*******************/
   /* --------------- */

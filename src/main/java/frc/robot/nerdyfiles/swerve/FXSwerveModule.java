@@ -1,7 +1,5 @@
 package frc.robot.nerdyfiles.swerve;
 
-import java.util.concurrent.Callable;
-
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.sensors.*;
