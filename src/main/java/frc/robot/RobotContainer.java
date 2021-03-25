@@ -88,7 +88,7 @@ public class RobotContainer {
     autonChooser.addOption("Motion Magic (Tuning 3)", new SequentialCommandGroup(
         new MotionMagicCommand(new Translation2d(-5, 0), swerveDrivetrain)
     ));
-    autonChooser.addOption("Galactic Search", new GalacticSearch(pixy, swerveDrivetrain));
+    autonChooser.addOption("Galactic Search", new GalacticSearch(pixy, swerveDrivetrain).beforeStarting(()-> intake.setIntakeSpeed(1), intake).withTimeout(2));
   }
 
   public void resetDrivetrain() {
