@@ -2,7 +2,6 @@ package frc.robot.commands.auto;
 
 import java.util.List;
 
-import edu.wpi.first.wpilibj.Ultrasonic.Unit;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -15,7 +14,6 @@ import frc.robot.subsystems.SwerveDrivetrain;
 public class LPathTrajectory extends TrajectoryCommand {
 
   public LPathTrajectory(SwerveDrivetrain drivetrain) {
-    // TODO: We know our velocity is correct, we need to figure out if our acceleration is correct
     super(
       TrajectoryGenerator.generateTrajectory(
         new Pose2d(0, 0, new Rotation2d(0)),

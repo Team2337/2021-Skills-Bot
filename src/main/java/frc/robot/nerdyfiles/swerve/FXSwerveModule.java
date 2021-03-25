@@ -1,7 +1,5 @@
 package frc.robot.nerdyfiles.swerve;
 
-import java.util.concurrent.Callable;
-
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.sensors.*;
@@ -247,18 +245,20 @@ public class FXSwerveModule {
      * Set the speed + rotation of the swerve module from a SwerveModuleState object
      * @param desiredState - A SwerveModuleState representing the desired new state of the module
      */
-    public void setDesiredState(SwerveModuleState desiredState, boolean shouldUpdateAngle) {
+    public void setDesiredState(SwerveModuleState desiredState, boolean shouldUpdateAngle, boolean isJoystickControl) {
         Rotation2d currentRotation = Rotation2d.fromDegrees(getAngle());
         SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
-
+        
         if (shouldUpdateAngle) {
             setAngle(state.angle);
         }
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
-
-       // driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
-       driveMotor.set(TalonFXControlMode.Velocity, ((feetPerSecond / 10) * 12) / kInchesPerTick);
+        if(isJoystickControl) {
+         driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
+        } else {
+            driveMotor.set(TalonFXControlMode.Velocity, ((feetPerSecond / 10) * 12) / kInchesPerTick);
+        }
     }
 
     public void setMotionMagic(Rotation2d angle, double distanceFeet) {
