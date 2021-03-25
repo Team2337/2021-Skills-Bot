@@ -149,7 +149,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
-    setModuleStates(moduleStates, shouldUpdateAngle);
+    setModuleStates(moduleStates, shouldUpdateAngle, true);
   }
 
   public void setModuleStates(SwerveModuleState[] states) {

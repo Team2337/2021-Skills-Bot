@@ -93,7 +93,11 @@ public class RobotContainer {
     autonChooser.addOption("Motion Magic (Tuning 3)", new SequentialCommandGroup(
         new MotionMagicCommand(new Translation2d(-5, 0), swerveDrivetrain)
     ));
-    autonChooser.addOption("Galactic Search", new GalacticSearch(pixy, swerveDrivetrain).beforeStarting(()-> intake.setIntakeSpeed(1), intake).withTimeout(2));
+    autonChooser.addOption("Galactic Search", new GalacticSearch(pixy, swerveDrivetrain).beforeStarting(() -> intake.setIntakeSpeed(1), intake).withTimeout(2));
+    try { autonChooser.addOption("Galatic Search Red A", new GalacticSearchRedA(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("Galatic Search Red B", new GalacticSearchRedB(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("Galatic Search Blue A", new GalacticSearchBlueA(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("Galatic Search Blue B", new GalacticSearchBlueB(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
   }
 
   public void resetDrivetrain() {
