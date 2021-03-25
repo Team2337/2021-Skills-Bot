@@ -21,6 +21,10 @@ import frc.robot.commands.auto.MotionMagicCommand;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft0;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft1;
+import frc.robot.commands.auto.galacticsearch.GalacticSearchBlueA;
+import frc.robot.commands.auto.galacticsearch.GalacticSearchBlueB;
+import frc.robot.commands.auto.galacticsearch.GalacticSearchRedA;
+import frc.robot.commands.auto.galacticsearch.GalacticSearchRedB;
 import frc.robot.commands.auto.autonav.BarrelRacing;
 import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;
@@ -40,7 +44,7 @@ public class RobotContainer {
   private final XboxController controller = new XboxController(0);
 
   /* --- Subsystems --- */
-  private PixyCam pixy = new PixyCam(Constants.PIXY_CHIP_SELECT);
+  private PixyCam2Wire pixy = new PixyCam2Wire(Constants.PIXY_ANALOG, Constants.PIXY_DIGITAL);
   private Pigeon pigeon = new Pigeon();
   private SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(pigeon);
   private Intake intake = new Intake();
@@ -68,6 +72,7 @@ public class RobotContainer {
     try { autonChooser.addOption("StraightLineTest10Ft", new StraightLineTest10Ft(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("StraightLineTest10Ft0", new StraightLineTest10Ft0(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("StraightLineTest10Ft1", new StraightLineTest10Ft1(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
+
     autonChooser.addOption("LPathCommand", new LPathTrajectory(swerveDrivetrain));
     autonChooser.addOption("Motion Magic (10ft)", new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain));
     autonChooser.addOption("Motion Magic (L-10ft)", new SequentialCommandGroup(
@@ -118,8 +123,8 @@ public class RobotContainer {
     redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
 
     // Intake controls
-    bumperRight.whenPressed(new SetIntakeSpeed(intake, 1));
-    bumperRight.whenReleased(new StopIntake(intake));
+    bumperRight.whenPressed(new SetIntakeSpeed(intake, 0.5));
+    bumperRight.whenReleased(new SetIntakeSpeed(intake, 0));
 
     SmartDashboard.putData("AutonChooser", autonChooser);
     // SmartDashboard.putData("Reset Drive Encoder", new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));

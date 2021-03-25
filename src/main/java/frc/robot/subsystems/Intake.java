@@ -19,9 +19,11 @@ public class Intake extends SubsystemBase {
   public Intake() {
     //Initialize variables
     intakeMotor = new TalonFX(Constants.INTAKE);
-
+    
     //Set settings on motor
     intakeMotor.configFactoryDefault();
+
+    intakeMotor.setInverted(true);
 
     //Configure a current limit
     StatorCurrentLimitConfiguration intakeCurrentLimitConfig = 
