@@ -164,9 +164,9 @@ public class FXSwerveModule {
         driveTalonFXConfiguration.slot0.kI = kDriveI;
         driveTalonFXConfiguration.slot0.kD = kDriveD;
         driveTalonFXConfiguration.slot0.kF = kDriveF;
+        driveTalonFXConfiguration.openloopRamp = 0.2; // 0.2s seconds from neutral to full output
+        // driveTalonFXConfiguration.closedloopRamp = 0.2; // 0.2s seconds from neutral to full output
         // driveTalonFXConfiguration.slot0.allowableClosedloopError = 100;
-        // driveTalonFXConfiguration.closedloopRamp = 0.55;
-        // driveTalonFXConfiguration.openloopRamp = 0.2;
 
         driveMotor.configAllSettings(driveTalonFXConfiguration);
 

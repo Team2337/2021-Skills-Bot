@@ -25,6 +25,7 @@ import frc.robot.commands.auto.galacticsearch.GalacticSearchBlueA;
 import frc.robot.commands.auto.galacticsearch.GalacticSearchBlueB;
 import frc.robot.commands.auto.galacticsearch.GalacticSearchRedA;
 import frc.robot.commands.auto.galacticsearch.GalacticSearchRedB;
+import frc.robot.commands.commandgroups.CGGalaticSearchRedA;
 import frc.robot.commands.auto.autonav.BarrelRacing;
 import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;
@@ -96,10 +97,11 @@ public class RobotContainer {
     ));
 
     autonChooser.addOption("Galactic Search", new GalacticSearch(pixy, swerveDrivetrain));
-    try { autonChooser.addOption("Galatic Search Red A", new GalacticSearchRedA(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Galatic Search Red B", new GalacticSearchRedB(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Galatic Search Blue A", new GalacticSearchBlueA(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Galatic Search Blue B", new GalacticSearchBlueB(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
+    // try { autonChooser.addOption("Galatic Search Red A", new GalacticSearchRedA(swerveDrivetrain).beforeStarting(new SetIntakeSpeed(intake, 1).withTimeout(2); } catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("Galatic Search Red A", new CGGalaticSearchRedA(swerveDrivetrain, intake)); } catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("Galatic Search Red B", new GalacticSearchRedB(swerveDrivetrain).beforeStarting(() -> intake.setIntakeSpeed(1), intake));} catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("Galatic Search Blue A", new GalacticSearchBlueA(swerveDrivetrain).beforeStarting(() -> intake.setIntakeSpeed(1), intake));} catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("Galatic Search Blue B", new GalacticSearchBlueB(swerveDrivetrain).beforeStarting(() -> intake.setIntakeSpeed(1), intake));} catch (IOException e) { e.printStackTrace(); }
   }
 
   public void resetDrivetrain() {

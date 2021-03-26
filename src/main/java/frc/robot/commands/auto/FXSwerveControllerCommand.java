@@ -177,6 +177,8 @@ public class FXSwerveControllerCommand extends CommandBase {
     if(m_shouldUpdate){
       m_actualRotation = desiredState.poseMeters.getRotation();
     }
+    SmartDashboard.putBoolean("shouldUpdate", m_shouldUpdate);
+    
     var targetChassisSpeeds = m_controller.calculate(pose, desiredState, m_actualRotation);
     var targetModuleStates = m_kinematics.toSwerveModuleStates(targetChassisSpeeds);
 
