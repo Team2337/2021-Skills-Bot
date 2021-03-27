@@ -53,8 +53,8 @@ public class SwerveDriveCommand extends CommandBase {
 
 
     if ((controller.getXButton()) || (controller.getYButton())) {
-      strafe = 0;
-      rotation = 0;
+      strafe = 45;
+      //rotation = 0;
       isFieldOriented = false;
     }
 
