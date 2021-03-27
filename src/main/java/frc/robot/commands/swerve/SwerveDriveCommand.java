@@ -51,6 +51,13 @@ public class SwerveDriveCommand extends CommandBase {
     strafe = Utilities.deadband(strafe, 0.1);
     rotation = Utilities.deadband(rotation, 0.1);
 
+
+    if ((controller.getXButton()) || (controller.getYButton())) {
+      strafe = 0;
+      rotation = 0;
+      isFieldOriented = false;
+    }
+
     // Pass on joystick values to be calculated into angles and speeds
     drivetrain.calculateJoystickInput(forward, strafe, rotation, isFieldOriented);
 

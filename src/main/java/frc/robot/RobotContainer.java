@@ -25,6 +25,7 @@ import frc.robot.commands.auto.galacticsearch.GalacticSearchBlueA;
 import frc.robot.commands.auto.galacticsearch.GalacticSearchBlueB;
 import frc.robot.commands.auto.galacticsearch.GalacticSearchRedA;
 import frc.robot.commands.auto.galacticsearch.GalacticSearchRedB;
+import frc.robot.commands.auto.commandGroups.CircleTest;
 import frc.robot.commands.auto.autonav.BarrelRacing;
 import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;
@@ -73,7 +74,7 @@ public class RobotContainer {
     try { autonChooser.addOption("StraightLineTest10Ft0", new StraightLineTest10Ft0(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("StraightLineTest10Ft1", new StraightLineTest10Ft1(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
 
-
+    autonChooser.addOption("CircleTest", new CircleTest(swerveDrivetrain));
     autonChooser.addOption("LPathCommand", new LPathTrajectory(swerveDrivetrain));
     autonChooser.addOption("Motion Magic (10ft)", new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain));
     autonChooser.addOption("Motion Magic (L-10ft)", new SequentialCommandGroup(
@@ -120,17 +121,23 @@ public class RobotContainer {
 
     final JoystickButton greenA = new JoystickButton(controller, XboxController.Button.kA.value);
     final JoystickButton redB = new JoystickButton(controller, XboxController.Button.kB.value);
+    final JoystickButton blueX = new JoystickButton(controller, XboxController.Button.kX.value);
 
     final JoystickButton bumperRight = new JoystickButton(controller, XboxController.Button.kBumperRight.value);
+    final JoystickButton yellowY = new JoystickButton(controller, XboxController.Button.kY.value);
 
     //Drive motor controls
     greenA.whenPressed(() -> swerveDrivetrain.resetDriveMotors());
     // greenA.whenPressed(new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
     redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
+    blueX.whileHeld(() -> swerveDrivetrain.setAngleMotorsTeleop(45));
+    yellowY.whileHeld(() -> swerveDrivetrain.setAngleMotorsTeleop(-45));
 
     // Intake controls
     bumperRight.whenPressed(new SetIntakeSpeed(intake, 0.5));
     bumperRight.whenReleased(new SetIntakeSpeed(intake, 0));
+
+    
 
     SmartDashboard.putData("AutonChooser", autonChooser);
     // SmartDashboard.putData("Reset Drive Encoder", new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));

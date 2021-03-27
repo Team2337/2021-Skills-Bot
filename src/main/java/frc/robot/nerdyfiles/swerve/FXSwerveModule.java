@@ -86,6 +86,7 @@ public class FXSwerveModule {
     private static final double kWheelInchesPerRotation = 2 * Math.PI * (kWheelDiameterInches / 2);
     private static final double kWheelTicksPerRevolution = kDriveEncoderTicksPerRotation * kDriveGearRatio;
     private static final double kInchesPerTick = kWheelInchesPerRotation / kWheelTicksPerRevolution;
+    private static final double kTicksPerInch = kWheelTicksPerRevolution / kWheelInchesPerRotation;
     private static final double kDriveFeetPerTick = kInchesPerTick / 12;
 
     /**
@@ -241,6 +242,16 @@ public class FXSwerveModule {
         return velocityFeet * 10;
     }
 
+        /**
+     * Get the number of drive ticks based on the measurement provided in inches
+     * @param inches
+     * @return Number of ticks the encoder will travel based on the number of inches the wheel travels.
+     */
+    public double getTicksFromInches(double inches) {
+        double ticks = kTicksPerInch * inches;
+        return ticks;
+    }
+
     /**
      * Set the speed + rotation of the swerve module from a SwerveModuleState object
      * @param desiredState - A SwerveModuleState representing the desired new state of the module
@@ -270,7 +281,7 @@ public class FXSwerveModule {
         driveMotor.set(TalonFXControlMode.MotionMagic, distanceFeet / kDriveFeetPerTick);
     }
 
-    private void setAngle(Rotation2d angle) {
+    public void setAngle(Rotation2d angle) {
         Rotation2d currentRotation = Rotation2d.fromDegrees(getAngle());
 
         // Find the rotational difference between the current state and the desired state

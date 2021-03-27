@@ -63,7 +63,7 @@ public class SwerveDrivetrain extends SubsystemBase {
   );
 
   private SwerveDriveOdometry odometry;
-
+  private double sentDegree;
   /**
    * Subsystem where swerve modules are configured,
    * and the calculations from the joystick inputs is handled.
@@ -95,6 +95,14 @@ public class SwerveDrivetrain extends SubsystemBase {
   public SwerveDriveKinematics getKinematics() {
     return kinematics;
   }
+
+  public double getDriveMotorPosition(int module) {
+    return modules[module].getDriveMotorPosition();
+  }
+
+  public double getTicksInches(double inches) {
+        return modules[0].getTicksFromInches(inches);
+}
 
   /**
    * Calculates the desired angle of each module, and the speed and direction of
@@ -221,6 +229,19 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
   }
 
+
+  public void setAngleMotorsTeleop(double degrees) {
+    sentDegree = degrees;
+    for (int i = 0; i < 2; i++) {
+      FXSwerveModule module = modules[i];
+      module.setAngle(Rotation2d.fromDegrees(degrees));    
+    }
+    for (int i = 2; i < 4; i++) {
+      FXSwerveModule module = modules[i];
+      module.setAngle(Rotation2d.fromDegrees(-degrees));    
+    }
+
+  }
   @Override
   public void periodic() {
     odometry.update(Rotation2d.fromDegrees(pigeon.getYaw()), modules[0].getState(), modules[1].getState(), modules[2].getState(), modules[3].getState());
@@ -229,6 +250,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Velocity X", Units.metersToFeet(speeds.vxMetersPerSecond));
     SmartDashboard.putNumber("Velocity Y", Units.metersToFeet(speeds.vyMetersPerSecond));
     SmartDashboard.putNumber("PoseYaw", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("input angle", sentDegree);
 
     for(FXSwerveModule module : modules) {
       module.logDebug();
