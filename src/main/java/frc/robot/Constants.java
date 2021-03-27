@@ -50,7 +50,7 @@ public final class Constants {
     Units.feetToMeters(Constants.Swerve.MAX_FEET_PER_SECOND)
   );
 
-    // Robot-specific configuration for our swerve drive algorithm
+  // Robot-specific configuration for our swerve drive algorithm
   public static final class Swerve {
 
     public enum ModulePosition {
