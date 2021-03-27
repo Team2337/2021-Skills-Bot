@@ -7,6 +7,6 @@ import frc.robot.subsystems.SwerveDrivetrain;
 
 public class Bounce extends PathweaverTrajectoryCommand {
   public Bounce(SwerveDrivetrain drivetrain) throws IOException {
-    super("output/Bounce.wpilib.json", drivetrain);
+    super("output/Bounce.wpilib.json", false, 1, drivetrain);
   }
 }

@@ -7,6 +7,6 @@ import frc.robot.subsystems.SwerveDrivetrain;
 
 public class Slalom extends PathweaverTrajectoryCommand {
   public Slalom(SwerveDrivetrain drivetrain) throws IOException {
-    super("output/SlalomP1.wpilib.json", drivetrain);
+    super("output/SlalomP1.wpilib.json", false, 1, drivetrain);
   }
 }

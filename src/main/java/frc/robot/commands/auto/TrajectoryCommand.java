@@ -10,11 +10,11 @@ import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrivetrain;
 
 public class TrajectoryCommand extends FXSwerveControllerCommand {
-  
+
   private Trajectory trajectory;
   private SwerveDrivetrain drivetrain;
 
-  public TrajectoryCommand(Trajectory trajectory, Boolean shouldUpdate, SwerveDrivetrain drivetrain) {
+  public TrajectoryCommand(Trajectory trajectory, Boolean shouldUpdate, double thetaP, SwerveDrivetrain drivetrain) {
     // TODO: We know our velocity is correct, we need to figure out if our acceleration is correct
     super(
       trajectory,
@@ -22,7 +22,7 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
       drivetrain.getKinematics(),
       new PIDController(5.5, 0, 0),
       new PIDController(3, 0, 0), // Theta controller P was 10 for bounce path
-      new ProfiledPIDController(11, 0, 0, new TrapezoidProfile.Constraints(
+      new ProfiledPIDController(thetaP, 0, 0, new TrapezoidProfile.Constraints( //Set to 11 for Galatic Search, set to 1 for autoNav
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND),
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND)
       )),
@@ -38,7 +38,7 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
 
   public TrajectoryCommand(Trajectory trajectory, SwerveDrivetrain drivetrain) {
     // TODO: We know our velocity is correct, we need to figure out if our acceleration is correct
-    this(trajectory, false, drivetrain);
+    this(trajectory, false, 1, drivetrain);
   }
 
   @Override
