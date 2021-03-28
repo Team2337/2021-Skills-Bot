@@ -18,7 +18,7 @@ public class CGGalaticSearchBlueA extends ParallelCommandGroup {
         );
         */
         addCommands(
-          new SetIntakeSpeed(intake, 0.5).withTimeout(1).andThen(new SetIntakeSpeed(intake, 0.75)),
+          new SetIntakeSpeed(intake, 0.75).withTimeout(5).andThen(new SetIntakeSpeed(intake, 0.75)),
           new GalacticSearchBlueA(drivetrain)
         );
     }
