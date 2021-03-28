@@ -1,0 +1,6 @@
+event    path             time(s)   vel(m/s)  accel(m/s/s)  cent-accel(m/s/s)
+slalom:   Slalomp3        6.039     4.2
+barrel:   BarrelRacing    8.408     ?
+Bounce:   Bounce          7.540     ?
+GSBlueA:  BlueA_favorblue 3.737     ?
+GSBlueB:  BlueB_favorblue 7.303     ?
