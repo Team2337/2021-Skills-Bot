@@ -23,7 +23,7 @@ public class Pigeon extends SubsystemBase {
 	 * Specifies whether or not the Pigeon will be in debug mode.
 	 * @see #periodic()
 	 */
-	private final boolean pigeonDebug = false;
+	private final boolean pigeonDebug = true;
 
 	/**
 	 * Pigeon IMU object
@@ -45,6 +45,10 @@ public class Pigeon extends SubsystemBase {
 	 * Array for raw gyro values (x: roll | y: pitch | z: yaw)
 	 */
 	public double[] xyz_dps;
+
+
+	public double[] tiltAngles;
+	public short[] ba_xyz;
 	/**
 	 * Timeout to set the yaw
 	 */
@@ -60,12 +64,15 @@ public class Pigeon extends SubsystemBase {
 		if(configMode){
 			pidgey.configFactoryDefault();
 			pidgey.enterCalibrationMode(CalibrationMode.BootTareGyroAccel, 10);
+
 		}
 
 		gyrofusionStatus = new PigeonIMU.FusionStatus();
 		gyroGenStatus = new PigeonIMU.GeneralStatus();
 		ypr_deg = new double[3];
 		xyz_dps = new double[3];
+		tiltAngles = new double[3];
+		ba_xyz = new short[3];
 	}
 
 
@@ -78,6 +85,8 @@ public class Pigeon extends SubsystemBase {
 		pidgey.getGeneralStatus(gyroGenStatus);
 		pidgey.getYawPitchRoll(ypr_deg);
 		pidgey.getRawGyro(xyz_dps);
+		pidgey.getAccelerometerAngles(tiltAngles);
+		pidgey.getBiasedAccelerometer(ba_xyz);  //Multiply by 2^(−n).  16384^(-14)= 1G
 
 		if(pigeonDebug){
 			SmartDashboard.putNumber("FusedHeading", pidgey.getFusedHeading());
@@ -85,6 +94,14 @@ public class Pigeon extends SubsystemBase {
 			SmartDashboard.putNumber("Roll", getRoll());
 		}
 			SmartDashboard.putNumber("yaw", getYaw());
+
+			SmartDashboard.putNumber("Accel_Angles/x",tiltAngles[0]);
+			SmartDashboard.putNumber("Accel_Angles/y",tiltAngles[1]);
+			SmartDashboard.putNumber("Accel_Angles/z",tiltAngles[2]);
+
+			SmartDashboard.putNumber("Pigeon Accl X",getX_Accel());
+			SmartDashboard.putNumber("Pigeon Accl Y",getY_Accel());
+			SmartDashboard.putNumber("Pigeon Accl Z",ba_xyz[2]/16384);
 	}
 
 	/**
@@ -162,6 +179,25 @@ public class Pigeon extends SubsystemBase {
 	public double getFusedHeading() {
 		return pidgey.getFusedHeading();
 	}
+
+	 /**
+	 * Returns the pigeon's biased acceleromter data as a fixed point notation Q2.14. (m.n notation)  (eg. 16384 = 1G)
+	 * and converts to to a reading in G's.  As in 16384 = 1G
+	 * @return x_Acceleration
+	 */
+	public double getX_Accel() {
+		return ba_xyz[0]/16384;
+	}
+
+	 /**
+	 * Returns the pigeon's biased acceleromter data as a fixed point notation Q2.14. (m.n notation)  (eg. 16384 = 1G)
+	 * and converts to to a reading in G's.  i.e. 16384 * (2^-14) = 1G.  (or just divide by 16384)
+	 * @return y_Acceleration
+	 */
+	public double getY_Accel() {
+		return ba_xyz[1]/16384;
+	}
+
 
 	/**
     * Returns the Temperature value from the gyro
