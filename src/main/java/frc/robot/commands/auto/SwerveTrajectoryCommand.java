@@ -28,7 +28,7 @@ public class SwerveTrajectoryCommand extends TrajectoryCommand {
     var states = trajectory.getStates();
     var start = trajectory.getInitialPose();
     var end = states.get(states.size() - 1).poseMeters;
-    var interiorWaypoints = states.subList(1, states.size() - 1).stream().map(s -> s.poseMeters).collect(Collectors.toList());
+    var interiorWaypoints = states.subList(1, states.size() - 1).stream().map(s -> s.poseMeters.getTranslation()).collect(Collectors.toList());
     return TrajectoryGenerator.generateTrajectory(
       start,
       interiorWaypoints,
