@@ -130,8 +130,8 @@ public class RobotContainer {
     greenA.whenPressed(() -> swerveDrivetrain.resetDriveMotors());
     // greenA.whenPressed(new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
     redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
-    blueX.whileHeld(() -> swerveDrivetrain.setAngleMotorsTeleop(45));
-    yellowY.whileHeld(() -> swerveDrivetrain.setAngleMotorsTeleop(-45));
+    //blueX.whileHeld(() -> swerveDrivetrain.setAngleMotorsTeleop(45));
+    //yellowY.whileHeld(() -> swerveDrivetrain.setAngleMotorsTeleop(-45));
 
     // Intake controls
     bumperRight.whenPressed(new SetIntakeSpeed(intake, 0.5));
