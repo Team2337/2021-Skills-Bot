@@ -15,11 +15,12 @@ public class DriveWithJoystickInputs extends CommandBase {
     private double endDistance;
     private double moduleAngle;
 
-    public DriveWithJoystickInputs(SwerveDrivetrain drivetrain, double forward, double encoderDist, double moduleAngle) { //, double forwardDist, double horizontalDist, double endAngleDegree) {
+    public DriveWithJoystickInputs(SwerveDrivetrain drivetrain, double forward, double rotation, double encoderDist, double moduleAngle) { //, double forwardDist, double horizontalDist, double endAngleDegree) {
         this.drivetrain = drivetrain;
         this.encoderDist = encoderDist;
         this.moduleAngle = moduleAngle;
         this.forward = forward;
+        this.rotation = rotation;
         addRequirements(drivetrain);
       } 
 
@@ -38,7 +39,7 @@ public class DriveWithJoystickInputs extends CommandBase {
        */
        // Pass on joystick values to be calculated into angles and speeds
        drivetrain.calculateJoystickInput(forward, strafe, rotation, false);
-       drivetrain.setAngleMotorsTeleop(moduleAngle);
+       //drivetrain.setAngleMotorsTeleop(moduleAngle);
       }
 
       @Override
