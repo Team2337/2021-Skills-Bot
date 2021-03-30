@@ -9,9 +9,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.Constants.Swerve.ModulePosition;
-import frc.robot.subsystems.Pigeon;;
 
 /**
  * Swerve Module Object used to run the calculations for the swerve drive The

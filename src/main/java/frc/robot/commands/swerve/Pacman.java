@@ -6,7 +6,7 @@ import frc.robot.subsystems.SwerveDrivetrain;
  * 
  * 
  */
-public class Pacman2 {
+public class Pacman {
 
    private static double halfRobotPlus = 1.1; //foot ? probably need meters for all
    private static double pacmanJoystickValues[];
