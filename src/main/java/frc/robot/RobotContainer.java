@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.auto.LPathTrajectory;
 import frc.robot.commands.auto.MotionMagicCommand;
+import frc.robot.commands.auto.SwerveTrajectoryCommand;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft0;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft1;
@@ -30,6 +31,7 @@ import frc.robot.commands.commandgroups.CGGalaticSearchBlueB;
 import frc.robot.commands.commandgroups.CGGalaticSearchRedA;
 import frc.robot.commands.commandgroups.CGGalaticSearchRedB;
 import frc.robot.commands.auto.autonav.BarrelRacing;
+import frc.robot.commands.auto.autonav.SendItCommand;
 import frc.robot.commands.auto.autonav.BarrelRacing2;
 import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;
@@ -74,6 +76,7 @@ public class RobotContainer {
     autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
     try { autonChooser.addOption("Barrel Racing", new BarrelRacing(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("Barrel Racing 2 (Centr)", new BarrelRacing2(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
+    try { autonChooser.addOption("Barrel Racing (Swerve)", new SwerveTrajectoryCommand("output/BarrelRacingV3.wpilib.json", swerveDrivetrain).andThen(new SendItCommand(swerveDrivetrain, pigeon))); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("Bounce", new Bounce(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("Slalom", new Slalom(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("Slalom 2 (Centr)", new Slalom2(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }

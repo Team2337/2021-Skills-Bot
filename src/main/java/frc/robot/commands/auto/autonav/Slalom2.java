@@ -20,7 +20,8 @@ public class Slalom2 extends TrajectoryCommand {
         new TrajectoryConfig(
           4.145,
           6.5
-        ).addConstraint(new CentripetalAccelerationConstraint(4.5))
+        )
+        .addConstraint(new CentripetalAccelerationConstraint(4.5))
       ),
       drivetrain
     );
