@@ -164,7 +164,12 @@ public class FXSwerveModule {
         driveTalonFXConfiguration.slot0.kI = kDriveI;
         driveTalonFXConfiguration.slot0.kD = kDriveD;
         driveTalonFXConfiguration.slot0.kF = kDriveF;
-        driveTalonFXConfiguration.openloopRamp = 1.0; // 1s seconds from neutral to full output
+        /**
+         * 0.5s seconds from neutral to full output
+         * As a note - we're looking to do some other fixes to make teleop driving smoother.
+         * This value might be able to be removed if we do smoothing pre-setting the percentage
+         */
+        driveTalonFXConfiguration.openloopRamp = 0.5;
         // driveTalonFXConfiguration.closedloopRamp = 0.2; // 0.2s seconds from neutral to full output
         // driveTalonFXConfiguration.slot0.allowableClosedloopError = 100;
 

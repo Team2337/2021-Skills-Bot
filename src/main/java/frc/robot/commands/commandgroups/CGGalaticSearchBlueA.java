@@ -11,12 +11,6 @@ import frc.robot.subsystems.SwerveDrivetrain;
 public class CGGalaticSearchBlueA extends ParallelCommandGroup {
 
   public CGGalaticSearchBlueA(SwerveDrivetrain drivetrain, Intake intake) throws IOException {
-        /*
-        addCommands(
-          new SetIntakeSpeed(intake, 0.75).withTimeout(5),
-          new GalacticSearchRedA(drivetrain)
-        );
-        */
         addCommands(
           new SetIntakeSpeed(intake, 0.75).withTimeout(5).andThen(new SetIntakeSpeed(intake, 0.75)),
           new GalacticSearchBlueA(drivetrain)

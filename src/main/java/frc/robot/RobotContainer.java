@@ -18,14 +18,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.auto.LPathTrajectory;
 import frc.robot.commands.auto.MotionMagicCommand;
-import frc.robot.commands.auto.SwerveTrajectoryCommand;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft0;
 import frc.robot.commands.auto.calibration.StraightLineTest10Ft1;
-// import frc.robot.commands.auto.galacticsearch.GalacticSearchBlueA;
-// import frc.robot.commands.auto.galacticsearch.GalacticSearchBlueB;
-// import frc.robot.commands.auto.galacticsearch.GalacticSearchRedA;
-// import frc.robot.commands.auto.galacticsearch.GalacticSearchRedB;
 import frc.robot.commands.commandgroups.CGGalaticSearchBlueA;
 import frc.robot.commands.commandgroups.CGGalaticSearchBlueB;
 import frc.robot.commands.commandgroups.CGGalaticSearchRedA;
@@ -76,7 +71,6 @@ public class RobotContainer {
     autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
     try { autonChooser.addOption("Barrel Racing", new BarrelRacing(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("Barrel Racing 2 (Centr)", new BarrelRacing2(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Barrel Racing (Swerve)", new SwerveTrajectoryCommand("output/BarrelRacingV3.wpilib.json", swerveDrivetrain).andThen(new SendItCommand(swerveDrivetrain, pigeon))); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("Bounce", new Bounce(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("Slalom", new Slalom(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("Slalom 2 (Centr)", new Slalom2(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
@@ -111,7 +105,6 @@ public class RobotContainer {
     // try { autonChooser.addOption("Galatic Search Red B", new GalacticSearchRedB(swerveDrivetrain).beforeStarting(() -> intake.setIntakeSpeed(1), intake));} catch (IOException e) { e.printStackTrace(); }
     // try { autonChooser.addOption("Galatic Search Blue A", new GalacticSearchBlueA(swerveDrivetrain).beforeStarting(() -> intake.setIntakeSpeed(1), intake));} catch (IOException e) { e.printStackTrace(); }
     // try { autonChooser.addOption("Galatic Search Blue B", new GalacticSearchBlueB(swerveDrivetrain).beforeStarting(() -> intake.setIntakeSpeed(1), intake));} catch (IOException e) { e.printStackTrace(); }
-
     try { autonChooser.addOption("CGGalatic Search Red A", new CGGalaticSearchRedA(swerveDrivetrain, intake)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("CGGalatic Search Red B", new CGGalaticSearchRedB(swerveDrivetrain, intake)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("CGGalatic Search Blue A", new CGGalaticSearchBlueA(swerveDrivetrain, intake)); } catch (IOException e) { e.printStackTrace(); }

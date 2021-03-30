@@ -123,7 +123,6 @@ public class SwerveDrivetrain extends SubsystemBase {
      * right to be a negative value. On our Xbox controller - right is a positive value,
      * left is a negative value. We need to negate the values to work with kinematics.
      */
-    //TODO: Update comment if it works
     double vyFeetPerSecond = Constants.Swerve.MAX_FEET_PER_SECOND * strafe;
     double omegaDegreesPerSecond = Constants.Swerve.MAX_DEGREES_PER_SECOND * rotation;
 

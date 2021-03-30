@@ -15,8 +15,8 @@ public class SendItCommand extends CommandBase {
   private Pigeon pigeon;
 
   /**
-   * woke up from a nap, its a little dark out but what are you silly i'm still
-   * gonna send it!
+   * woke up from a nap, its a little dark out
+   * but what are you silly? i'm still gonna send it
    */
   public SendItCommand(SwerveDrivetrain drivetrain, Pigeon pigeon) {
     this.drivetrain = drivetrain;
@@ -24,18 +24,17 @@ public class SendItCommand extends CommandBase {
   }
 
   @Override
-  public void initialize() {
+  public void execute() {
+    double kFullSpeed = Units.feetToMeters(20);
     ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-      Units.feetToMeters(-20), // x - might need to be negative?
-      Units.feetToMeters(0), // y
+      kFullSpeed * -1, // Negated, since we need to move towards our alliance wall in field relative terms
+      Units.feetToMeters(0),
       0,
       Rotation2d.fromDegrees(pigeon.getYaw())
     );
     SwerveModuleState[] moduleStates = drivetrain.getKinematics().toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.normalizeWheelSpeeds(moduleStates, Units.feetToMeters(20));
+    SwerveDriveKinematics.normalizeWheelSpeeds(moduleStates, kFullSpeed);
     drivetrain.setModuleStates(moduleStates);
   }
-
-  // TODO: This is going to need an end, or we're going to just keep going
 
 }

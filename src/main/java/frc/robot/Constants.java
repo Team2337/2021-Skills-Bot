@@ -58,7 +58,7 @@ public final class Constants {
       FRONT_LEFT(1),
       BACK_LEFT(2),
       BACK_RIGHT(3);
-            
+
       public final int value;
 
       ModulePosition(int value) {
@@ -79,7 +79,7 @@ public final class Constants {
      * Swerve Drive Specialties module is 13.6 feet/second
      * https://www.swervedrivespecialties.com/products/mk3-swerve-module
      */
-    public static final double MAX_FEET_PER_SECOND = 20;
+    public static final double MAX_FEET_PER_SECOND = 13.6;
     private static final double MAX_INCHES_PER_SECOND = MAX_FEET_PER_SECOND * 12;
     /**
      * To calculate max rotational speed:

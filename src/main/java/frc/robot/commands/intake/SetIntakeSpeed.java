@@ -28,4 +28,5 @@ public class SetIntakeSpeed extends CommandBase {
   public void initialize() {
     subsystem.setIntakeSpeed(speed);
   }
+
 }

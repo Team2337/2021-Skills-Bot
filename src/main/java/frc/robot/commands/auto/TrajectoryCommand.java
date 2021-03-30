@@ -15,14 +15,16 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
   private SwerveDrivetrain drivetrain;
 
   public TrajectoryCommand(Trajectory trajectory, Boolean shouldUpdate, double thetaP, SwerveDrivetrain drivetrain) {
-    // TODO: We know our velocity is correct, we need to figure out if our acceleration is correct
+    // Note on thetaP: set to 11 for Galatic Search, set to 1 for AutoNav, except Barrel Racing which is 10
+    // There was also a comment around thetaP being 10 for Bounce, but I can't confirm that (~zach)
+    // We should look to bring this thetaP down for Galactic Search, since we're over-correcting in the videos
     super(
       trajectory,
       drivetrain::getPose,
       drivetrain.getKinematics(),
       new PIDController(5.5, 0, 0),
-      new PIDController(3, 0, 0), // Theta controller P was 10 for bounce path
-      new ProfiledPIDController(thetaP, 0, 0, new TrapezoidProfile.Constraints( //Set to 11 for Galatic Search, set to 1 for autoNav
+      new PIDController(3, 0, 0),
+      new ProfiledPIDController(thetaP, 0, 0, new TrapezoidProfile.Constraints(
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND),
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND)
       )),
@@ -37,7 +39,6 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
 
 
   public TrajectoryCommand(Trajectory trajectory, SwerveDrivetrain drivetrain) {
-    // TODO: We know our velocity is correct, we need to figure out if our acceleration is correct
     this(trajectory, false, 1, drivetrain);
   }
 

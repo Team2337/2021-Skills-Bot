@@ -20,7 +20,7 @@ public class MotionMagicCommand extends CommandBase {
 
     addRequirements(drivetrain);
   }
-  
+
   @Override
   public void initialize() {
     drivetrain.playNote();
@@ -34,12 +34,12 @@ public class MotionMagicCommand extends CommandBase {
 
     drivetrain.setMotionMagic(heading, distance);
   }
-  
+
   @Override
   public boolean isFinished() {
     Translation2d currentPosition = drivetrain.getPose().getTranslation();
     // Error is in feet - what is the maximum allowable eror distance
-    double error = 0.1; // TODO: Reduce
+    double error = 0.1;
 
     double distance = currentPosition.getX() - point.getX();
     return Math.abs(distance) <= error;
