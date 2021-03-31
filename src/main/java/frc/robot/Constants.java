@@ -81,6 +81,7 @@ public final class Constants {
      */
     public static final double MAX_FEET_PER_SECOND = 13.6;
     private static final double MAX_INCHES_PER_SECOND = MAX_FEET_PER_SECOND * 12;
+    public static final double MAX_FEET_PER_SECOND_PER_SECOND = 13.6;
     /**
      * To calculate max rotational speed:
      * Max speed in feet per second * 12 = inches per second

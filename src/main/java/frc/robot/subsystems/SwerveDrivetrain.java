@@ -148,6 +148,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveDriveKinematics.normalizeWheelSpeeds(moduleStates, Constants.Swerve.MAX_FEET_PER_SECOND);
     setModuleStates(moduleStates, shouldUpdateAngle);
   }
 

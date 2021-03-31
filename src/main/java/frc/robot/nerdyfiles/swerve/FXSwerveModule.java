@@ -4,9 +4,11 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.sensors.*;
 
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants;
 import frc.robot.Constants.Swerve.ModulePosition;;
@@ -87,6 +89,17 @@ public class FXSwerveModule {
     private static final double kWheelTicksPerRevolution = kDriveEncoderTicksPerRotation * kDriveGearRatio;
     private static final double kInchesPerTick = kWheelInchesPerRotation / kWheelTicksPerRevolution;
     private static final double kDriveFeetPerTick = kInchesPerTick / 12;
+
+    private static final TrapezoidProfile.Constraints kDriveTeleopConstraints = new TrapezoidProfile.Constraints(
+        Constants.Swerve.MAX_FEET_PER_SECOND,
+        Constants.Swerve.MAX_FEET_PER_SECOND_PER_SECOND
+    );
+    private final ProfiledPIDController kDriveTeleopProfiledPIDController = new ProfiledPIDController(
+        kDriveP,
+        kDriveI,
+        kDriveD,
+        kDriveTeleopConstraints
+    );
 
     /**
      * Swerve Module Object used to run the calculations for the swerve drive
@@ -259,8 +272,9 @@ public class FXSwerveModule {
         }
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
-        if(isJoystickControl) {
-            driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
+        if (isJoystickControl) {
+            kDriveTeleopProfiledPIDController.setGoal(feetPerSecond);
+            driveMotor.set(TalonFXControlMode.PercentOutput, kDriveTeleopProfiledPIDController.calculate(getVelocity()) / Constants.Swerve.MAX_FEET_PER_SECOND);
         } else {
             driveMotor.set(TalonFXControlMode.Velocity, ((feetPerSecond / 10) * 12) / kInchesPerTick);
         }
