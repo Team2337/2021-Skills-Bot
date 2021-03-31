@@ -4,6 +4,6 @@
   "maxVelocity": 4.145,
   "maxAcceleration": 8.2,
   "wheelBase": 0.875,
-  "gameName": "Bounce Path",
+  "gameName": "Galactic Search A",
   "outputDir": "../src/main/deploy"
 }

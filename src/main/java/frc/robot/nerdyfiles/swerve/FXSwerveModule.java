@@ -164,9 +164,14 @@ public class FXSwerveModule {
         driveTalonFXConfiguration.slot0.kI = kDriveI;
         driveTalonFXConfiguration.slot0.kD = kDriveD;
         driveTalonFXConfiguration.slot0.kF = kDriveF;
+        /**
+         * 0.5s seconds from neutral to full output
+         * As a note - we're looking to do some other fixes to make teleop driving smoother.
+         * This value might be able to be removed if we do smoothing pre-setting the percentage
+         */
+        driveTalonFXConfiguration.openloopRamp = 0.5;
+        // driveTalonFXConfiguration.closedloopRamp = 0.2; // 0.2s seconds from neutral to full output
         // driveTalonFXConfiguration.slot0.allowableClosedloopError = 100;
-        // driveTalonFXConfiguration.closedloopRamp = 0.55;
-        // driveTalonFXConfiguration.openloopRamp = 0.2;
 
         driveMotor.configAllSettings(driveTalonFXConfiguration);
 
@@ -248,14 +253,14 @@ public class FXSwerveModule {
     public void setDesiredState(SwerveModuleState desiredState, boolean shouldUpdateAngle, boolean isJoystickControl) {
         Rotation2d currentRotation = Rotation2d.fromDegrees(getAngle());
         SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
-        
+
         if (shouldUpdateAngle) {
             setAngle(state.angle);
         }
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
         if(isJoystickControl) {
-         driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
+            driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
         } else {
             driveMotor.set(TalonFXControlMode.Velocity, ((feetPerSecond / 10) * 12) / kInchesPerTick);
         }
@@ -319,7 +324,7 @@ public class FXSwerveModule {
     private double getDriveMotorTemperature() {
         return driveMotor.getTemperature();
     }
-    
+
     public double getDriveMotorPosition() {
         return driveMotor.getSelectedSensorPosition();
     }

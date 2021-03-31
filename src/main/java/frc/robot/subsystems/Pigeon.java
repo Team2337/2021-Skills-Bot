@@ -46,6 +46,10 @@ public class Pigeon extends SubsystemBase {
 	 */
 	public double[] xyz_dps;
 	/**
+	 * Array for raw acceleration values
+	 */
+	public short[] xyz_accl;
+	/**
 	 * Timeout to set the yaw
 	 */
 	private int timeoutMs = 20;
@@ -66,8 +70,8 @@ public class Pigeon extends SubsystemBase {
 		gyroGenStatus = new PigeonIMU.GeneralStatus();
 		ypr_deg = new double[3];
 		xyz_dps = new double[3];
+		xyz_accl = new short[3];
 	}
-
 
 	/**
 	 * Periodically request information from the device
@@ -78,13 +82,26 @@ public class Pigeon extends SubsystemBase {
 		pidgey.getGeneralStatus(gyroGenStatus);
 		pidgey.getYawPitchRoll(ypr_deg);
 		pidgey.getRawGyro(xyz_dps);
+		pidgey.getBiasedAccelerometer(xyz_accl);
 
 		if(pigeonDebug){
 			SmartDashboard.putNumber("FusedHeading", pidgey.getFusedHeading());
 			SmartDashboard.putNumber("Pitch", getPitch());
 			SmartDashboard.putNumber("Roll", getRoll());
 		}
-			SmartDashboard.putNumber("yaw", getYaw());
+
+		SmartDashboard.putNumber("Pigeon Accl X ", q(xyz_accl[0]));
+		SmartDashboard.putNumber("Pigeon Accl Y", q(xyz_accl[1]));
+		SmartDashboard.putNumber("Pigeon Accl Z", q(xyz_accl[2]));
+
+		SmartDashboard.putNumber("yaw", getYaw());
+	}
+
+	private static double q(short val) {
+		// Convert Q2.14 -> double
+		// http://www.ctr-electronics.com/downloads/api/java/html/classcom_1_1ctre_1_1phoenix_1_1sensors_1_1_pigeon_i_m_u.html#a2a964e72cdd29bd9ca52b24d7d02e326
+		// https://en.wikipedia.org/wiki/Q_(number_format)#Q_to_float
+		return val * Math.pow(2, -14);
 	}
 
 	/**
