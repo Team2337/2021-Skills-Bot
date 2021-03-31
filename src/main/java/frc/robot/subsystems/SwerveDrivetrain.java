@@ -156,10 +156,6 @@ public class SwerveDrivetrain extends SubsystemBase {
     setModuleStates(states, true);
   }
 
-  public void resetOdometry() {
-    odometry.resetPosition(new Pose2d(0, 0, Rotation2d.fromDegrees(0)), Rotation2d.fromDegrees(0));
-  }
-
   public void setModuleStates(SwerveModuleState[] states, boolean shouldUpdateAngle) {
     setModuleStates(states, shouldUpdateAngle, false);
   }
@@ -168,8 +164,12 @@ public class SwerveDrivetrain extends SubsystemBase {
     for (int i = 0; i < states.length; i++) {
       FXSwerveModule module = modules[i];
       SwerveModuleState moduleState = states[i];
-      module.setDesiredState(moduleState, shouldUpdateAngle, isJoystickControl);
+      module.setDesiredState(moduleState, shouldUpdateAngle, isJoystickControl, attemptAntiSkid());
     }
+  }
+
+  public void resetOdometry() {
+    odometry.resetPosition(new Pose2d(0, 0, Rotation2d.fromDegrees(0)), Rotation2d.fromDegrees(0));
   }
 
   public void setMotionMagic(Rotation2d angleDegrees, double distanceFeet) {
@@ -220,6 +220,23 @@ public class SwerveDrivetrain extends SubsystemBase {
       module.resetAngleMotor();
     }
   }
+
+  public double attemptAntiSkid() {
+    double reduction;
+    double max_gForce = 2; // absolute max before we skid
+    double threshold_gForce = 1; // some threshold at which we want to start throttling speed to prevent skidding
+    double xAccel = pigeon.getX_Accel(); // from pigeon
+    double yAccel = pigeon.getX_Accel(); // from pigeon
+    double gForce = Math.sqrt(xAccel*xAccel + yAccel*yAccel);  //get magnitude of acceleration in some direction other than x or y (robot relative)
+    if (gForce > threshold_gForce){
+        reduction = (max_gForce - gForce) / (max_gForce - threshold_gForce);
+    } else {
+        reduction = 1;
+    }
+    return reduction;
+}
+
+
 
   @Override
   public void periodic() {

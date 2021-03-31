@@ -47,6 +47,13 @@ public class SwerveDriveCommand extends CommandBase {
     // Inverting the bumper value because we want field-oriented drive by default.
     boolean isFieldOriented = !controller.getBumper(Hand.kLeft);
 
+    //modify values based on 'no fly zones'
+    if(true) {
+    double pacmanJoyStick[] = Pacman.pacmanSlalom(forward, strafe, drivetrain);
+    forward = pacmanJoyStick[0];
+    strafe = pacmanJoyStick[1];
+    }
+
     forward = Utilities.deadband(forward, 0.1);
     strafe = Utilities.deadband(strafe, 0.1);
     rotation = Utilities.deadband(rotation, 0.1);

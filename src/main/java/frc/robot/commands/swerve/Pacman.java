@@ -1,6 +1,5 @@
 package frc.robot.commands.swerve;
 
-import frc.robot.Robot;
 import frc.robot.subsystems.SwerveDrivetrain;
 
 /**
@@ -9,17 +8,15 @@ import frc.robot.subsystems.SwerveDrivetrain;
  */
 public class Pacman {
 
-  private SwerveDrivetrain drivetrain;  //TODO why not used???
-
-    double halfRobotPlus = 1.1; //foot ? probably need meters for all
-    
+   private static double halfRobotPlus = 1.1; //foot ? probably need meters for all
+   private static double pacmanJoystickValues[];
+   
     /**
      * @return
      * 
      */
-    public void pacmanSlalom(double forward, double strafe, SwerveDrivetrain drivetrain) {
-      this.drivetrain = drivetrain;
-
+    public static double[] pacmanSlalom(double forward, double strafe, SwerveDrivetrain drivetrain) {
+      
       double robotX = drivetrain.getPose().getTranslation().getX();
       double robotY = drivetrain.getPose().getTranslation().getY();
 
@@ -42,8 +39,9 @@ public class Pacman {
         if (robotY > 5.0001 & robotY < 5+halfRobotPlus & strafe < 0) strafe = 0;
         if (robotY < 5.0000 & robotY > 5-halfRobotPlus & strafe > 0) strafe = 0;
         }
-    
+        pacmanJoystickValues[0] = forward;
+        pacmanJoystickValues[1] = strafe;
+    return pacmanJoystickValues;
     } //end pacmanSlalom.  probably and else's
-
 
 }
