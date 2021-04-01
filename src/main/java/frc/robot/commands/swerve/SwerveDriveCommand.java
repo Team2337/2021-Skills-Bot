@@ -33,7 +33,6 @@ public class SwerveDriveCommand extends CommandBase {
 
   @Override
   public void initialize() {
-
   }
 
   @Override
@@ -48,15 +47,24 @@ public class SwerveDriveCommand extends CommandBase {
     boolean isFieldOriented = !controller.getBumper(Hand.kLeft);
 
     //modify values based on 'no fly zones'
-    if(true) {
+    if(controller.getTriggerAxis(Hand.kRight)>0.5) {
     double pacmanJoyStick[] = Pacman.pacmanSlalom(forward, strafe, drivetrain);
     forward = pacmanJoyStick[0];
     strafe = pacmanJoyStick[1];
     }
 
+     //limit speed but enable boost for straightaways?
+     if(controller.getTriggerAxis(Hand.kLeft)>0.5) {
+       double limit = 0.75;
+      forward = forward * limit;
+      strafe = strafe * limit;
+      }
+
     forward = Utilities.deadband(forward, 0.1);
     strafe = Utilities.deadband(strafe, 0.1);
     rotation = Utilities.deadband(rotation, 0.1);
+
+
 
     // Pass on joystick values to be calculated into angles and speeds
     drivetrain.calculateJoystickInput(forward, strafe, rotation, isFieldOriented);

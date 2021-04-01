@@ -148,7 +148,10 @@ public class SwerveDrivetrain extends SubsystemBase {
       );
     }
 
+    SmartDashboard.putNumber( "Robot Direction", Units.radiansToDegrees(Math.asin(vyMetersPerSecond/vxMetersPerSecond)) );
+
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
+
     setModuleStates(moduleStates, shouldUpdateAngle);
   }
 
