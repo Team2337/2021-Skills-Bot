@@ -42,8 +42,18 @@ public class SwerveDriveCommand extends CommandBase {
     double forward = -controller.getY(Hand.kLeft);
     // Inverting X values because we want positive values when we pull to the left.
     // Xbox controllers return positive values when you pull to the right by default.
-    double strafe = -controller.getX(Hand.kLeft); 
+    double strafe = -controller.getX(Hand.kLeft);
     double rotation = -controller.getX(Hand.kRight);
+
+    // Holding down X will rotate the robot counter-clockwise. Holding down B will rotate the robot blockwise.
+    boolean shouldRotateCounterClockwise = controller.getXButton();
+    boolean shouldRotateClockwise = controller.getBButton();
+    if (shouldRotateCounterClockwise) {
+      rotation = 1.0;
+    } else if (shouldRotateClockwise) {
+      rotation = -1.0;
+    }
+
     // Inverting the bumper value because we want field-oriented drive by default.
     boolean isFieldOriented = !controller.getBumper(Hand.kLeft);
 

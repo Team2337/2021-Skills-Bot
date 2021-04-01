@@ -124,18 +124,8 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Driver Left Bumper is used for field-oriented drive - held for true, released
-    // for false
-
-    final JoystickButton greenA = new JoystickButton(controller, XboxController.Button.kA.value);
-    final JoystickButton redB = new JoystickButton(controller, XboxController.Button.kB.value);
-
+    // Driver Left Bumper is used for field-oriented drive - held to disable (FO by default)
     final JoystickButton bumperRight = new JoystickButton(controller, XboxController.Button.kBumperRight.value);
-
-    //Drive motor controls
-    greenA.whenPressed(() -> swerveDrivetrain.resetDriveMotors());
-    // greenA.whenPressed(new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
-    redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
 
     // Intake controls
     bumperRight.whenPressed(new SetIntakeSpeed(intake, 0.75));
