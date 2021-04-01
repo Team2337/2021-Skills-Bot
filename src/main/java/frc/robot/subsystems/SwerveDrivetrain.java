@@ -45,20 +45,20 @@ public class SwerveDrivetrain extends SubsystemBase {
    */
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
     new Translation2d(
-      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
-      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES)
+      Units.inchesToMeters(Constants.Swerve.DRIVETRAIN_RADIUS_INCHES),
+      Units.inchesToMeters(-Constants.Swerve.DRIVETRAIN_RADIUS_INCHES)
     ),
     new Translation2d(
-      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
-      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES)
+      Units.inchesToMeters(Constants.Swerve.DRIVETRAIN_RADIUS_INCHES),
+      Units.inchesToMeters(Constants.Swerve.DRIVETRAIN_RADIUS_INCHES)
     ),
     new Translation2d(
-      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
-      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES)
+      Units.inchesToMeters(-Constants.Swerve.DRIVETRAIN_RADIUS_INCHES),
+      Units.inchesToMeters(Constants.Swerve.DRIVETRAIN_RADIUS_INCHES)
     ),
     new Translation2d(
-      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
-      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES)
+      Units.inchesToMeters(-Constants.Swerve.DRIVETRAIN_RADIUS_INCHES),
+      Units.inchesToMeters(-Constants.Swerve.DRIVETRAIN_RADIUS_INCHES)
     )
   );
 
