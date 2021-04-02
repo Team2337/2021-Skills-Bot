@@ -169,7 +169,7 @@ public class FXSwerveModule {
          * As a note - we're looking to do some other fixes to make teleop driving smoother.
          * This value might be able to be removed if we do smoothing pre-setting the percentage
          */
-        driveTalonFXConfiguration.openloopRamp = 0.5;
+        driveTalonFXConfiguration.openloopRamp = 0.2;
         // driveTalonFXConfiguration.closedloopRamp = 0.2; // 0.2s seconds from neutral to full output
         // driveTalonFXConfiguration.slot0.allowableClosedloopError = 100;
 
@@ -186,31 +186,31 @@ public class FXSwerveModule {
         // Sets how the motor will react when there is no power applied to the motor
         driveMotor.setNeutralMode(NeutralMode.Coast);
 
-        /* --- Setup Angle Current Limits --- */
-        StatorCurrentLimitConfiguration currentLimitConfigurationAngle = new StatorCurrentLimitConfiguration();
-        // Sets the current limit for the angle motor
-        currentLimitConfigurationAngle.currentLimit = 50;
-        // Enables the current limit
-        currentLimitConfigurationAngle.enable = true;
-        // Sets the minimum current reading needed in order to initiate the current reading
-        currentLimitConfigurationAngle.triggerThresholdCurrent = 40;
-        // Sets the minimum amount of time beyond the trigger threshold reading needed in order to initiate the current reading
-        currentLimitConfigurationAngle.triggerThresholdTime = 3;
+        // /* --- Setup Angle Current Limits --- */
+        // StatorCurrentLimitConfiguration currentLimitConfigurationAngle = new StatorCurrentLimitConfiguration();
+        // // Sets the current limit for the angle motor
+        // currentLimitConfigurationAngle.currentLimit = 50;
+        // // Enables the current limit
+        // currentLimitConfigurationAngle.enable = true;
+        // // Sets the minimum current reading needed in order to initiate the current reading
+        // currentLimitConfigurationAngle.triggerThresholdCurrent = 40;
+        // // Sets the minimum amount of time beyond the trigger threshold reading needed in order to initiate the current reading
+        // currentLimitConfigurationAngle.triggerThresholdTime = 3;
 
-        /* --- Setup Drive Current Limit --- */
-        StatorCurrentLimitConfiguration currentLimitConfigurationDrive = new StatorCurrentLimitConfiguration();
-        // Sets the current limit for the drive motor
-        currentLimitConfigurationDrive.currentLimit = 50;
-        // Enables the current limit
-        currentLimitConfigurationDrive.enable = true;
-        // Sets the minimum current reading needed in order to initiate the current reading
-        currentLimitConfigurationDrive.triggerThresholdCurrent = 40;
-        // Sets the minimum amount of time beyond the trigger threshold reading needed in order to initiate the current reading
-        currentLimitConfigurationDrive.triggerThresholdTime = 3;
+        // /* --- Setup Drive Current Limit --- */
+        // StatorCurrentLimitConfiguration currentLimitConfigurationDrive = new StatorCurrentLimitConfiguration();
+        // // Sets the current limit for the drive motor
+        // currentLimitConfigurationDrive.currentLimit = 50;
+        // // Enables the current limit
+        // currentLimitConfigurationDrive.enable = true;
+        // // Sets the minimum current reading needed in order to initiate the current reading
+        // currentLimitConfigurationDrive.triggerThresholdCurrent = 40;
+        // // Sets the minimum amount of time beyond the trigger threshold reading needed in order to initiate the current reading
+        // currentLimitConfigurationDrive.triggerThresholdTime = 3;
 
-        /* --- Set Amperage Limits --- */
-        angleMotor.configStatorCurrentLimit(currentLimitConfigurationAngle, 0);
-        driveMotor.configStatorCurrentLimit(currentLimitConfigurationDrive, 0);
+        // /* --- Set Amperage Limits --- */
+        // angleMotor.configStatorCurrentLimit(currentLimitConfigurationAngle, 0);
+        // driveMotor.configStatorCurrentLimit(currentLimitConfigurationDrive, 0);
     }
 
     /**

@@ -44,7 +44,8 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
 
-  private final XboxController controller = new XboxController(0);
+  private final XboxController driverController = new XboxController(0);
+  private final XboxController operatorController = new XboxController(1);
 
   /* --- Subsystems --- */
   private PixyCam2Wire pixy = new PixyCam2Wire(Constants.PIXY_ANALOG, Constants.PIXY_DIGITAL);
@@ -58,7 +59,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    swerveDrivetrain.setDefaultCommand(new SwerveDriveCommand(swerveDrivetrain, controller));
+    swerveDrivetrain.setDefaultCommand(new SwerveDriveCommand(swerveDrivetrain, driverController, operatorController));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -127,10 +128,10 @@ public class RobotContainer {
     // Driver Left Bumper is used for field-oriented drive - held for true, released
     // for false
 
-    final JoystickButton greenA = new JoystickButton(controller, XboxController.Button.kA.value);
-    final JoystickButton redB = new JoystickButton(controller, XboxController.Button.kB.value);
+    final JoystickButton greenA = new JoystickButton(driverController, XboxController.Button.kA.value);
+    final JoystickButton redB = new JoystickButton(driverController, XboxController.Button.kB.value);
 
-    final JoystickButton bumperRight = new JoystickButton(controller, XboxController.Button.kBumperRight.value);
+    final JoystickButton bumperRight = new JoystickButton(driverController, XboxController.Button.kBumperRight.value);
 
     //Drive motor controls
     greenA.whenPressed(() -> swerveDrivetrain.resetDriveMotors());

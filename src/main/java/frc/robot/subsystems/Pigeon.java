@@ -90,7 +90,7 @@ public class Pigeon extends SubsystemBase {
 			SmartDashboard.putNumber("Roll", getRoll());
 		}
 
-		SmartDashboard.putNumber("Pigeon Accl X ", q(xyz_accl[0]));
+		SmartDashboard.putNumber("Pigeon Accl X", q(xyz_accl[0]));
 		SmartDashboard.putNumber("Pigeon Accl Y", q(xyz_accl[1]));
 		SmartDashboard.putNumber("Pigeon Accl Z", q(xyz_accl[2]));
 
