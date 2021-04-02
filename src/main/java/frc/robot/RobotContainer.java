@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,7 +37,7 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
 
-  private final XboxController controller = new XboxController(0);
+  private final static XboxController controller = new XboxController(0);
 
   /* --- Subsystems --- */
   private PixyCam2Wire pixy = new PixyCam2Wire(Constants.PIXY_ANALOG, Constants.PIXY_DIGITAL);
@@ -62,48 +63,104 @@ public class RobotContainer {
 
     autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
 
-    try { autonChooser.addOption("Barrel Racing", new BarrelRacing(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Barrel Racing 2 (Centr)", new BarrelRacing2(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Bounce", new Bounce(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Slalom", new Slalom(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Slalom 2 (Centr)", new Slalom2(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
+    try {
+      autonChooser.addOption("Barrel Racing", new BarrelRacing(swerveDrivetrain));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
+      autonChooser.addOption("Barrel Racing 2 (Centr)", new BarrelRacing2(swerveDrivetrain));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
+      autonChooser.addOption("Bounce", new Bounce(swerveDrivetrain));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
+      autonChooser.addOption("Slalom", new Slalom(swerveDrivetrain));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
+      autonChooser.addOption("Slalom 2 (Centr)", new Slalom2(swerveDrivetrain));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
-    try { autonChooser.addOption("Circle Test", new CircleTest(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("StraightLineTest10Ft0", new StraightLineTest10Ft0(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("StraightLineTest10Ft1", new StraightLineTest10Ft1(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
+    try {
+      autonChooser.addOption("Circle Test", new CircleTest(swerveDrivetrain));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
+      autonChooser.addOption("StraightLineTest10Ft0", new StraightLineTest10Ft0(swerveDrivetrain));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
+      autonChooser.addOption("StraightLineTest10Ft1", new StraightLineTest10Ft1(swerveDrivetrain));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     autonChooser.addOption("LPathCommand", new LPathTrajectory(swerveDrivetrain));
 
     autonChooser.addOption("Motion Magic (10ft)", new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain));
-    autonChooser.addOption("Motion Magic (L-10ft)", new SequentialCommandGroup(
-      new MotionMagicCommand(new Translation2d(5, 2.5), swerveDrivetrain),
-      new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain)
-    ));
+    autonChooser.addOption("Motion Magic (L-10ft)",
+        new SequentialCommandGroup(new MotionMagicCommand(new Translation2d(5, 2.5), swerveDrivetrain),
+            new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain)));
     autonChooser.addOption("Motion Magic (L-10ft 2)",
         new SequentialCommandGroup(new MotionMagicCommand(new Translation2d(5, 0), swerveDrivetrain),
-        new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain)));
-    autonChooser.addOption("Motion Magic (Tuning 1)", new SequentialCommandGroup(
-        new MotionMagicCommand(new Translation2d(5, 0), swerveDrivetrain)
-    ));
-    autonChooser.addOption("Motion Magic (Tuning 2)", new SequentialCommandGroup(
-        new MotionMagicCommand(new Translation2d(10, 0), swerveDrivetrain),
-        new MotionMagicCommand(new Translation2d(5, 0), swerveDrivetrain),
-        new MotionMagicCommand(new Translation2d(10, 0), swerveDrivetrain)
-    ));
-    autonChooser.addOption("Motion Magic (Tuning 3)", new SequentialCommandGroup(
-        new MotionMagicCommand(new Translation2d(-5, 0), swerveDrivetrain)
-    ));
+            new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain)));
+    autonChooser.addOption("Motion Magic (Tuning 1)",
+        new SequentialCommandGroup(new MotionMagicCommand(new Translation2d(5, 0), swerveDrivetrain)));
+    autonChooser.addOption("Motion Magic (Tuning 2)",
+        new SequentialCommandGroup(new MotionMagicCommand(new Translation2d(10, 0), swerveDrivetrain),
+            new MotionMagicCommand(new Translation2d(5, 0), swerveDrivetrain),
+            new MotionMagicCommand(new Translation2d(10, 0), swerveDrivetrain)));
+    autonChooser.addOption("Motion Magic (Tuning 3)",
+        new SequentialCommandGroup(new MotionMagicCommand(new Translation2d(-5, 0), swerveDrivetrain)));
 
     autonChooser.addOption("Galactic Search", new GalacticSearch(pixy, swerveDrivetrain));
-    // try { autonChooser.addOption("Galatic Search Red A", new GalacticSearchRedA(swerveDrivetrain).beforeStarting(new SetIntakeSpeed(intake, 1).withTimeout(2); } catch (IOException e) { e.printStackTrace(); }
-    // try { autonChooser.addOption("Galatic Search Red B", new GalacticSearchRedB(swerveDrivetrain).beforeStarting(() -> intake.setIntakeSpeed(1), intake));} catch (IOException e) { e.printStackTrace(); }
-    // try { autonChooser.addOption("Galatic Search Blue A", new GalacticSearchBlueA(swerveDrivetrain).beforeStarting(() -> intake.setIntakeSpeed(1), intake));} catch (IOException e) { e.printStackTrace(); }
-    // try { autonChooser.addOption("Galatic Search Blue B", new GalacticSearchBlueB(swerveDrivetrain).beforeStarting(() -> intake.setIntakeSpeed(1), intake));} catch (IOException e) { e.printStackTrace(); }
+    // try { autonChooser.addOption("Galatic Search Red A", new
+    // GalacticSearchRedA(swerveDrivetrain).beforeStarting(new
+    // SetIntakeSpeed(intake, 1).withTimeout(2); } catch (IOException e) {
+    // e.printStackTrace(); }
+    // try { autonChooser.addOption("Galatic Search Red B", new
+    // GalacticSearchRedB(swerveDrivetrain).beforeStarting(() ->
+    // intake.setIntakeSpeed(1), intake));} catch (IOException e) {
+    // e.printStackTrace(); }
+    // try { autonChooser.addOption("Galatic Search Blue A", new
+    // GalacticSearchBlueA(swerveDrivetrain).beforeStarting(() ->
+    // intake.setIntakeSpeed(1), intake));} catch (IOException e) {
+    // e.printStackTrace(); }
+    // try { autonChooser.addOption("Galatic Search Blue B", new
+    // GalacticSearchBlueB(swerveDrivetrain).beforeStarting(() ->
+    // intake.setIntakeSpeed(1), intake));} catch (IOException e) {
+    // e.printStackTrace(); }
 
-    try { autonChooser.addOption("CGGalatic Search Red A", new CGGalaticSearchRedA(swerveDrivetrain, intake)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("CGGalatic Search Red B", new CGGalaticSearchRedB(swerveDrivetrain, intake)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("CGGalatic Search Blue A", new CGGalaticSearchBlueA(swerveDrivetrain, intake)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("CGGalatic Search Blue B", new CGGalaticSearchBlueB(swerveDrivetrain, intake)); } catch (IOException e) { e.printStackTrace(); }
+    try {
+      autonChooser.addOption("CGGalatic Search Red A", new CGGalaticSearchRedA(swerveDrivetrain, intake));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
+      autonChooser.addOption("CGGalatic Search Red B", new CGGalaticSearchRedB(swerveDrivetrain, intake));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
+      autonChooser.addOption("CGGalatic Search Blue A", new CGGalaticSearchBlueA(swerveDrivetrain, intake));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
+      autonChooser.addOption("CGGalatic Search Blue B", new CGGalaticSearchBlueB(swerveDrivetrain, intake));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void resetDrivetrain() {
@@ -119,25 +176,34 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Driver Left Bumper is used for field-oriented drive - held for true, released
-    // for false?
 
+    // *****************DEFINE BUTTONS*********************
     final JoystickButton greenA = new JoystickButton(controller, XboxController.Button.kA.value);
     final JoystickButton redB = new JoystickButton(controller, XboxController.Button.kB.value);
 
     final JoystickButton bumperRight = new JoystickButton(controller, XboxController.Button.kBumperRight.value);
+    // Driver Left Bumper is used for field-oriented drive - held for true, released
+    // for false?
 
-    //Drive motor controls
+    // *****************ASSIGN BUTTONS********************
+    // Drive motor controls
     greenA.whenPressed(() -> swerveDrivetrain.resetDriveMotors());
-    // greenA.whenPressed(new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
+    // greenA.whenPressed(new InstantCommand(() ->
+    // swerveDrivetrain.resetDriveEncoders())));
     redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
 
     // Intake controls
-    bumperRight.whenPressed(new SetIntakeSpeed(intake, 0.75));
-    bumperRight.whenReleased(new SetIntakeSpeed(intake, 0));
+    // bumperRight.whenPressed(new SetIntakeSpeed(intake, 0.75));
+    // bumperRight.whenReleased(new SetIntakeSpeed(intake, 0));
+    // ***using to test alternative Kinematics for turns
 
     SmartDashboard.putData("AutonChooser", autonChooser);
-    // SmartDashboard.putData("Reset Drive Encoder", new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
+    // SmartDashboard.putData("Reset Drive Encoder", new InstantCommand(() ->
+    // swerveDrivetrain.resetDriveEncoders())));
+  }
+
+  public static Boolean getLeftTriger() {
+    return (controller.getTriggerAxis(Hand.kLeft) > 0.5);
   }
 
   /**

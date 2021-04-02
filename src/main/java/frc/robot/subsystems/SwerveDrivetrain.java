@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.nerdyfiles.swerve.*;
 
 /**
@@ -63,6 +64,44 @@ public class SwerveDrivetrain extends SubsystemBase {
     )
   );
 
+  private double turnRadius = 15;
+  private SwerveDriveKinematics kinematicsRT = new SwerveDriveKinematics(
+    new Translation2d(
+      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(turnRadius)
+    ),
+    new Translation2d(
+      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(turnRadius +Constants.WHEEL_BASE)
+    ),
+    new Translation2d(
+      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(turnRadius +Constants.WHEEL_BASE)
+    ),
+    new Translation2d(
+      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(turnRadius)
+    )
+  );
+  private SwerveDriveKinematics kinematicsLT = new SwerveDriveKinematics(
+    new Translation2d(
+      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(-turnRadius -Constants.WHEEL_BASE)
+    ),
+    new Translation2d(
+      Units.inchesToMeters(Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(-turnRadius)
+    ),
+    new Translation2d(
+      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(-turnRadius)
+    ),
+    new Translation2d(
+      Units.inchesToMeters(-Constants.Swerve.MODULE_DISTANCE_LENGTH_FROM_CENTER_INCHES),
+      Units.inchesToMeters(-turnRadius -Constants.WHEEL_BASE)
+    )
+  );
+
   private SwerveDriveOdometry odometry;
 
   /**
@@ -96,6 +135,12 @@ public class SwerveDrivetrain extends SubsystemBase {
   public SwerveDriveKinematics getKinematics() {
     return kinematics;
   }
+  public SwerveDriveKinematics getKinematicsRT() {
+    return kinematicsRT;
+  }
+  public SwerveDriveKinematics getKinematicsLT() {
+    return kinematicsLT;
+  }
 
   /**
    * Calculates the desired angle of each module, and the speed and direction of
@@ -120,12 +165,19 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     double vxFeetPerSeccond = Constants.Swerve.MAX_FEET_PER_SECOND * forward;
     /**
-     * For our joystick X axes - kinematics expects left to be a positive value,
-     * right to be a negative value. On our Xbox controller - right is a positive value,
-     * left is a negative value. We need to negate the values to work with kinematics.
+     * For our joystick X axes, kinematics expects left/forward and rotate CCW to be a positive values.
+     * On our Xbox controller, these area ll negative.
+     * These values are negated in SwerveDriveCommand.java already so nothing needs to be done here to address that.
      */
-    //TODO: Update comment if it works
     double vyFeetPerSecond = Constants.Swerve.MAX_FEET_PER_SECOND * strafe;
+
+    if (forward != 0 && strafe != 0) {
+      if(RobotContainer.getLeftTriger())  rotation = (Math.atan2(forward, strafe)-90) - pigeon.getYaw();
+      if (Math.abs(rotation)>180) rotation = -rotation%180;
+      rotation = rotation/10;
+      if (Math.abs(rotation)>1) rotation = 1;
+    }
+
     double omegaDegreesPerSecond = Constants.Swerve.MAX_DEGREES_PER_SECOND * rotation;
 
     // Kinematics expects meters/sec + radians
@@ -151,8 +203,14 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     SmartDashboard.putNumber( "Robot Direction", Units.radiansToDegrees(Math.asin(vyMetersPerSecond/vxMetersPerSecond)) );
 
-    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
-
+    SwerveModuleState[] moduleStates;
+    if(rotation>0) {
+     moduleStates = kinematicsLT.toSwerveModuleStates(chassisSpeeds);
+    } else if (rotation<0) {
+     moduleStates = kinematicsRT.toSwerveModuleStates(chassisSpeeds);}
+    else{
+    moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
+    }  
     setModuleStates(moduleStates, shouldUpdateAngle);
   }
 

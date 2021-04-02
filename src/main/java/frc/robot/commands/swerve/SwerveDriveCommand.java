@@ -44,7 +44,7 @@ public class SwerveDriveCommand extends CommandBase {
     double strafe = -controller.getX(Hand.kLeft); 
     double rotation = -controller.getX(Hand.kRight);
     // Inverting the bumper value because we want field-oriented drive by default.
-    boolean isFieldOriented = !controller.getBumper(Hand.kLeft);
+    boolean isFieldOriented = true;//!controller.getBumper(Hand.kLeft);
 
     //modify values based on 'no fly zones'
     if(controller.getTriggerAxis(Hand.kRight)>0.5) {
@@ -54,11 +54,13 @@ public class SwerveDriveCommand extends CommandBase {
     }
 
      //limit speed but enable boost for straightaways?
+     /*
      if(controller.getTriggerAxis(Hand.kLeft)>0.5) {
        double limit = 0.75;
       forward = forward * limit;
       strafe = strafe * limit;
       }
+      */
 
     forward = Utilities.deadband(forward, 0.1);
     strafe = Utilities.deadband(strafe, 0.1);

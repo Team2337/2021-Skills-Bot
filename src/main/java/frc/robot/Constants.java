@@ -42,7 +42,7 @@ public final class Constants {
   private static final double MODULE_INSET_HEIGHT_INCHES = 3.25;
 
   private static final double TRACK_WIDTH = DRIVETRAIN_WIDTH_INCHES - (MODULE_INSET_WIDTH_INCHES * 2);
-  private static final double WHEEL_BASE = DRIVETRAIN_LENGTH_INCHES - (MODULE_INSET_HEIGHT_INCHES * 2);
+  public static final double WHEEL_BASE = DRIVETRAIN_LENGTH_INCHES - (MODULE_INSET_HEIGHT_INCHES * 2);
 
   //Swerve trajectory config
   public static final TrajectoryConfig SWERVE_TRAJECTORY_CONFIG = new TrajectoryConfig(
