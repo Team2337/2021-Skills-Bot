@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -42,6 +43,9 @@ public class FXSwerveControllerCommand extends CommandBase {
   private final Consumer<SwerveModuleState[]> m_outputModuleStates;
   private final Supplier<Rotation2d> m_desiredRotation;
   private Boolean m_shouldUpdate;
+
+  
+  private final Field2d m_field = new Field2d();
 
   /**
    * Constructs a new FXSwerveControllerCommand that when executed will follow the
@@ -181,6 +185,9 @@ public class FXSwerveControllerCommand extends CommandBase {
     
     var targetChassisSpeeds = m_controller.calculate(pose, desiredState, m_actualRotation);
     var targetModuleStates = m_kinematics.toSwerveModuleStates(targetChassisSpeeds);
+
+    m_field.setRobotPose(desiredState.poseMeters);
+    SmartDashboard.putData("Field", m_field);
 
     SmartDashboard.putNumber("pathX", desiredState.poseMeters.getTranslation().getX());
     SmartDashboard.putNumber("pathHeading", desiredState.poseMeters.getRotation().getDegrees());
