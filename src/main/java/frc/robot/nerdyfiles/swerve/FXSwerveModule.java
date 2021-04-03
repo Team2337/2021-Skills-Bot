@@ -229,6 +229,10 @@ public class FXSwerveModule {
         return canCoder.getAbsolutePosition();
     }
 
+    public Double getEncoderDistanceInches() {
+        return kInchesPerTick * getDriveMotorPosition();
+    }
+
     /**
      * Get the velocity of the drive motor for the module.
      * @return The velocity for the drive motor of the module in feet per second.

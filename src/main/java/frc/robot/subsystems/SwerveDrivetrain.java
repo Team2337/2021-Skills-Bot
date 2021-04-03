@@ -221,6 +221,10 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
   }
 
+  public Double getEncoderDistanceInches() {
+    return modules[0].getEncoderDistanceInches();
+  }
+
   @Override
   public void periodic() {
     odometry.update(Rotation2d.fromDegrees(pigeon.getYaw()), modules[0].getState(), modules[1].getState(), modules[2].getState(), modules[3].getState());

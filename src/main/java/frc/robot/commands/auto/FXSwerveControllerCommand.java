@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -73,12 +74,12 @@ public class FXSwerveControllerCommand extends CommandBase {
   @SuppressWarnings("ParameterName")
   public FXSwerveControllerCommand(Trajectory trajectory, Supplier<Pose2d> pose, SwerveDriveKinematics kinematics,
       PIDController xController, PIDController yController, ProfiledPIDController thetaController,
-      Supplier<Rotation2d> desiredRotation, Consumer<SwerveModuleState[]> outputModuleStates,
+      Optional<Supplier<Rotation2d>> desiredRotation, Consumer<SwerveModuleState[]> outputModuleStates,
       Subsystem... requirements) {
     m_trajectory = requireNonNullParam(trajectory, "trajectory", "FXSwerveControllerCommand");
     m_pose = requireNonNullParam(pose, "pose", "FXSwerveControllerCommand");
     m_kinematics = requireNonNullParam(kinematics, "kinematics", "FXSwerveControllerCommand");
-    
+
     // Either -180 to 180 or 0 to 360 - trying the former, might need to try the latter
     thetaController.enableContinuousInput(-(Math.PI), (Math.PI));
     m_controller = new HolonomicDriveController(
@@ -88,7 +89,12 @@ public class FXSwerveControllerCommand extends CommandBase {
 
     m_outputModuleStates = requireNonNullParam(outputModuleStates, "frontLeftOutput", "SwerveControllerCommand");
 
-    m_desiredRotation = requireNonNullParam(desiredRotation, "desiredRotation", "SwerveControllerCommand");
+    if (desiredRotation.isEmpty()) {
+      m_desiredRotation = () -> trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters.getRotation();
+    } else {
+      m_desiredRotation = requireNonNullParam(desiredRotation.get(), "desiredRotation", "SwerveControllerCommand");
+    }
+
     m_shouldUpdate = false;
 
     addRequirements(requirements);
@@ -136,12 +142,29 @@ public class FXSwerveControllerCommand extends CommandBase {
           xController,
           yController,
           thetaController,
-          () -> trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters.getRotation(),
+          Optional.empty(),
           outputModuleStates,
           requirements
       );
   }
-  
+
+  public FXSwerveControllerCommand(Trajectory trajectory, Supplier<Pose2d> pose, SwerveDriveKinematics kinematics,
+  PIDController xController, PIDController yController, ProfiledPIDController thetaController, Optional<Supplier<Rotation2d>> desiredRotation,
+  Boolean shouldUpdate, Consumer<SwerveModuleState[]> outputModuleStates, Subsystem... requirements) {
+    this(
+        trajectory,
+        pose,
+        kinematics,
+        xController,
+        yController,
+        thetaController,
+        desiredRotation,
+        outputModuleStates,
+        requirements
+    );
+    m_shouldUpdate = shouldUpdate;
+  }
+
   public FXSwerveControllerCommand(Trajectory trajectory, Supplier<Pose2d> pose, SwerveDriveKinematics kinematics,
   PIDController xController, PIDController yController, ProfiledPIDController thetaController,
   Boolean shouldUpdate, Consumer<SwerveModuleState[]> outputModuleStates, Subsystem... requirements) {
@@ -152,12 +175,13 @@ public class FXSwerveControllerCommand extends CommandBase {
         xController,
         yController,
         thetaController,
-        () -> trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters.getRotation(),
+        Optional.empty(),
         outputModuleStates,
         requirements
     );
     m_shouldUpdate = shouldUpdate;
-}
+  }
+
   @Override
   public void initialize() {
     m_timer.reset();
@@ -178,7 +202,7 @@ public class FXSwerveControllerCommand extends CommandBase {
       m_actualRotation = desiredState.poseMeters.getRotation();
     }
     SmartDashboard.putBoolean("shouldUpdate", m_shouldUpdate);
-    
+
     var targetChassisSpeeds = m_controller.calculate(pose, desiredState, m_actualRotation);
     var targetModuleStates = m_kinematics.toSwerveModuleStates(targetChassisSpeeds);
 

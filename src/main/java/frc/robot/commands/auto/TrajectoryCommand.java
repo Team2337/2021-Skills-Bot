@@ -1,7 +1,11 @@
 package frc.robot.commands.auto;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Units;
@@ -14,7 +18,7 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
   private Trajectory trajectory;
   private SwerveDrivetrain drivetrain;
 
-  public TrajectoryCommand(Trajectory trajectory, Boolean shouldUpdate, double thetaP, SwerveDrivetrain drivetrain) {
+  public TrajectoryCommand(Trajectory trajectory, Optional<Supplier<Rotation2d>> desiredRotation, Boolean shouldUpdate, double thetaP, SwerveDrivetrain drivetrain) {
     // Note on thetaP: set to 11 for Galatic Search, set to 1 for AutoNav, except Barrel Racing which is 10
     // There was also a comment around thetaP being 10 for Bounce, but I can't confirm that (~zach)
     // We should look to bring this thetaP down for Galactic Search, since we're over-correcting in the videos
@@ -28,6 +32,7 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND),
         Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND)
       )),
+      desiredRotation,
       shouldUpdate,
       drivetrain::setModuleStates,
       drivetrain
@@ -39,7 +44,7 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
 
 
   public TrajectoryCommand(Trajectory trajectory, SwerveDrivetrain drivetrain) {
-    this(trajectory, false, 1, drivetrain);
+    this(trajectory, Optional.empty(), false, 1, drivetrain);
   }
 
   @Override
