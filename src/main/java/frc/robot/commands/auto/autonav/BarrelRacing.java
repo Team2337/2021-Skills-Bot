@@ -7,6 +7,6 @@ import frc.robot.subsystems.SwerveDrivetrain;
 
 public class BarrelRacing extends PathweaverTrajectoryCommand {
   public BarrelRacing(SwerveDrivetrain drivetrain) throws IOException {
-    super("output/BarrelRacingV2RB.wpilib.json", false, 10, drivetrain);
+    super("output2/output/BarrelRacingV2RB.wpilib.json", false, 10, drivetrain);
   }
 }
