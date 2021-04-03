@@ -149,20 +149,20 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.normalizeWheelSpeeds(moduleStates, Constants.Swerve.MAX_FEET_PER_SECOND);
-    setModuleStates(moduleStates, shouldUpdateAngle);
+    setModuleStates(moduleStates, shouldUpdateAngle, true);
   }
 
-  public void setModuleStates(SwerveModuleState[] states) {
-    setModuleStates(states, true);
-  }
+public void setModuleStates(SwerveModuleState[] states) {
+
+  setModuleStates(states, true, false);
+
+}
 
   public void resetOdometry() {
     odometry.resetPosition(new Pose2d(0, 0, Rotation2d.fromDegrees(0)), Rotation2d.fromDegrees(0));
   }
 
-  public void setModuleStates(SwerveModuleState[] states, boolean shouldUpdateAngle) {
-    setModuleStates(states, shouldUpdateAngle, false);
-  }
+
 
   public void setModuleStates(SwerveModuleState[] states, boolean shouldUpdateAngle, boolean isJoystickControl) {
     for (int i = 0; i < states.length; i++) {

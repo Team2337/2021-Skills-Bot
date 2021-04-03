@@ -34,7 +34,7 @@ public class SendItCommand extends CommandBase {
     );
     SwerveModuleState[] moduleStates = drivetrain.getKinematics().toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.normalizeWheelSpeeds(moduleStates, kFullSpeed);
-    drivetrain.setModuleStates(moduleStates);
+    drivetrain.setModuleStates(moduleStates, true, false);
   }
 
 }

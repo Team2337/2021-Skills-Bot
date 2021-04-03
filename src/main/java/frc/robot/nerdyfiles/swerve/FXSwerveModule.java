@@ -169,7 +169,7 @@ public class FXSwerveModule {
          * As a note - we're looking to do some other fixes to make teleop driving smoother.
          * This value might be able to be removed if we do smoothing pre-setting the percentage
          */
-        driveTalonFXConfiguration.openloopRamp = 0.2;
+        driveTalonFXConfiguration.openloopRamp = .2;
         // driveTalonFXConfiguration.closedloopRamp = 0.2; // 0.2s seconds from neutral to full output
         // driveTalonFXConfiguration.slot0.allowableClosedloopError = 100;
 
@@ -259,7 +259,7 @@ public class FXSwerveModule {
         }
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
-        if(isJoystickControl) {
+        if(isJoystickControl) {  //TODO:  change this back to isJoystickControl
             driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
         } else {
             driveMotor.set(TalonFXControlMode.Velocity, ((feetPerSecond / 10) * 12) / kInchesPerTick);

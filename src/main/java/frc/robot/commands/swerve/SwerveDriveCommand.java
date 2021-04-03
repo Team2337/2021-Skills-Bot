@@ -42,6 +42,8 @@ public class SwerveDriveCommand extends CommandBase {
   public void execute() {
     // Inverting this Y value because Xbox controllers return negative values when we push forward.
     double forward = -driverController.getY(Hand.kLeft);
+
+
     // Inverting X values because we want positive values when we pull to the left.
     // Xbox controllers return positive values when you pull to the right by default.
     double strafe = -driverController.getX(Hand.kLeft); 
@@ -49,9 +51,17 @@ public class SwerveDriveCommand extends CommandBase {
     // Inverting the bumper value because we want field-oriented drive by default.
     boolean isFieldOriented = !driverController.getBumper(Hand.kLeft);
 
-    forward = Utilities.deadband(forward, 0.1);
-    strafe = Utilities.deadband(strafe, 0.1);
-    rotation = Utilities.deadband(rotation, 0.1);
+    if (operatorController.getTriggerAxis(Hand.kRight) > .5) {
+      forward = forward * .75;
+      strafe = strafe * .75;
+    }
+
+    //forward = Math.copySign(forward * forward, forward);
+    //strafe = Math.copySign(strafe * strafe, strafe);
+
+    forward = Utilities.deadband(forward, 0.04);
+    strafe = Utilities.deadband(strafe, 0.04);
+    rotation = Utilities.deadband(rotation, 0.04);
 
     // Pass on joystick values to be calculated into angles and speeds
     drivetrain.calculateJoystickInput(forward, strafe, rotation, isFieldOriented);
