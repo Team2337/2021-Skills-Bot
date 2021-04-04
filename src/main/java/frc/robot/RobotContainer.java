@@ -26,6 +26,7 @@ import frc.robot.commands.auto.galacticsearch.GalacticSearchBlueB;
 import frc.robot.commands.auto.galacticsearch.GalacticSearchRedA;
 import frc.robot.commands.auto.galacticsearch.GalacticSearchRedB;
 import frc.robot.commands.auto.commandGroups.CircleTest;
+import frc.robot.commands.auto.commandGroups.CircleTest2;
 import frc.robot.commands.auto.autonav.BarrelRacing;
 import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;
@@ -74,7 +75,8 @@ public class RobotContainer {
     try { autonChooser.addOption("StraightLineTest10Ft0", new StraightLineTest10Ft0(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("StraightLineTest10Ft1", new StraightLineTest10Ft1(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
 
-    autonChooser.addOption("CircleTest", new CircleTest(swerveDrivetrain));
+    autonChooser.addOption("CircleTest", new CircleTest(swerveDrivetrain, pigeon));
+    autonChooser.addOption("CircleTest2", new CircleTest2(swerveDrivetrain, pigeon));
     autonChooser.addOption("LPathCommand", new LPathTrajectory(swerveDrivetrain));
     autonChooser.addOption("Motion Magic (10ft)", new MotionMagicCommand(new Translation2d(10, 5), swerveDrivetrain));
     autonChooser.addOption("Motion Magic (L-10ft)", new SequentialCommandGroup(
