@@ -26,7 +26,6 @@ import frc.robot.commands.commandgroups.CGGalaticSearchBlueB;
 import frc.robot.commands.commandgroups.CGGalaticSearchRedA;
 import frc.robot.commands.commandgroups.CGGalaticSearchRedB;
 import frc.robot.commands.auto.autonav.BarrelRacing;
-import frc.robot.commands.auto.autonav.SendItCommand;
 import frc.robot.commands.auto.autonav.BarrelRacing2;
 import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;

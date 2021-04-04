@@ -29,4 +29,9 @@ public class SetIntakeSpeed extends CommandBase {
     subsystem.setIntakeSpeed(speed);
   }
 
+  @Override
+  public void end(boolean interrupted) {
+    subsystem.setIntakeSpeed(0.0);
+  }
+
 }

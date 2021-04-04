@@ -152,17 +152,13 @@ public class SwerveDrivetrain extends SubsystemBase {
     setModuleStates(moduleStates, shouldUpdateAngle, true);
   }
 
-public void setModuleStates(SwerveModuleState[] states) {
-
-  setModuleStates(states, true, false);
-
-}
+  public void setModuleStates(SwerveModuleState[] states) {
+    setModuleStates(states, true, false);
+  }
 
   public void resetOdometry() {
     odometry.resetPosition(new Pose2d(0, 0, Rotation2d.fromDegrees(0)), Rotation2d.fromDegrees(0));
   }
-
-
 
   public void setModuleStates(SwerveModuleState[] states, boolean shouldUpdateAngle, boolean isJoystickControl) {
     for (int i = 0; i < states.length; i++) {

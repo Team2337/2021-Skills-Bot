@@ -259,7 +259,7 @@ public class FXSwerveModule {
         }
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
-        if(isJoystickControl) {  //TODO:  change this back to isJoystickControl
+        if (isJoystickControl) {
             driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.MAX_FEET_PER_SECOND);
         } else {
             driveMotor.set(TalonFXControlMode.Velocity, ((feetPerSecond / 10) * 12) / kInchesPerTick);
