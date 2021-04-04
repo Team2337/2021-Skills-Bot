@@ -9,11 +9,11 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -34,6 +34,7 @@ import frc.robot.commands.heading.PathFinderCommand;
 import frc.robot.commands.auto.autonav.BarrelRacing;
 import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;
+import frc.robot.commands.auto.autonav.Slalom2;
 import frc.robot.commands.swerve.SwerveDriveCommand;
 import frc.robot.commands.intake.*;
 import frc.robot.subsystems.*;
@@ -74,58 +75,64 @@ public class RobotContainer {
 
     autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
     try { autonChooser.addOption("Barrel Racing", new BarrelRacing(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Barrel Racing (PathFinder)", new BarrelRacing(swerveDrivetrain).alongWith(new PathFinderCommand<Double>(
-      List.of(
-        new Translation2d(Units.feetToMeters(4.0), Units.feetToMeters(9.0)),
-        new Translation2d(Units.feetToMeters(13.867001027252401), Units.feetToMeters(6.538763671520938)),
-        new Translation2d(Units.feetToMeters(11.792253308357), Units.feetToMeters(2.2560275545350184)),
-        new Translation2d(Units.feetToMeters(9.489092996555682), Units.feetToMeters(4.84470360746873)),
-        new Translation2d(Units.feetToMeters(11.068946764154934), Units.feetToMeters(7.395310894918123)),
-        new Translation2d(Units.feetToMeters(18.5), Units.feetToMeters(8.3)),
-        new Translation2d(Units.feetToMeters(21.8), Units.feetToMeters(11.2)),
-        new Translation2d(Units.feetToMeters(18.987249984893346), Units.feetToMeters(14.133482385642637)),
-        new Translation2d(Units.feetToMeters(16.5), Units.feetToMeters(10.5)),
-        new Translation2d(Units.feetToMeters(20.25), Units.feetToMeters(5.5)),
-        new Translation2d(Units.feetToMeters(25.21149314157955), Units.feetToMeters(3.0)),
-        new Translation2d(Units.feetToMeters(27.800169194513263), Units.feetToMeters(6.1)),
-        new Translation2d(Units.feetToMeters(23.15577980542631), Units.feetToMeters(9.0)),
-        new Translation2d(Units.feetToMeters(0.23838298386609455), Units.feetToMeters(8.5)),
-        new Translation2d(Units.feetToMeters(1.0), Units.feetToMeters(8.5))
-      ),
-      () -> swerveDrivetrain.getPose().getTranslation(),
-      swerveDrivetrain::getEncoderDistanceInches
-    ))); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Barrel Racing (Heading)", new BarrelRacing(new HeadingSupplier(
-      List.of(
-        new Heading(0.0, new Rotation2d())
-      ),
-      swerveDrivetrain::getEncoderDistanceInches
-    ), swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
+    // try { autonChooser.addOption("Barrel Racing (PathFinder)", new BarrelRacing(swerveDrivetrain).alongWith(new PathFinderCommand<Double>(
+    //   List.of(
+    //     new Translation2d(Units.feetToMeters(4.0), Units.feetToMeters(9.0)),
+    //     new Translation2d(Units.feetToMeters(13.867001027252401), Units.feetToMeters(6.538763671520938)),
+    //     new Translation2d(Units.feetToMeters(11.792253308357), Units.feetToMeters(2.2560275545350184)),
+    //     new Translation2d(Units.feetToMeters(9.489092996555682), Units.feetToMeters(4.84470360746873)),
+    //     new Translation2d(Units.feetToMeters(11.068946764154934), Units.feetToMeters(7.395310894918123)),
+    //     new Translation2d(Units.feetToMeters(18.5), Units.feetToMeters(8.3)),
+    //     new Translation2d(Units.feetToMeters(21.8), Units.feetToMeters(11.2)),
+    //     new Translation2d(Units.feetToMeters(18.987249984893346), Units.feetToMeters(14.133482385642637)),
+    //     new Translation2d(Units.feetToMeters(16.5), Units.feetToMeters(10.5)),
+    //     new Translation2d(Units.feetToMeters(20.25), Units.feetToMeters(5.5)),
+    //     new Translation2d(Units.feetToMeters(25.21149314157955), Units.feetToMeters(3.0)),
+    //     new Translation2d(Units.feetToMeters(27.800169194513263), Units.feetToMeters(6.1)),
+    //     new Translation2d(Units.feetToMeters(23.15577980542631), Units.feetToMeters(9.0)),
+    //     new Translation2d(Units.feetToMeters(0.23838298386609455), Units.feetToMeters(8.5)),
+    //     new Translation2d(Units.feetToMeters(1.0), Units.feetToMeters(8.5))
+    //   ),
+    //   () -> swerveDrivetrain.getPose().getTranslation(),
+    //   swerveDrivetrain::getEncoderDistanceInches
+    // ))); } catch (IOException e) { e.printStackTrace(); }
+    // try { autonChooser.addOption("Barrel Racing (Heading)", new BarrelRacing(new HeadingSupplier(
+    //   List.of(
+    //     new Heading(0.0, new Rotation2d())
+    //   ),
+    //   swerveDrivetrain::getEncoderDistanceInches
+    // ), swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
 
     try { autonChooser.addOption("Bounce", new Bounce(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
 
     try { autonChooser.addOption("Slalom", new Slalom(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Slalom (PathFinder)", new Slalom(swerveDrivetrain).alongWith(new PathFinderCommand<Double>(
-      List.of(
-        new Translation2d(Units.feetToMeters(4.3), Units.feetToMeters(2.5)),
-        new Translation2d(Units.feetToMeters(9.0), Units.feetToMeters(7.2)),
-        new Translation2d(Units.feetToMeters(21.0), Units.feetToMeters(7.4)),
-        new Translation2d(Units.feetToMeters(25.0), Units.feetToMeters(2.75)),
-        new Translation2d(Units.feetToMeters(29.0), Units.feetToMeters(5.5)),
-        new Translation2d(Units.feetToMeters(25.5), Units.feetToMeters(8.25)),
-        new Translation2d(Units.feetToMeters(21.0), Units.feetToMeters(3.3219529880959566)),
-        new Translation2d(Units.feetToMeters(15.0), Units.feetToMeters(2.8000000000000007)),
-        new Translation2d(Units.feetToMeters(8.9), Units.feetToMeters(4.0)),
-        new Translation2d(Units.feetToMeters(6.2), Units.feetToMeters(7.603571626643003)),
-        new Translation2d(Units.feetToMeters(1.4067439409905163), Units.feetToMeters(8.5)),
-        new Translation2d(Units.feetToMeters(5.0), Units.feetToMeters(8.5))
-      ),
+
+    Command slalom2;
+    List<Pose2d> slalomPoses = List.of();
+    try {
+      Slalom2 localSlalom = new Slalom2(swerveDrivetrain);
+      slalom2 = localSlalom;
+      slalomPoses = localSlalom.getPoses();
+    } catch (IOException e) {
+      slalom2 = new WaitCommand(15);
+    }
+    autonChooser.addOption("Slalom (PathFinder)", slalom2.alongWith(new PathFinderCommand<Double>(
+      slalomPoses,
       () -> swerveDrivetrain.getPose().getTranslation(),
       swerveDrivetrain::getEncoderDistanceInches
-    ))); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("Slalom (Heading)", new Slalom(new HeadingSupplier(
+    )));
+    
+    try { autonChooser.addOption("Slalom (Heading)", new Slalom2(new HeadingSupplier(
       List.of(
-        new Heading(0.0, new Rotation2d())
+        new Heading(0.0, Rotation2d.fromDegrees(0)),
+        new Heading(17.835534464637018, Rotation2d.fromDegrees(-90)), // D4ish
+        new Heading(109.99394200506657, Rotation2d.fromDegrees(-135)), // D8ish top
+        new Heading(255.0709269707177, Rotation2d.fromDegrees(-75)), // D10 bottom
+        new Heading(335.55679344725075, Rotation2d.fromDegrees(0)), // End of Circle
+        new Heading(403.0902976339161, Rotation2d.fromDegrees(90)), // D10 top
+        new Heading(467.71149417769857, Rotation2d.fromDegrees(135)), // D8ish bottom
+        new Heading(551.7240125636354, Rotation2d.fromDegrees(90)), // D6 bottom
+        new Heading(624.9715951851748, Rotation2d.fromDegrees(45)) // D4ish
       ),
       swerveDrivetrain::getEncoderDistanceInches
     ), swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }

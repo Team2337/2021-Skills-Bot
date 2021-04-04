@@ -23,7 +23,7 @@ public class PathFinder<T> {
     Optional<Translation2d> translation = Optional.empty();
     for (Translation2d t : results.keySet()) {
       // If any given point is too far away from the current translation, discard it
-      if (Math.abs(currentTranslationMeters.getDistance(t)) > Units.feetToMeters(1)) {
+      if (Math.abs(currentTranslationMeters.getDistance(t)) > Units.inchesToMeters(6)) {
         continue;
       }
 

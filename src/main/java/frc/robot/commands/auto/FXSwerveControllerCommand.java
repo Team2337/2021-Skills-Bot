@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -198,12 +199,14 @@ public class FXSwerveControllerCommand extends CommandBase {
 
     var pose = m_pose.get();
 
-    if(m_shouldUpdate){
+    if (m_shouldUpdate){
       m_actualRotation = desiredState.poseMeters.getRotation();
     }
     SmartDashboard.putBoolean("shouldUpdate", m_shouldUpdate);
 
     var targetChassisSpeeds = m_controller.calculate(pose, desiredState, m_actualRotation);
+    SmartDashboard.putString("targetChassisSpeeds", targetChassisSpeeds.toString());
+
     var targetModuleStates = m_kinematics.toSwerveModuleStates(targetChassisSpeeds);
 
     SmartDashboard.putNumber("pathX", desiredState.poseMeters.getTranslation().getX());

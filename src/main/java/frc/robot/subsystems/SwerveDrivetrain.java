@@ -148,7 +148,6 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.normalizeWheelSpeeds(moduleStates, Constants.Swerve.MAX_FEET_PER_SECOND);
     setModuleStates(moduleStates, shouldUpdateAngle);
   }
 
@@ -165,6 +164,8 @@ public class SwerveDrivetrain extends SubsystemBase {
   }
 
   public void setModuleStates(SwerveModuleState[] states, boolean shouldUpdateAngle, boolean isJoystickControl) {
+    SwerveDriveKinematics.normalizeWheelSpeeds(states, Constants.Swerve.MAX_FEET_PER_SECOND);
+
     for (int i = 0; i < states.length; i++) {
       FXSwerveModule module = modules[i];
       SwerveModuleState moduleState = states[i];

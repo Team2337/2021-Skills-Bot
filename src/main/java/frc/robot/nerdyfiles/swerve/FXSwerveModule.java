@@ -347,7 +347,7 @@ public class FXSwerveModule {
         SmartDashboard.putNumber("Module Angle (Degrees)/" + getModuleNumber(), getAngle());
         SmartDashboard.putNumber("Angle Motor Temperature/" + getModuleNumber(), getAngleMotorTemperature());
         SmartDashboard.putNumber("Drive Motor Temperature/" + getModuleNumber(), getDriveMotorTemperature());
-        SmartDashboard.putNumber("Inches Traveled/" + getModuleNumber(), kInchesPerTick * getDriveMotorPosition());
+        SmartDashboard.putNumber("Inches Traveled/" + getModuleNumber(), getEncoderDistanceInches());
         SmartDashboard.putNumber("Feet Traveled/" + getModuleNumber(), kDriveFeetPerTick * getDriveMotorPosition());
         SmartDashboard.putNumber("Drive Encoders/" + getModuleNumber(), getDriveMotorPosition());
         SmartDashboard.putNumber("Velocity/" + getModuleNumber(), getVelocity());
