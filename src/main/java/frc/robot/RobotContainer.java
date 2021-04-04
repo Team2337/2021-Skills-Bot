@@ -116,12 +116,13 @@ public class RobotContainer {
     } catch (IOException e) {
       slalom2 = new WaitCommand(15);
     }
+    /*
     autonChooser.addOption("Slalom (PathFinder)", slalom2.alongWith(new PathFinderCommand<Double>(
       slalomPoses,
       () -> swerveDrivetrain.getPose().getTranslation(),
       swerveDrivetrain::getEncoderDistanceInches
     )));
-    
+    */
     try { autonChooser.addOption("Slalom (Heading)", new Slalom2(new HeadingSupplier(
       List.of(
         new Heading(0.0, Rotation2d.fromDegrees(0)),

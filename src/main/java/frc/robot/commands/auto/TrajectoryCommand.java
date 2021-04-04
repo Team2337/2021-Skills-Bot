@@ -42,7 +42,6 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
     this.drivetrain = drivetrain;
   }
 
-
   public TrajectoryCommand(Trajectory trajectory, Optional<Supplier<Rotation2d>> desiredRotation, SwerveDrivetrain drivetrain) {
     this(trajectory, desiredRotation, false, 1, drivetrain);
   }

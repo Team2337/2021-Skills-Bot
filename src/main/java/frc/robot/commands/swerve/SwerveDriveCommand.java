@@ -45,7 +45,7 @@ public class SwerveDriveCommand extends CommandBase {
     // Inverting X values because we want positive values when we pull to the left.
     // Xbox controllers return positive values when you pull to the right by default.
     double strafe = -driverController.getX(Hand.kLeft); 
-    double rotation = -operatorController.getX(Hand.kRight) * 0.34;
+    double rotation = -driverController.getX(Hand.kRight) * 0.34;
     // Inverting the bumper value because we want field-oriented drive by default.
     boolean isFieldOriented = !driverController.getBumper(Hand.kLeft);
 
