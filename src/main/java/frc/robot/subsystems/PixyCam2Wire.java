@@ -18,6 +18,8 @@ public class PixyCam2Wire extends SubsystemBase {
   final private AnalogInput analog;
   final private DigitalInput digital;
 
+  final private int FINAL_READING;
+
   // Debug mode
   private final boolean DEBUG = true;
 
@@ -30,6 +32,7 @@ public class PixyCam2Wire extends SubsystemBase {
   public PixyCam2Wire(int analogPort, int digitalPort) {
     this.analog = new AnalogInput(analogPort);
     this.digital = new DigitalInput(digitalPort);
+    FINAL_READING = getLargestTargetX();
   }
   
   @Override
@@ -102,7 +105,9 @@ public class PixyCam2Wire extends SubsystemBase {
     if(!pixySeesTarget()) {
       return -1;
     }
-    return (int)((getPixyVoltage() / 3.3) * 315);
+    int x = (int)((getPixyVoltage() / 3.3) * 315);
+
+    return x;
   }
 
   public enum GalacticSearchPath {
@@ -115,20 +120,38 @@ public class PixyCam2Wire extends SubsystemBase {
   public Optional<GalacticSearchPath> getPath() {
     int x = getLargestTargetX();
 
-    if (x >= 0 && x < 79) {
+    if (x >= 220 && x < 235) {
       //Red A path
       return Optional.of(GalacticSearchPath.RED_A);
-    } else if (x >= 79 && x < 158) {
+    } else if (x >= 0 && x < 100) {
       //Red B path
       return Optional.of(GalacticSearchPath.RED_B);
-    } else if (x >= 158 && x < 237) {
+    } else if (x >= 200 && x < 220) {
       //Blue A path
       return Optional.of(GalacticSearchPath.BLUE_A);
-    } else if (x >= 237 && x <= 315) {
+    } else if (x >= 150 && x <= 200) {
       //Blue B path
       return Optional.of(GalacticSearchPath.BLUE_B);
     }
     return Optional.empty();
+  }
+
+  public void printPath(){
+    int x = FINAL_READING;
+    
+    if (x >= 220 && x < 235) {
+      //Red A path
+      System.out.println("Red A");
+    } else if (x >= 0 && x < 100) {
+      //Red B path
+      System.out.println("Red B");
+    } else if (x >= 200 && x < 220) {
+      //Blue A path
+      System.out.println("Blue A");
+    } else if (x >= 150 && x <= 200) {
+      //Blue B path
+      System.out.println("Blue B");
+    }
   }
 
 }

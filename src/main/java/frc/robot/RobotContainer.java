@@ -47,7 +47,7 @@ public class RobotContainer {
   private final XboxController operatorController = new XboxController(1);
 
   /* --- Subsystems --- */
-  private PixyCam2Wire pixy = new PixyCam2Wire(Constants.PIXY_ANALOG, Constants.PIXY_DIGITAL);
+  public PixyCam2Wire pixy = new PixyCam2Wire(Constants.PIXY_ANALOG, Constants.PIXY_DIGITAL);
   private Pigeon pigeon = new Pigeon();
   private SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(pigeon);
   private Intake intake = new Intake();

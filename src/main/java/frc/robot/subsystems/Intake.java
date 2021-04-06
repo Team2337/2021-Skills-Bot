@@ -24,6 +24,7 @@ public class Intake extends SubsystemBase {
     intakeMotor.configFactoryDefault();
 
     intakeMotor.setInverted(true);
+    intakeMotor.setNeutralMode(NeutralMode.Coast);
 
     //Configure a current limit
     StatorCurrentLimitConfiguration intakeCurrentLimitConfig = 
