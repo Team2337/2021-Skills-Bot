@@ -131,6 +131,7 @@ public class RobotContainer {
     final JoystickButton redB = new JoystickButton(driverController, XboxController.Button.kB.value);
 
     final JoystickButton bumperRight = new JoystickButton(driverController, XboxController.Button.kBumperRight.value);
+    final JoystickButton bumperLeft = new JoystickButton(driverController, XboxController.Button.kBumperLeft.value);
 
     //Drive motor controls
     greenA.whenPressed(() -> swerveDrivetrain.resetDriveMotors());
@@ -140,6 +141,9 @@ public class RobotContainer {
     // Intake controls
     bumperRight.whenPressed(new SetIntakeSpeed(intake, 0.75));
     bumperRight.whenReleased(new SetIntakeSpeed(intake, 0));
+
+    bumperLeft.whenPressed(new SetIntakeSpeed(intake, -0.25));
+    bumperLeft.whenReleased(new SetIntakeSpeed(intake, 0));
 
     SmartDashboard.putData("AutonChooser", autonChooser);
     // SmartDashboard.putData("Reset Drive Encoder", new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));

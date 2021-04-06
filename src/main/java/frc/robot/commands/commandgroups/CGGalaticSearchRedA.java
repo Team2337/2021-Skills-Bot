@@ -12,8 +12,8 @@ public class CGGalaticSearchRedA extends ParallelCommandGroup {
 
   public CGGalaticSearchRedA(SwerveDrivetrain drivetrain, Intake intake) throws IOException {
         addCommands(
-          new SetIntakeSpeed(intake, 0.75).withTimeout(2.6),
-          new GalacticSearchRedA(drivetrain))
+          new GalacticSearchRedA(drivetrain),
+          new SetIntakeSpeed(intake, 0.75).withTimeout(2.6))
         ;
     }
 
