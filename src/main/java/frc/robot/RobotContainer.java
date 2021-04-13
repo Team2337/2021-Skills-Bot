@@ -141,7 +141,7 @@ public class RobotContainer {
     // greenA.whenPressed(new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
     redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
 
-    blueX.whenPressed(new RotateToDegree(112, swerveDrivetrain, pigeon));
+    blueX.whenPressed(new RotateToDegree(112, 2, swerveDrivetrain, pigeon));
 
     // Intake controls
     bumperRight.whenPressed(new SetIntakeSpeed(intake, 0.75));
