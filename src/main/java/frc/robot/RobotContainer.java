@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.RotateToDegree;
 import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.auto.LPathTrajectory;
 import frc.robot.commands.auto.MotionMagicCommand;
@@ -31,6 +32,7 @@ import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;
 import frc.robot.commands.auto.autonav.Slalom2;
 import frc.robot.commands.swerve.SwerveDriveCommand;
+import frc.robot.commands.RotateToDegree;
 import frc.robot.commands.intake.*;
 import frc.robot.subsystems.*;
 
@@ -129,6 +131,7 @@ public class RobotContainer {
 
     final JoystickButton greenA = new JoystickButton(driverController, XboxController.Button.kA.value);
     final JoystickButton redB = new JoystickButton(driverController, XboxController.Button.kB.value);
+    final JoystickButton blueX = new JoystickButton(driverController, XboxController.Button.kX.value);
 
     final JoystickButton bumperRight = new JoystickButton(driverController, XboxController.Button.kBumperRight.value);
     final JoystickButton bumperLeft = new JoystickButton(driverController, XboxController.Button.kBumperLeft.value);
@@ -137,6 +140,8 @@ public class RobotContainer {
     greenA.whenPressed(() -> swerveDrivetrain.resetDriveMotors());
     // greenA.whenPressed(new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
     redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
+
+    blueX.whenPressed(new RotateToDegree(112, swerveDrivetrain, pigeon));
 
     // Intake controls
     bumperRight.whenPressed(new SetIntakeSpeed(intake, 0.75));

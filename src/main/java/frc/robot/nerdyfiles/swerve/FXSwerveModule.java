@@ -184,7 +184,7 @@ public class FXSwerveModule {
         driveMotor.configMotionAcceleration(kMaxVelocityTicks * 1, 0);
 
         // Sets how the motor will react when there is no power applied to the motor
-        driveMotor.setNeutralMode(NeutralMode.Coast);
+        driveMotor.setNeutralMode(NeutralMode.Brake);
 
         // /* --- Setup Angle Current Limits --- */
         // StatorCurrentLimitConfiguration currentLimitConfigurationAngle = new StatorCurrentLimitConfiguration();
