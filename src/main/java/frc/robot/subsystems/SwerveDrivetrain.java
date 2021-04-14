@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.Swerve.AngleOffset;
 import frc.robot.nerdyfiles.swerve.*;
 
 /**
@@ -27,6 +28,8 @@ import frc.robot.nerdyfiles.swerve.*;
 public class SwerveDrivetrain extends SubsystemBase {
 
   private Pigeon pigeon;
+
+  public String angleOffset;
 
   /**
    * Array for swerve module objects, sorted by ID
@@ -107,8 +110,10 @@ public class SwerveDrivetrain extends SubsystemBase {
    * @param rotation        - double joystick value from the X axis on the right
    *                        hand stick
    * @param isFieldOriented - If the robot should drive relative to the field
+   * 
+   * @param offset          - Set the degree offset of the robot relative to field orientation
    */
-  public void calculateJoystickInput(double forward, double strafe, double rotation, boolean isFieldOriented) {
+  public void calculateJoystickInput(double forward, double strafe, double rotation, boolean isFieldOriented, AngleOffset offset) {
     // By default, our angle motors will reset back to 0
     // If we let go of our joysticks, we don't want our angle motors to snap to a position
     // We want to stay still, so the robot does not adjust once we've stopped moving
@@ -143,7 +148,7 @@ public class SwerveDrivetrain extends SubsystemBase {
         vxMetersPerSecond,
         vyMetersPerSecond,
         omegaRadiansPerSecond,
-        Rotation2d.fromDegrees(pigeon.getYaw())
+        Rotation2d.fromDegrees(pigeon.getYaw() + offset.degree)
       );
     }
 
@@ -216,6 +221,14 @@ public class SwerveDrivetrain extends SubsystemBase {
       module.resetAngleMotor();
     }
   }
+
+  public String getGyroAngleOffset() {
+    return angleOffset;
+}
+
+public void setGyroAngleOffset(String angleOffset) {
+    this.angleOffset = angleOffset;
+}
 
   @Override
   public void periodic() {

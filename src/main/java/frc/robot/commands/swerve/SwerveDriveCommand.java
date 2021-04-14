@@ -1,5 +1,6 @@
 package frc.robot.commands.swerve;
 
+import frc.robot.Constants;
 import frc.robot.Utilities;
 import frc.robot.subsystems.SwerveDrivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -19,6 +20,7 @@ public class SwerveDriveCommand extends CommandBase {
   private final SwerveDrivetrain drivetrain;
   private final XboxController driverController;
   private final XboxController operatorController;
+  private String offset;
 
   /**
    * Command running the swerve calculations with the joystick
@@ -30,12 +32,11 @@ public class SwerveDriveCommand extends CommandBase {
     addRequirements(drivetrain);
 
     this.driverController = driverController;
-    this.operatorController = operatorController;
+    this.operatorController = operatorController; 
   }
 
   @Override
   public void initialize() {
-
   }
 
   @Override
@@ -55,6 +56,8 @@ public class SwerveDriveCommand extends CommandBase {
       forward = forward * speedLimit;
       strafe = strafe * speedLimit;
    // }
+    
+
 
     //forward = Math.copySign(forward * forward, forward);
     //strafe = Math.copySign(strafe * strafe, strafe);
@@ -64,7 +67,7 @@ public class SwerveDriveCommand extends CommandBase {
     rotation = Utilities.deadband(rotation, 0.04);
 
     // Pass on joystick values to be calculated into angles and speeds
-    drivetrain.calculateJoystickInput(forward, strafe, rotation, isFieldOriented);
+    drivetrain.calculateJoystickInput(forward, strafe, rotation, isFieldOriented, Constants.Swerve.AngleOffset.valueOf(offset));
 
     SmartDashboard.putNumber("Forward", forward);
     SmartDashboard.putNumber("Strafe", strafe);

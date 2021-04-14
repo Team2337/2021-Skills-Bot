@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import frc.robot.Constants;
 import frc.robot.Utilities;
 import frc.robot.subsystems.Pigeon;
 import frc.robot.subsystems.SwerveDrivetrain;
@@ -13,7 +14,7 @@ public class RotateToDegree extends PIDCommand{
             new PIDController(Utilities.scaleToRange(degree, -180, 180, -1, 1) * kP, 0, 0),
             pigeon::getYaw,
             degree,
-            output -> drivetrain.calculateJoystickInput(0, 0, output, false),
+            output -> drivetrain.calculateJoystickInput(0, 0, output, false, Constants.Swerve.AngleOffset.FIELD_0),
             drivetrain
         );
         addRequirements(drivetrain);

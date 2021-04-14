@@ -66,6 +66,23 @@ public final class Constants {
       }
     }
 
+    public enum AngleOffset {
+      FIELD_0(0),
+      FIELD_90(90),
+      FIELD_180(180),
+      FIELD_270(270)
+      ;
+      public final double degree;
+
+      AngleOffset(double degree) {
+        this.degree = degree;
+      }
+
+      public double getDegree() {
+        return this.degree;
+      }
+    }
+
 
     // /2 since we're measuring from the center - halfway
     private static final double MODULE_DISTANCE_WIDTH_FROM_CENTER_INCHES = TRACK_WIDTH / 2;

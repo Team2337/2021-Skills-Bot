@@ -32,7 +32,6 @@ import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;
 import frc.robot.commands.auto.autonav.Slalom2;
 import frc.robot.commands.swerve.SwerveDriveCommand;
-import frc.robot.commands.RotateToDegree;
 import frc.robot.commands.intake.*;
 import frc.robot.subsystems.*;
 
@@ -136,6 +135,9 @@ public class RobotContainer {
     final JoystickButton bumperRight = new JoystickButton(driverController, XboxController.Button.kBumperRight.value);
     final JoystickButton bumperLeft = new JoystickButton(driverController, XboxController.Button.kBumperLeft.value);
 
+    final JoystickButton opGreenA = new JoystickButton(operatorController, XboxController.Button.kA.value);
+    final JoystickButton opRedB = new JoystickButton(operatorController, XboxController.Button.kB.value);
+
     //Drive motor controls
     greenA.whenPressed(() -> swerveDrivetrain.resetDriveMotors());
     // greenA.whenPressed(new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
@@ -149,6 +151,9 @@ public class RobotContainer {
 
     bumperLeft.whenPressed(new SetIntakeSpeed(intake, -0.25));
     bumperLeft.whenReleased(new SetIntakeSpeed(intake, 0));
+
+    opGreenA.whenPressed(() -> swerveDrivetrain.setGyroAngleOffset("FIELD_0"));
+    opRedB.whenPressed(() -> swerveDrivetrain.setGyroAngleOffset("FIELD_90"));
 
     SmartDashboard.putData("AutonChooser", autonChooser);
     // SmartDashboard.putData("Reset Drive Encoder", new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
