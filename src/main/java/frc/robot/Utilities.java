@@ -42,6 +42,7 @@ public class Utilities {
       }
     }
 
+
   /**
    * Determines whether or not the given value is within a certain amount of a target
    *
@@ -53,5 +54,29 @@ public class Utilities {
   public static boolean withinTolerance(double target, double current, double tolerance) {
     return Math.abs(target - current) <= tolerance;
   }
+
+  public static double scaleRotationP(double input) {
+    double rotationP = (0.5/input) * 0.5;
+    return rotationP;
+  }
+
+  /**
+ * Scales an input to a new output
+ * 
+ * @param input Value to be translated to new range
+ * @param oldmin Minimum value of the old range
+ * @param oldmax Maximum value of the new range
+ * @param newmin Minimum value of the new range
+ * @param newmax Maximum value of the new range
+ * @return
+ */
+public static double scaleToRange(double input, double oldmin, double oldmax, double newmin, double newmax) {
+    
+  double oldrange = oldmax - oldmin;
+  double newrange = newmax - newmin;
+  double newoutput = (((input -oldmin)*newrange)/ oldrange) + newmin;
+  return newoutput;
+}
+
 
 }
