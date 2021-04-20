@@ -15,11 +15,10 @@ public class RotateToDegree extends PIDCommand {
     private boolean done = false;
     public RotateToDegree(double degree, SwerveDrivetrain drivetrain, Pigeon pigeon) {
         super(
-            new PIDController(0.009
-            ,0,0.00025),
+            new PIDController(0.009,0,0.0002),
             pigeon::getYaw,
             degree,
-            output -> drivetrain.calculateJoystickInput(0, 0, output, false),
+            output -> drivetrain.calculateJoystickInput(0, 0, Utilities.constraintOutput(output, 0.3), false),
             drivetrain
         );
         addRequirements(drivetrain);
@@ -44,6 +43,7 @@ public class RotateToDegree extends PIDCommand {
           SmartDashboard.putBoolean("withinTolerance", Utilities.withinTolerance(degree, pigeon.getYaw(), 1));
     }
 
+
     @Override
     public void end(boolean interrupted) {
         drivetrain.stopAngleMotors();
@@ -54,6 +54,7 @@ public class RotateToDegree extends PIDCommand {
     public boolean isFinished() {
         return done;
         //return getController().atSetpoint();
+
     }
     
 }

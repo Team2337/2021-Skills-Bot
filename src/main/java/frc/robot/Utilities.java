@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * Utilities class to house basic methods that can be used across subsystems
  * @author Bryce G.
@@ -58,6 +60,15 @@ public class Utilities {
   public static double scaleRotationP(double input) {
     double rotationP = (0.5/input) * 0.5;
     return rotationP;
+  }
+
+  public static double constraintOutput(double input, double constraint) {
+    SmartDashboard.putNumber("ConstrainedInput", input);
+    double newConstraint = Math.copySign(constraint, input);
+    if(Math.abs(input) > constraint) {
+      input = newConstraint;
+    }
+    return input;
   }
 
   /**

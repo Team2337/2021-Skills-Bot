@@ -117,11 +117,6 @@ public class SwerveDrivetrain extends SubsystemBase {
       shouldUpdateAngle = false;
     }
 
-    //TODO: Take this out when done testing
-    if(rotation > 0.3) {
-      rotation = 0.3;
-    }
-
     double vxFeetPerSeccond = Constants.Swerve.MAX_FEET_PER_SECOND * forward;
     /**
      * For our joystick X axes - kinematics expects left to be a positive value,
