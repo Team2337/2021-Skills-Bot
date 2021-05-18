@@ -133,6 +133,8 @@ public class RobotContainer {
     final JoystickButton redB = new JoystickButton(driverController, XboxController.Button.kB.value);
     final JoystickButton blueX = new JoystickButton(driverController, XboxController.Button.kX.value);
     final JoystickButton yellowY = new JoystickButton(driverController, XboxController.Button.kY.value);
+    final JoystickButton rightStarButton = new JoystickButton(driverController, XboxController.Button.kStart.value);
+
 
 
     final JoystickButton bumperRight = new JoystickButton(driverController, XboxController.Button.kBumperRight.value);
@@ -143,8 +145,12 @@ public class RobotContainer {
     // greenA.whenPressed(new InstantCommand(() -> swerveDrivetrain.resetDriveEncoders())));
     redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
 
-    blueX.whenPressed(new RotateToDegree(90, swerveDrivetrain, pigeon).withTimeout(1.3));
-    yellowY.whenPressed(new RotateToDegree(1, swerveDrivetrain, pigeon).withTimeout(1.3));
+    //blueX.whenPressed(new RotateToDegree(90, swerveDrivetrain, pigeon).withTimeout(1.3));
+    //yellowY.whenPressed(new RotateToDegree(1, swerveDrivetrain, pigeon).withTimeout(1.3));
+
+    blueX.whenPressed(() -> swerveDrivetrain.setFieldOrientedOffset());
+    yellowY.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(90));
+    rightStarButton.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(0));
 
 
     // Intake controls

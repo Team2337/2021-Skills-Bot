@@ -27,6 +27,8 @@ import frc.robot.nerdyfiles.swerve.*;
 public class SwerveDrivetrain extends SubsystemBase {
 
   private Pigeon pigeon;
+  private double fieldOrientedOffset = 0;
+  private double futureFieldOrientedOffset = 0;
 
   /**
    * Array for swerve module objects, sorted by ID
@@ -96,6 +98,14 @@ public class SwerveDrivetrain extends SubsystemBase {
     return kinematics;
   }
 
+  public void setFieldOrientedOffset() {
+    fieldOrientedOffset = futureFieldOrientedOffset;
+  }
+
+  public void setFutureFieldOrientedOffset(double offset) {
+    futureFieldOrientedOffset = offset;
+  }
+
   /**
    * Calculates the desired angle of each module, and the speed and direction of
    * the drive motors based on joystick inputs
@@ -143,7 +153,7 @@ public class SwerveDrivetrain extends SubsystemBase {
         vxMetersPerSecond,
         vyMetersPerSecond,
         omegaRadiansPerSecond,
-        Rotation2d.fromDegrees(pigeon.getYaw())
+        Rotation2d.fromDegrees(pigeon.getYaw() + fieldOrientedOffset)
       );
     }
 
@@ -225,6 +235,8 @@ public class SwerveDrivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Velocity X", Units.metersToFeet(speeds.vxMetersPerSecond));
     SmartDashboard.putNumber("Velocity Y", Units.metersToFeet(speeds.vyMetersPerSecond));
     SmartDashboard.putNumber("PoseYaw", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("fieldOrientedOffset", fieldOrientedOffset);
+    SmartDashboard.putNumber("futureFieldOrientedOffset", futureFieldOrientedOffset);
 
     for(FXSwerveModule module : modules) {
       module.logDebug();
