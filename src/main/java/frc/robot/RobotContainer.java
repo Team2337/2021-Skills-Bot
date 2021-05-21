@@ -60,7 +60,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    swerveDrivetrain.setDefaultCommand(new SwerveDriveCommand(swerveDrivetrain, driverController, operatorController));
+    swerveDrivetrain.setDefaultCommand(new SwerveDriveCommand(swerveDrivetrain, driverController, operatorController, pigeon));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -135,6 +135,12 @@ public class RobotContainer {
     final JoystickButton yellowY = new JoystickButton(driverController, XboxController.Button.kY.value);
     final JoystickButton rightStarButton = new JoystickButton(driverController, XboxController.Button.kStart.value);
 
+    final JoystickButton operatorRedB = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    final JoystickButton operatorGreenA = new JoystickButton(operatorController, XboxController.Button.kA.value);
+    final JoystickButton operatorBlueX = new JoystickButton(operatorController, XboxController.Button.kX.value);
+    final JoystickButton operatorYellowY = new JoystickButton(operatorController, XboxController.Button.kY.value);
+
+
 
 
     final JoystickButton bumperRight = new JoystickButton(driverController, XboxController.Button.kBumperRight.value);
@@ -149,8 +155,13 @@ public class RobotContainer {
     //yellowY.whenPressed(new RotateToDegree(1, swerveDrivetrain, pigeon).withTimeout(1.3));
 
     blueX.whenPressed(() -> swerveDrivetrain.setFieldOrientedOffset());
-    yellowY.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(90));
-    rightStarButton.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(0));
+    operatorYellowY.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(0));
+    operatorRedB.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(-90));
+    operatorGreenA.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(180));
+    operatorBlueX.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(270));
+
+
+
 
 
     // Intake controls

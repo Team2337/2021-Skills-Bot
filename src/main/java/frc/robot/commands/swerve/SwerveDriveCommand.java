@@ -1,6 +1,7 @@
 package frc.robot.commands.swerve;
 
 import frc.robot.Utilities;
+import frc.robot.subsystems.Pigeon;
 import frc.robot.subsystems.SwerveDrivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.XboxController;
@@ -19,18 +20,20 @@ public class SwerveDriveCommand extends CommandBase {
   private final SwerveDrivetrain drivetrain;
   private final XboxController driverController;
   private final XboxController operatorController;
+  private final Pigeon pigeon;
 
   /**
    * Command running the swerve calculations with the joystick
    *
    * @param subsystem - SwerveDrivetrain subsystem object
    */
-  public SwerveDriveCommand(SwerveDrivetrain drivetrain, XboxController driverController, XboxController operatorController) {
+  public SwerveDriveCommand(SwerveDrivetrain drivetrain, XboxController driverController, XboxController operatorController, Pigeon pigeon) {
     this.drivetrain = drivetrain;
     addRequirements(drivetrain);
 
     this.driverController = driverController;
     this.operatorController = operatorController;
+    this.pigeon = pigeon;
   }
 
   @Override
@@ -62,6 +65,9 @@ public class SwerveDriveCommand extends CommandBase {
     forward = Utilities.deadband(forward, 0.04);
     strafe = Utilities.deadband(strafe, 0.04);
     rotation = Utilities.deadband(rotation, 0.04);
+    if(driverController.getStartButton()) {
+      rotation = (drivetrain.getFutureFieldOrientedOffset() - pigeon.getYaw()) * 0.02;
+    }
 
     // Pass on joystick values to be calculated into angles and speeds
     drivetrain.calculateJoystickInput(forward, strafe, rotation, isFieldOriented);

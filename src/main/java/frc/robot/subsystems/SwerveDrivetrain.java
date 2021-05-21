@@ -106,6 +106,10 @@ public class SwerveDrivetrain extends SubsystemBase {
     futureFieldOrientedOffset = offset;
   }
 
+  public double getFutureFieldOrientedOffset() {
+    return futureFieldOrientedOffset;
+  }
+
   /**
    * Calculates the desired angle of each module, and the speed and direction of
    * the drive motors based on joystick inputs
