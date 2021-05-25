@@ -157,8 +157,8 @@ public class RobotContainer {
     blueX.whenPressed(() -> swerveDrivetrain.setFieldOrientedOffset());
     operatorYellowY.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(0));
     operatorRedB.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(-90));
-    operatorGreenA.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(180));
-    operatorBlueX.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(270));
+    operatorGreenA.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(-180));
+    operatorBlueX.whenPressed(() -> swerveDrivetrain.setFutureFieldOrientedOffset(-270));
 
 
 
