@@ -65,6 +65,7 @@ public class SwerveDriveCommand extends CommandBase {
     forward = Utilities.deadband(forward, 0.04);
     strafe = Utilities.deadband(strafe, 0.04);
     rotation = Utilities.deadband(rotation, 0.04);
+
     if(driverController.getStartButton()) {
        double angleRotation = drivetrain.getFutureFieldOrientedOffset() - pigeon.getYaw();
       if(angleRotation > 180) {   //TODO: We need to fine tune this logic
@@ -72,6 +73,7 @@ public class SwerveDriveCommand extends CommandBase {
       }
       rotation = angleRotation * 0.003;
     }
+    
 
     // Pass on joystick values to be calculated into angles and speeds
     drivetrain.calculateJoystickInput(forward, strafe, rotation, isFieldOriented);
