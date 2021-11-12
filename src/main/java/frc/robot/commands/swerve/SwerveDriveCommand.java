@@ -54,13 +54,8 @@ public class SwerveDriveCommand extends CommandBase {
     // Inverting the bumper value because we want field-oriented drive by default.
     boolean isFieldOriented = !driverController.getBumper(Hand.kLeft);
     double speedLimit = .95;
-    //if (operatorController.getTriggerAxis(Hand.kRight) > .5) {
       forward = forward * speedLimit;
       strafe = strafe * speedLimit;
-   // }
-
-    //forward = Math.copySign(forward * forward, forward);
-    //strafe = Math.copySign(strafe * strafe, strafe);
 
     forward = Utilities.deadband(forward, 0.04);
     strafe = Utilities.deadband(strafe, 0.04);

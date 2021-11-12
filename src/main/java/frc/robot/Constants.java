@@ -93,10 +93,6 @@ public final class Constants {
     public static final double MAX_DEGREES_PER_SECOND = REVOLUTION_PER_SECOND * 360;
   }
 
-  public static final int PIXY_CHIP_SELECT = 0;
-  public static final int PIXY_ANALOG = 4; //MXP pin 3
-  public static final int PIXY_DIGITAL = 5;
-
   /*******************/
   /* --------------- */
   /* --- CAN IDs --- */
@@ -123,5 +119,4 @@ public final class Constants {
   public static final int MODULE3_ANGLE_CANCODER_ID = 4;
   public static final double MODULE3_ANGLE_OFFSET = -15.557;
 
-  public static final int INTAKE = 6;
 }
