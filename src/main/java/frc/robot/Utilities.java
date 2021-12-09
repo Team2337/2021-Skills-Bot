@@ -5,7 +5,6 @@ package frc.robot;
  * @author Bryce G.
  */
 public class Utilities {
-
     /**
      * Checks to see if the absolute value of the input is less than the deadband
      * @param input - Value in which the deadband will be applied (0 < input < 1)
@@ -23,8 +22,14 @@ public class Utilities {
      * @return - squared input double value
      */
     public static double squareValues(double value) {
-      // double direction = value < 0 ? -1 : 1;
       return Math.copySign(Math.pow(value, 2), value);
+    }
+
+    public static double modifyAxis(double value) {
+      // Deadband
+      value = deadband(value, 0.05);
+      // Square the axis
+      return Math.copySign(value * value, value);
     }
 
     /**

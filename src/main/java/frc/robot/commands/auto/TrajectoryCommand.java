@@ -4,8 +4,6 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.util.Units;
-//import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrivetrain;
 
@@ -25,8 +23,8 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
       new PIDController(5.5, 0, 0),
       new PIDController(3, 0, 0),
       new ProfiledPIDController(thetaP, 0, 0, new TrapezoidProfile.Constraints(
-        Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND),
-        Units.degreesToRadians(Constants.Swerve.MAX_DEGREES_PER_SECOND)
+        Constants.Swerve.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+        Constants.Swerve.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
       )),
       shouldUpdate,
       drivetrain::setModuleStates,
@@ -36,7 +34,6 @@ public class TrajectoryCommand extends FXSwerveControllerCommand {
     this.trajectory = trajectory;
     this.drivetrain = drivetrain;
   }
-
 
   public TrajectoryCommand(Trajectory trajectory, SwerveDrivetrain drivetrain) {
     this(trajectory, false, 1, drivetrain);
