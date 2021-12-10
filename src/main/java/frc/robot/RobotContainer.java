@@ -53,9 +53,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Driver Left Bumper is used for field-oriented drive - held for true, released for false
     swerveDrivetrain.setDefaultCommand(new SwerveDriveCommand(
-      () -> -modifyAxis(driverController.getY(GenericHID.Hand.kLeft)) * Constants.Swerve.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(driverController.getX(GenericHID.Hand.kLeft)) * Constants.Swerve.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(driverController.getX(GenericHID.Hand.kRight)) * Constants.Swerve.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+      () -> -Utilities.modifyAxis(driverController.getY(GenericHID.Hand.kLeft)) * Constants.Swerve.MAX_VELOCITY_METERS_PER_SECOND,
+      () -> -Utilities.modifyAxis(driverController.getX(GenericHID.Hand.kLeft)) * Constants.Swerve.MAX_VELOCITY_METERS_PER_SECOND,
+      () -> -Utilities.modifyAxis(driverController.getX(GenericHID.Hand.kRight)) * Constants.Swerve.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
       () -> !driverController.getBumper(GenericHID.Hand.kLeft),
       swerveDrivetrain
     ));

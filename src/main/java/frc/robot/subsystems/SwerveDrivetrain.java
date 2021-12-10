@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -77,31 +80,44 @@ public class SwerveDrivetrain extends SubsystemBase {
     odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(pigeon.getYaw()));
 
     SmartDashboard.putNumber("ticks", 0);
+    ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     modules = new SwerveModule[] {
       Mk3SwerveModuleHelper.createFalcon500(
-        GearRatio.FAST,
+        tab.getLayout("Front Right Module", BuiltInLayouts.kList)
+          .withSize(2, 4)
+          .withPosition(0, 0),
+        GearRatio.STANDARD,
         Constants.MODULE0_DRIVE_MOTOR_ID,
         Constants.MODULE0_ANGLE_MOTOR_ID,
         Constants.MODULE0_ANGLE_CANCODER_ID,
         Constants.MODULE0_ANGLE_OFFSET
       ),
       Mk3SwerveModuleHelper.createFalcon500(
-        GearRatio.FAST,
+        tab.getLayout("Front Left Module", BuiltInLayouts.kList)
+          .withSize(2, 4)
+          .withPosition(2, 0),
+        GearRatio.STANDARD,
         Constants.MODULE1_DRIVE_MOTOR_ID,
         Constants.MODULE1_ANGLE_MOTOR_ID,
         Constants.MODULE1_ANGLE_CANCODER_ID,
         Constants.MODULE1_ANGLE_OFFSET
       ),
       Mk3SwerveModuleHelper.createFalcon500(
-        GearRatio.FAST,
+        tab.getLayout("Back Left Module", BuiltInLayouts.kList)
+          .withSize(2, 4)
+          .withPosition(4, 0),
+        GearRatio.STANDARD,
         Constants.MODULE2_DRIVE_MOTOR_ID,
         Constants.MODULE2_ANGLE_MOTOR_ID,
         Constants.MODULE2_ANGLE_CANCODER_ID,
         Constants.MODULE2_ANGLE_OFFSET
       ),
       Mk3SwerveModuleHelper.createFalcon500(
-        GearRatio.FAST,
+        tab.getLayout("Back Right Module", BuiltInLayouts.kList)
+          .withSize(2, 4)
+          .withPosition(6, 0),
+        GearRatio.STANDARD,
         Constants.MODULE3_DRIVE_MOTOR_ID,
         Constants.MODULE3_ANGLE_MOTOR_ID,
         Constants.MODULE3_ANGLE_CANCODER_ID,
