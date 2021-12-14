@@ -1,53 +1,66 @@
 package frc.robot.commands.swerve;
 
-import frc.robot.subsystems.SwerveDrivetrain;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.Utilities;
+import frc.robot.subsystems.SwerveDrivetrain;
+
 
 public class SwerveDriveCommand extends CommandBase {
 
+  private final XboxController controller;
+
   private final SwerveDrivetrain drivetrain;
 
-  private final DoubleSupplier translationXSupplier;
-  private final DoubleSupplier translationYSupplier;
-  private final DoubleSupplier rotationSupplier;
-  private final BooleanSupplier fieldOrientedSupplier;
+  private double futureAngle = 90;
+  private double futureAngleActive = 0;
 
   /**
    * Command running the swerve calculations with the joystick
    *
    * @param subsystem - SwerveDrivetrain subsystem object
    */
-  public SwerveDriveCommand(DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier, BooleanSupplier fieldOrientedSupplier, SwerveDrivetrain drivetrain) {
-    this.translationXSupplier = translationXSupplier;
-    this.translationYSupplier = translationYSupplier;
-    this.rotationSupplier = rotationSupplier;
-    this.fieldOrientedSupplier = fieldOrientedSupplier;
-
+  public SwerveDriveCommand(XboxController controller, SwerveDrivetrain drivetrain) {
+    this.controller = controller;
     this.drivetrain = drivetrain;
+
     addRequirements(drivetrain);
   }
 
   @Override
   public void execute() {
-    if (fieldOrientedSupplier.getAsBoolean()) {
+    double forward = -Utilities.modifyAxis(controller.getY(Hand.kLeft));
+    double strafe = -Utilities.modifyAxis(controller.getX(Hand.kLeft));
+    double rotation = -Utilities.modifyAxis(controller.getX(Hand.kRight));
+
+    double vxMetersPerSecond = forward * Constants.Swerve.MAX_VELOCITY_METERS_PER_SECOND;
+    double vyMetersPerSecond = strafe * Constants.Swerve.MAX_VELOCITY_METERS_PER_SECOND;
+    double omegaRadiansPerSecond = rotation * Constants.Swerve.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
+    boolean isFieldOriented = !controller.getBumper(Hand.kLeft);
+
+    if(controller.getBumper(Hand.kRight)) {
+      futureAngleActive = futureAngle;
+    } else {
+      futureAngleActive = 0;
+    }
+
+    if (isFieldOriented) {
       drivetrain.drive(
         ChassisSpeeds.fromFieldRelativeSpeeds(
-          translationXSupplier.getAsDouble(),
-          translationYSupplier.getAsDouble(),
-          rotationSupplier.getAsDouble(),
-          drivetrain.getGyroscopeRotation()
+          vxMetersPerSecond,
+          vyMetersPerSecond,
+          omegaRadiansPerSecond,
+          drivetrain.getGyroscopeRotation(futureAngleActive)
         )
       );
     } else {
       drivetrain.drive(new ChassisSpeeds(
-        translationXSupplier.getAsDouble(),
-        translationYSupplier.getAsDouble(),
-        rotationSupplier.getAsDouble()
+        vxMetersPerSecond,
+        vyMetersPerSecond,
+        omegaRadiansPerSecond
       ));
     }
   }

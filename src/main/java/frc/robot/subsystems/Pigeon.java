@@ -23,7 +23,7 @@ public class Pigeon extends SubsystemBase {
      * Specifies whether or not the Pigeon will be in debug mode.
      * @see #periodic()
      */
-    private final boolean pigeonDebug = false;
+    private final boolean pigeonDebug = true;
 
     /**
      * Pigeon IMU object
@@ -150,6 +150,7 @@ public class Pigeon extends SubsystemBase {
      */
     public void resetPidgey() {
         pidgey.setYaw(0, timeoutMs);
+        pidgey.setFusedHeading(0, timeoutMs);
     }
 
     /**

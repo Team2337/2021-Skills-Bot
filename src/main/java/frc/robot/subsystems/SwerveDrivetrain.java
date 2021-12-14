@@ -142,6 +142,14 @@ public class SwerveDrivetrain extends SubsystemBase {
     return Rotation2d.fromDegrees(pigeon.getFusedHeading());
   }
 
+  public Rotation2d getGyroscopeRotation(double angle) {
+    return Rotation2d.fromDegrees(pigeon.getFusedHeading() + angle);
+  }
+
+  public double getGyroscopeFusedHeading() {
+    return pigeon.getFusedHeading();
+  }
+
   public void drive(ChassisSpeeds chassisSpeeds) {
     this.chassisSpeeds = chassisSpeeds;
   }

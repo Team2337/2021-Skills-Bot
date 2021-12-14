@@ -53,10 +53,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Driver Left Bumper is used for field-oriented drive - held for true, released for false
     swerveDrivetrain.setDefaultCommand(new SwerveDriveCommand(
-      () -> -Utilities.modifyAxis(driverController.getY(GenericHID.Hand.kLeft)) * Constants.Swerve.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -Utilities.modifyAxis(driverController.getX(GenericHID.Hand.kLeft)) * Constants.Swerve.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -Utilities.modifyAxis(driverController.getX(GenericHID.Hand.kRight)) * Constants.Swerve.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-      () -> !driverController.getBumper(GenericHID.Hand.kLeft),
+     driverController, 
       swerveDrivetrain
     ));
 
@@ -95,12 +92,6 @@ public class RobotContainer {
     //Drive motor controls
     redB.whenPressed(() -> swerveDrivetrain.resetOdometry());
 
-    // Intake controls
-    bumperRight.whenPressed(new SetIntakeSpeed(intake, 0.75));
-    bumperRight.whenReleased(new SetIntakeSpeed(intake, 0));
-
-    bumperLeft.whenPressed(new SetIntakeSpeed(intake, -0.25));
-    bumperLeft.whenReleased(new SetIntakeSpeed(intake, 0));
 
     SmartDashboard.putData("AutonChooser", autonChooser);
   }
