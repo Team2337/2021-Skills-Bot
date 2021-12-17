@@ -23,6 +23,7 @@ import frc.robot.commands.auto.autonav.BarrelRacing2;
 import frc.robot.commands.auto.autonav.Bounce;
 import frc.robot.commands.auto.autonav.Slalom;
 import frc.robot.commands.auto.autonav.Slalom2;
+import frc.robot.commands.swerve.SDTargetAndDistance;
 import frc.robot.commands.swerve.SwerveDriveCommand;
 import frc.robot.commands.intake.*;
 import frc.robot.subsystems.*;
@@ -44,6 +45,7 @@ public class RobotContainer {
   private Pigeon pigeon = new Pigeon();
   private SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(pigeon);
   private Intake intake = new Intake();
+  private Vision vision = new Vision();
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -52,9 +54,10 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Driver Left Bumper is used for field-oriented drive - held for true, released for false
-    swerveDrivetrain.setDefaultCommand(new SwerveDriveCommand(
+    swerveDrivetrain.setDefaultCommand(new SDTargetAndDistance(
      driverController, 
-      swerveDrivetrain
+      swerveDrivetrain,
+      vision
     ));
 
     // Configure the button bindings
