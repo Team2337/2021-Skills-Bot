@@ -18,9 +18,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.auto.LPathTrajectory;
 import frc.robot.commands.auto.MotionMagicCommand;
-import frc.robot.commands.auto.calibration.StraightLineTest10Ft;
-import frc.robot.commands.auto.calibration.StraightLineTest10Ft0;
-import frc.robot.commands.auto.calibration.StraightLineTest10Ft1;
+// import frc.robot.commands.auto.calibration.StraightLineTest10Ft;
+// import frc.robot.commands.auto.calibration.StraightLineTest10Ft0;
+// import frc.robot.commands.auto.calibration.StraightLineTest10Ft1;
 import frc.robot.commands.commandgroups.CGGalaticSearchBlueA;
 import frc.robot.commands.commandgroups.CGGalaticSearchBlueB;
 import frc.robot.commands.commandgroups.CGGalaticSearchRedA;
@@ -74,9 +74,9 @@ public class RobotContainer {
     try { autonChooser.addOption("Bounce", new Bounce(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("Slalom", new Slalom(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
     try { autonChooser.addOption("Slalom 2 (Centr)", new Slalom2(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("StraightLineTest10Ft", new StraightLineTest10Ft(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("StraightLineTest10Ft0", new StraightLineTest10Ft0(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
-    try { autonChooser.addOption("StraightLineTest10Ft1", new StraightLineTest10Ft1(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
+    // try { autonChooser.addOption("StraightLineTest10Ft", new StraightLineTest10Ft(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
+    // try { autonChooser.addOption("StraightLineTest10Ft0", new StraightLineTest10Ft0(swerveDrivetrain)); } catch (IOException e) { e.printStackTrace(); }
+    // try { autonChooser.addOption("StraightLineTest10Ft1", new StraightLineTest10Ft1(swerveDrivetrain));} catch (IOException e) { e.printStackTrace(); }
 
 
     autonChooser.addOption("LPathCommand", new LPathTrajectory(swerveDrivetrain));
